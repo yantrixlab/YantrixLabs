@@ -1,0 +1,43 @@
+{
+  "name": "yantrx-invoice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Yantrix Core - SaaS Platform for Indian SMEs",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "db:generate": "prisma generate --schema=./prisma/schema.prisma",
+    "db:push": "prisma db push --schema=./prisma/schema.prisma",
+    "db:seed": "ts-node prisma/seed.ts",
+    "db:migrate": "prisma migrate dev --schema=./prisma/schema.prisma",
+    "db:deploy": "prisma migrate deploy --schema=./prisma/schema.prisma",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "type-check": "turbo run type-check"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "prettier": "^3.2.5",
+    "prisma": "^5.22.0",
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.7"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=11.0.9"
+  },
+  "packageManager": "pnpm@11.0.9",
+  "pnpm": {
+    "ignoredBuiltDependencies": []
+  }
+}
