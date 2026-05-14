@@ -1,0 +1,20 @@
+[variables]
+NODE_VERSION = "20"
+
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = [
+  "npm install -g pnpm@9.12.3 turbo",
+  "pnpm install --no-frozen-lockfile"
+]
+
+[phases.build]
+cmds = [
+  "pnpm prisma generate --schema=./prisma/schema.prisma",
+  "pnpm turbo build --filter=@yantrix/web"
+]
+
+[start]
+cmd = "cd apps/web && pnpm start"

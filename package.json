@@ -8,9 +8,9 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "prisma generate --schema=./prisma/schema.prisma",
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules",
@@ -23,21 +23,18 @@
     "type-check": "turbo run type-check"
   },
   "dependencies": {
-    "@prisma/client": "^5.22.0"
+    "@prisma/client": "^5.13.0"
   },
   "devDependencies": {
     "turbo": "^2.0.0",
     "prettier": "^3.2.5",
-    "prisma": "^5.22.0",
+    "prisma": "^5.13.0",
     "typescript": "^5.4.5",
     "@types/node": "^20.12.7"
   },
   "engines": {
-    "node": ">=22.0.0",
-    "pnpm": ">=11.0.9"
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
   },
-  "packageManager": "pnpm@11.0.9",
-  "pnpm": {
-    "ignoredBuiltDependencies": []
-  }
+  "packageManager": "pnpm@9.12.3"
 }
