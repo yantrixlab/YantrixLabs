@@ -1,5 +1,17 @@
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
+
+function normalizeApiUrl(url?: string): string {
+  if (!url) return 'http://localhost:4000/api/v1';
+
+  const cleaned = url.replace(/\/+$/, '');
+  // Backward-compatible guard: if env points to ".../api", append "/v1"
+  // because backend routes are mounted at /api/v1.
+  if (cleaned.endsWith('/api')) return `${cleaned}/v1`;
+
+  return cleaned;
+}
+
+export const API_URL = normalizeApiUrl(rawApiUrl);
 
 /**
  * Returns true if the given string is a safe image URL (data URI or HTTPS).

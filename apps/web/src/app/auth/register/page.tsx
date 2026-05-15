@@ -37,7 +37,8 @@ export default function RegisterPage() {
         }),
       });
 
-      const data = await res.json();
+      const responseText = await res.text();
+      const data = responseText ? JSON.parse(responseText) : {};
 
       if (data.success) {
         localStorage.setItem('accessToken', data.data.accessToken);
@@ -47,8 +48,12 @@ export default function RegisterPage() {
       } else {
         setError(data.error || 'Registration failed. Please try again.');
       }
-    } catch {
-      setError('Connection error. Please try again.');
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        setError('Unexpected server response. Please verify API URL and backend status.');
+      } else {
+        setError('Connection error. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
