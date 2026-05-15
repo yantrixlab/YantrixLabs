@@ -24,17 +24,12 @@
     "baseUrl": ".",
 
     "paths": {
-      "@yantrix/shared-types": ["../../packages/shared-types/src"],
-      "@yantrix/auth": ["../../packages/auth/src"],
-      "@yantrix/billing": ["../../packages/billing/src"]
+      "@yantrix/shared-types": ["../../packages/shared-types/dist"],
+      "@yantrix/auth": ["../../packages/auth/dist"],
+      "@yantrix/billing": ["../../packages/billing/dist"]
     }
   },
-  "include": [
-    "src/**/*",
-    "../../packages/auth/src/**/*",
-    "../../packages/billing/src/**/*",
-    "../../packages/shared-types/src/**/*"
-  ],
+  "include": ["src/**/*"],
 
   "exclude": ["node_modules", "dist"]
 }
