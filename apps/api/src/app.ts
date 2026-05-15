@@ -34,6 +34,23 @@ import faqRoutes from "./routes/faq";
 
 const app = express();
 
+const allowedOrigins = (process.env.CORS_ORIGINS ||
+  "https://yantrixlab.com,https://admin.yantrixlab.com,http://localhost:3000,http://localhost:3001")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser tools (no Origin header) and configured origins.
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-API-Key", "X-Business-Id"],
+};
+
 // Trust the first proxy so req.ip reflects the real client IP, not the
 // proxy's loopback address.  Without this, every user behind a reverse
 // proxy (or in Docker/nginx) would share the same rate-limit bucket.
@@ -60,12 +77,8 @@ app.use(
 //   allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key', 'X-Business-Id'],
 // }));
 
-app.use(
-  cors({
-    origin: ["https://yantrixlab.com", "https://admin.yantrixlab.com"],
-    credentials: true,
-  }),
-);
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // ─── General Middleware ─────────────────────────────────────────────────────
 app.use(compression());
