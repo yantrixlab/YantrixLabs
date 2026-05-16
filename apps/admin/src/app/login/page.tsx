@@ -38,7 +38,9 @@ export default function AdminLoginPage() {
         setError(data.error || 'Invalid credentials');
       }
     } catch {
-      setError('Connection error. Please check if the API server is running.');
+      setError(
+        `Cannot reach API at ${API_URL}. Check CORS (allow https://admin.yantrixlab.com), SSL certificate, and API uptime.`
+      );
     } finally {
       setIsLoading(false);
     }
