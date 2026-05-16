@@ -90,6 +90,16 @@ app.use("/api/v1/webhooks", express.raw({ type: "application/json" }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Keep dynamic API reads fresh across browsers/CDNs/proxies.
+app.use("/api/v1", (req, res, next) => {
+  if (req.method === "GET" || req.method === "HEAD") {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+  }
+  next();
+});
+
 // ─── Rate Limiting ──────────────────────────────────────────────────────────
 // Auth endpoints get a stricter, dedicated limiter.
 const authLimiter = rateLimiter({ max: 20, windowMs: 15 * 60 * 1000 });

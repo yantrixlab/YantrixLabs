@@ -149,14 +149,14 @@ export default function HomePage() {
   const [homeHeader, setHomeHeader] = useState(HOME_HEADER_DEFAULTS);
 
   useEffect(() => {
-    fetch(`${API_URL}/tools?limit=12`)
+    fetch(`${API_URL}/tools?limit=12`, { cache: 'no-store' })
       .then(r => r.json())
       .then(d => { if (d.success && Array.isArray(d.data) && d.data.length > 0) setCmsTools(d.data); })
       .catch(() => {});
   }, []);
 
   useEffect(() => {
-    fetch(`${API_URL}/settings/home-header`)
+    fetch(`${API_URL}/settings/home-header`, { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
       .then(d => {
         if (d.success && d.data) {

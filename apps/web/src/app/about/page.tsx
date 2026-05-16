@@ -96,7 +96,7 @@ export default function AboutPage() {
   const [team, setTeam] = useState(TEAM_DEFAULTS);
 
   useEffect(() => {
-    fetch(`${API_URL}/settings/about-stats`)
+    fetch(`${API_URL}/settings/about-stats`, { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
       .then(d => {
         if (d.success && d.data) {
@@ -112,7 +112,7 @@ export default function AboutPage() {
       })
       .catch(() => {});
 
-    fetch(`${API_URL}/settings/team-members`)
+    fetch(`${API_URL}/settings/team-members`, { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
       .then(d => {
         if (d.success && Array.isArray(d.data) && d.data.length > 0) {

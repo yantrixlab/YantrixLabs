@@ -66,7 +66,7 @@ export default function ContactPage() {
   const [faqs, setFaqs] = useState(DEFAULT_FAQS);
 
   useEffect(() => {
-    fetch(`${API_URL}/settings/contact-details`)
+    fetch(`${API_URL}/settings/contact-details`, { cache: 'no-store' })
       .then(r => r.json())
       .then((res: any) => {
         if (res.success && res.data) {
@@ -78,7 +78,7 @@ export default function ContactPage() {
       })
       .catch(() => {});
 
-    fetch(`${API_URL}/faqs/public`)
+    fetch(`${API_URL}/faqs/public`, { cache: 'no-store' })
       .then(r => r.json())
       .then((res: any) => {
         if (res.success && Array.isArray(res.data) && res.data.length > 0) {
