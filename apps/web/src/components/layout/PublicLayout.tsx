@@ -55,7 +55,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         <div className="container-wide">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/yeantrix-labs-logo.svg" alt="Yantrix Labs" className="h-8 w-8 rounded-lg" />
+              <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
               <span className="text-xl font-bold text-gray-900">Yantrix Labs</span>
             </Link>
 
@@ -160,7 +160,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div className="md:col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-4">
-                <img src="/yeantrix-labs-logo.svg" alt="Yantrix Labs" className="h-8 w-8 rounded-lg" />
+                <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
                 <span className="text-xl font-bold text-white">Yantrix Labs</span>
               </Link>
               <p className="text-sm leading-relaxed mb-3">

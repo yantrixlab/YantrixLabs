@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   keywords: ['software company India', 'business software', 'SaaS platform', 'GST billing software', 'custom software development', 'yantrix labs', 'startup software'],
   authors: [{ name: 'Yantrix Labs' }],
   creator: 'Yantrix Labs',
+  icons: {
+    icon: '/app_logo.png',
+    shortcut: '/app_logo.png',
+    apple: '/app_logo.png',
+  },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://yantrixlab.com'),
   openGraph: {
     type: 'website',

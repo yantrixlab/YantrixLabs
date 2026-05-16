@@ -348,6 +348,7 @@ export default function HomePage() {
   const [businessLogo, setBusinessLogo] = useState<string | null>(null);
   const [businessName, setBusinessName] = useState<string | null>(null);
   const [cmsTools, setCmsTools] = useState<CMSTool[]>([]);
+  const [toolsLoading, setToolsLoading] = useState(true);
   const [homeHeader, setHomeHeader] = useState(HOME_HEADER_DEFAULTS);
   const [homeHeaderLoading, setHomeHeaderLoading] = useState(true);
   const businessCount = Number.parseInt(homeHeader.stat2Value || "", 10);
@@ -363,7 +364,8 @@ export default function HomePage() {
         if (d.success && Array.isArray(d.data) && d.data.length > 0)
           setCmsTools(d.data);
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setToolsLoading(false));
   }, []);
 
   useEffect(() => {
@@ -964,7 +966,28 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cmsTools.length > 0
+            {toolsLoading
+              ? Array.from({ length: 6 }).map((_, idx) => (
+                  <div
+                    key={`tool-skeleton-${idx}`}
+                    className="rounded-2xl border border-gray-100/80 p-6"
+                    style={{
+                      background: getCardGradient(idx),
+                      boxShadow:
+                        "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
+                    }}
+                  >
+                    <div className="flex items-start justify-between mb-5">
+                      <div className="h-12 w-12 skeleton rounded-xl" />
+                      <div className="h-7 w-24 skeleton rounded-full" />
+                    </div>
+                    <div className="h-6 w-2/3 skeleton mb-3" />
+                    <div className="h-4 w-full skeleton mb-2" />
+                    <div className="h-4 w-5/6 skeleton mb-6" />
+                    <div className="h-5 w-28 skeleton" />
+                  </div>
+                ))
+              : cmsTools.length > 0
               ? cmsTools.map((tool, idx) => (
                   <motion.div
                     key={tool.id}
@@ -1366,9 +1389,9 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-4">
                 <img
-                  src="/yeantrix-labs-logo.svg"
+                  src="/app_logo.png"
                   alt="Yantrix Labs"
-                  className="h-8 w-8 rounded-lg"
+                  className="h-8 w-8 rounded-lg object-contain"
                 />
                 <span className="text-xl font-bold text-white">
                   Yantrix Labs

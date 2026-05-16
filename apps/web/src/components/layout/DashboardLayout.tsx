@@ -319,7 +319,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               {businessLogo ? (
                 <img src={businessLogo} alt={businessName || 'Business Logo'} className="h-full w-full object-contain" />
               ) : (
-                <img src="/yeantrix-labs-logo.svg" alt="Yeantrix Labs" className="h-full w-full object-contain" />
+                <img src="/app_logo.png" alt="Yeantrix Labs" className="h-full w-full object-contain" />
               )}
             </div>
             {!collapsed && (
