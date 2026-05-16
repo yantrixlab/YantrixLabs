@@ -114,7 +114,7 @@ export default function AdminLoginPage() {
           </form>
 
           <p className="mt-6 text-center text-xs text-gray-600">
-            Default: admin@yantrix.in / Admin@123
+            Use your configured super admin credentials
           </p>
         </div>
       </motion.div>

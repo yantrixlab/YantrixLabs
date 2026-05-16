@@ -1,227 +1,563 @@
-import { PrismaClient, UserRole, GstType } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
+import { PrismaClient, UserRole, GstType } from "@prisma/client";
+import { PrismaClient, UserRole, GstType } from "@prisma/client";
+import * as bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seed...\n');
+  console.log("🌱 Starting database seed...\n");
 
   // Plans
-  console.log('Creating plans...');
+  console.log("Creating plans...");
   // Feature lists are also used by the client nav-gating logic to determine which
   // sidebar items are accessible for a given plan (and for expired plans falling
   // back to the free tier).  Each keyword in NAV_FEATURE_REQUIREMENTS must appear
   // in at least one feature string for the corresponding route to be enabled.
-  const FREE_FEATURES    = ['5 invoices/month', '10 customers', 'Invoicing', 'Payments', 'Customers', 'Basic GST reports', 'PDF download', 'Email support'];
-  const DAILY_FEATURES   = ['2 invoices/day', '2 customers', '1 team member', 'Invoicing', 'Payments', 'Customers'];
-  const STARTER_FEATURES = ['100 invoices/month', '200 customers', '2 team members', 'Invoicing', 'Payments', 'Customers', 'Products & Services', 'GST reports', 'Expense Tracker', 'Email invoices', 'Payment tracking'];
-  const PRO_FEATURES     = ['500 invoices/month', 'Unlimited customers', '5 team members', 'Invoicing', 'Payments', 'Customers', 'Products & Services', 'Advanced GST reports', 'Expense Tracker', 'Inventory', 'HRM', 'CRM', 'Multi-branch', 'Payment gateway', 'Priority support'];
-  const BUSINESS_FEATURES = ['Unlimited invoices', 'Unlimited customers', '20 team members', 'Invoicing', 'Payments', 'Customers', 'Products & Services', 'Full GST suite', 'Expense Tracker', 'Inventory', 'HRM', 'CRM', 'API access', 'Multi-branch', 'Dedicated manager'];
-  const YEARLY_FEATURES  = ['500 invoices/year', '500 customers', '2 team members', 'Invoicing', 'Payments', 'Customers', 'Products & Services', 'GST reports', 'Email invoices'];
+  const FREE_FEATURES = [
+    "5 invoices/month",
+    "10 customers",
+    "Invoicing",
+    "Payments",
+    "Customers",
+    "Basic GST reports",
+    "PDF download",
+    "Email support",
+  ];
+  const DAILY_FEATURES = [
+    "2 invoices/day",
+    "2 customers",
+    "1 team member",
+    "Invoicing",
+    "Payments",
+    "Customers",
+  ];
+  const STARTER_FEATURES = [
+    "100 invoices/month",
+    "200 customers",
+    "2 team members",
+    "Invoicing",
+    "Payments",
+    "Customers",
+    "Products & Services",
+    "GST reports",
+    "Expense Tracker",
+    "Email invoices",
+    "Payment tracking",
+  ];
+  const PRO_FEATURES = [
+    "500 invoices/month",
+    "Unlimited customers",
+    "5 team members",
+    "Invoicing",
+    "Payments",
+    "Customers",
+    "Products & Services",
+    "Advanced GST reports",
+    "Expense Tracker",
+    "Inventory",
+    "HRM",
+    "CRM",
+    "Multi-branch",
+    "Payment gateway",
+    "Priority support",
+  ];
+  const BUSINESS_FEATURES = [
+    "Unlimited invoices",
+    "Unlimited customers",
+    "20 team members",
+    "Invoicing",
+    "Payments",
+    "Customers",
+    "Products & Services",
+    "Full GST suite",
+    "Expense Tracker",
+    "Inventory",
+    "HRM",
+    "CRM",
+    "API access",
+    "Multi-branch",
+    "Dedicated manager",
+  ];
+  const YEARLY_FEATURES = [
+    "500 invoices/year",
+    "500 customers",
+    "2 team members",
+    "Invoicing",
+    "Payments",
+    "Customers",
+    "Products & Services",
+    "GST reports",
+    "Email invoices",
+  ];
 
   const freePlan = await prisma.plan.upsert({
-    where: { slug: 'free' },
+    where: { slug: "free" },
     update: { features: FREE_FEATURES },
     create: {
-      name: 'Free', slug: 'free', description: 'Perfect for freelancers',
-      price: 0, invoiceLimit: 5, customerLimit: 10, productLimit: 10, userLimit: 1, storageLimit: 50,
+      name: "Free",
+      slug: "free",
+      description: "Perfect for freelancers",
+      price: 0,
+      invoiceLimit: 5,
+      customerLimit: 10,
+      productLimit: 10,
+      userLimit: 1,
+      storageLimit: 50,
       features: FREE_FEATURES,
       sortOrder: 0,
     },
   });
 
   // Fix any existing Daily plan whose slug was incorrectly set, then upsert.
-  await prisma.plan.updateMany({ where: { name: 'Daily', NOT: { slug: 'daily' } }, data: { slug: 'daily' } });
+  await prisma.plan.updateMany({
+    where: { name: "Daily", NOT: { slug: "daily" } },
+    data: { slug: "daily" },
+  });
   const dailyPlan = await prisma.plan.upsert({
-    where: { slug: 'daily' },
+    where: { slug: "daily" },
     update: { dailyPrice: 10, features: DAILY_FEATURES },
     create: {
-      name: 'Daily', slug: 'daily', description: 'Try out Yantrix for a day',
-      price: 0, dailyPrice: 10, invoiceLimit: 2, customerLimit: 2, productLimit: 5, userLimit: 1, storageLimit: 50,
+      name: "Daily",
+      slug: "daily",
+      description: "Try out Yantrix for a day",
+      price: 0,
+      dailyPrice: 10,
+      invoiceLimit: 2,
+      customerLimit: 2,
+      productLimit: 5,
+      userLimit: 1,
+      storageLimit: 50,
       features: DAILY_FEATURES,
       sortOrder: -1,
     },
   });
 
   const starterPlan = await prisma.plan.upsert({
-    where: { slug: 'starter' }, update: { features: STARTER_FEATURES },
+    where: { slug: "starter" },
+    update: { features: STARTER_FEATURES },
     create: {
-      name: 'Starter', slug: 'starter', description: 'For growing businesses',
-      price: 149, yearlyPrice: 1490, invoiceLimit: 100, customerLimit: 200, productLimit: 100, userLimit: 2, storageLimit: 500,
+      name: "Starter",
+      slug: "starter",
+      description: "For growing businesses",
+      price: 149,
+      yearlyPrice: 1490,
+      invoiceLimit: 100,
+      customerLimit: 200,
+      productLimit: 100,
+      userLimit: 2,
+      storageLimit: 500,
       features: STARTER_FEATURES,
       sortOrder: 1,
     },
   });
 
   const proPlan = await prisma.plan.upsert({
-    where: { slug: 'pro' }, update: { features: PRO_FEATURES },
+    where: { slug: "pro" },
+    update: { features: PRO_FEATURES },
     create: {
-      name: 'Pro', slug: 'pro', description: 'Most popular for established businesses',
-      price: 299, yearlyPrice: 2990, invoiceLimit: 500, customerLimit: 999999, productLimit: 999999, userLimit: 5, storageLimit: 2000,
+      name: "Pro",
+      slug: "pro",
+      description: "Most popular for established businesses",
+      price: 299,
+      yearlyPrice: 2990,
+      invoiceLimit: 500,
+      customerLimit: 999999,
+      productLimit: 999999,
+      userLimit: 5,
+      storageLimit: 2000,
       features: PRO_FEATURES,
-      sortOrder: 2, isFeatured: true,
+      sortOrder: 2,
+      isFeatured: true,
     },
   });
 
   const businessPlan = await prisma.plan.upsert({
-    where: { slug: 'business' }, update: { features: BUSINESS_FEATURES },
+    where: { slug: "business" },
+    update: { features: BUSINESS_FEATURES },
     create: {
-      name: 'Business', slug: 'business', description: 'For large enterprises',
-      price: 599, yearlyPrice: 5990, invoiceLimit: 999999, customerLimit: 999999, productLimit: 999999, userLimit: 20, storageLimit: 10000,
+      name: "Business",
+      slug: "business",
+      description: "For large enterprises",
+      price: 599,
+      yearlyPrice: 5990,
+      invoiceLimit: 999999,
+      customerLimit: 999999,
+      productLimit: 999999,
+      userLimit: 20,
+      storageLimit: 10000,
       features: BUSINESS_FEATURES,
       sortOrder: 3,
     },
   });
 
   // Fix any existing Yearly plan whose slug was incorrectly set, then upsert.
-  await prisma.plan.updateMany({ where: { name: 'Yearly', NOT: { slug: 'yearly' } }, data: { slug: 'yearly' } });
+  await prisma.plan.updateMany({
+    where: { name: "Yearly", NOT: { slug: "yearly" } },
+    data: { slug: "yearly" },
+  });
   const yearlyPlan = await prisma.plan.upsert({
-    where: { slug: 'yearly' },
+    where: { slug: "yearly" },
     update: { yearlyPrice: 999, features: YEARLY_FEATURES },
     create: {
-      name: 'Yearly', slug: 'yearly', description: 'Annual plan — pay once, save more',
-      price: 0, yearlyPrice: 999, invoiceLimit: 500, customerLimit: 500, productLimit: 200, userLimit: 2, storageLimit: 1000,
+      name: "Yearly",
+      slug: "yearly",
+      description: "Annual plan — pay once, save more",
+      price: 0,
+      yearlyPrice: 999,
+      invoiceLimit: 500,
+      customerLimit: 500,
+      productLimit: 200,
+      userLimit: 2,
+      storageLimit: 1000,
       features: YEARLY_FEATURES,
       sortOrder: 5,
     },
   });
 
-  console.log('  ✓ 6 plans created\n');
+  console.log("  ✓ 6 plans created\n");
 
   // Modules
-  console.log('Creating modules...');
+  console.log("Creating modules...");
   const modDefs = [
-    { name: 'Invoicing', slug: 'invoicing', isCore: true, sortOrder: 0 },
-    { name: 'Payments', slug: 'payments', isCore: true, sortOrder: 1 },
-    { name: 'Customers', slug: 'customers', isCore: true, sortOrder: 2 },
-    { name: 'Products & Services', slug: 'products', isCore: true, sortOrder: 3 },
-    { name: 'GST Reports', slug: 'gst-reports', isCore: true, sortOrder: 4 },
-    { name: 'Expense Tracker', slug: 'expenses', isCore: false, sortOrder: 5, requiredPlan: 'starter' },
-    { name: 'Inventory', slug: 'inventory', isCore: false, sortOrder: 6, requiredPlan: 'pro' },
-    { name: 'HRMS', slug: 'hrms', isCore: false, isActive: true, requiredPlan: 'pro', sortOrder: 10 },
-    { name: 'CRM', slug: 'crm', isCore: false, isActive: true, requiredPlan: 'pro', sortOrder: 11 },
+    { name: "Invoicing", slug: "invoicing", isCore: true, sortOrder: 0 },
+    { name: "Payments", slug: "payments", isCore: true, sortOrder: 1 },
+    { name: "Customers", slug: "customers", isCore: true, sortOrder: 2 },
+    {
+      name: "Products & Services",
+      slug: "products",
+      isCore: true,
+      sortOrder: 3,
+    },
+    { name: "GST Reports", slug: "gst-reports", isCore: true, sortOrder: 4 },
+    {
+      name: "Expense Tracker",
+      slug: "expenses",
+      isCore: false,
+      sortOrder: 5,
+      requiredPlan: "starter",
+    },
+    {
+      name: "Inventory",
+      slug: "inventory",
+      isCore: false,
+      sortOrder: 6,
+      requiredPlan: "pro",
+    },
+    {
+      name: "HRMS",
+      slug: "hrms",
+      isCore: false,
+      isActive: true,
+      requiredPlan: "pro",
+      sortOrder: 10,
+    },
+    {
+      name: "CRM",
+      slug: "crm",
+      isCore: false,
+      isActive: true,
+      requiredPlan: "pro",
+      sortOrder: 11,
+    },
   ];
 
   const moduleMap: Record<string, any> = {};
   for (const m of modDefs) {
     const mod = await prisma.module.upsert({
-      where: { slug: m.slug }, update: {},
-      create: { name: m.name, slug: m.slug, isCore: m.isCore ?? false, isActive: m.isActive ?? true, sortOrder: m.sortOrder, requiredPlan: m.requiredPlan ?? null },
+      where: { slug: m.slug },
+      update: {},
+      create: {
+        name: m.name,
+        slug: m.slug,
+        isCore: m.isCore ?? false,
+        isActive: m.isActive ?? true,
+        sortOrder: m.sortOrder,
+        requiredPlan: m.requiredPlan ?? null,
+      },
     });
     moduleMap[m.slug] = mod;
   }
-  console.log('  ✓ 9 modules created\n');
+  console.log("  ✓ 9 modules created\n");
 
   // Super Admin
-  console.log('Creating super admin...');
-  const adminHash = await bcrypt.hash('Admin@123', 12);
+  console.log("Creating super admin...");
+  const superAdminEmail = process.env.SUPER_ADMIN_EMAIL || "admin@yantrix.in";
+  const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD || "Admin@123";
+  const adminHash = await bcrypt.hash(superAdminPassword, 12);
   await prisma.user.upsert({
-    where: { email: 'admin@yantrix.in' }, update: {},
-    create: { name: 'Super Admin', email: 'admin@yantrix.in', phone: '+919999999999', passwordHash: adminHash, role: UserRole.SUPER_ADMIN, isActive: true, isVerified: true },
+    where: { email: superAdminEmail },
+    update: {},
+    create: {
+      name: "Super Admin",
+      email: superAdminEmail,
+      phone: "+919999999999",
+      passwordHash: adminHash,
+      role: UserRole.SUPER_ADMIN,
+      isActive: true,
+      isVerified: true,
+    },
   });
-  console.log('  ✓ admin@yantrix.in / Admin@123\n');
+  console.log(`  ✓ ${superAdminEmail} / [configured password]\n`);
 
   // Demo User
-  console.log('Creating demo user & business...');
-  const demoHash = await bcrypt.hash('Demo@123', 12);
+  console.log("Creating demo user & business...");
+  const demoHash = await bcrypt.hash("Demo@123", 12);
   const demoUser = await prisma.user.upsert({
-    where: { email: 'demo@yantrix.in' }, update: {},
-    create: { name: 'Demo User', email: 'demo@yantrix.in', phone: '+919876543210', passwordHash: demoHash, role: UserRole.OWNER, isActive: true, isVerified: true },
+    where: { email: "demo@yantrix.in" },
+    update: {},
+    create: {
+      name: "Demo User",
+      email: "demo@yantrix.in",
+      phone: "+919876543210",
+      passwordHash: demoHash,
+      role: UserRole.OWNER,
+      isActive: true,
+      isVerified: true,
+    },
   });
 
   const demoBiz = await prisma.business.upsert({
-    where: { gstin: '29AABCD1234E1ZX' }, update: {},
+    where: { gstin: "29AABCD1234E1ZX" },
+    update: {},
     create: {
-      name: 'Demo Tech Solutions Pvt Ltd', legalName: 'Demo Tech Solutions Private Limited',
-      gstin: '29AABCD1234E1ZX', pan: 'AABCD1234E',
-      email: 'billing@demotechsolutions.in', phone: '+919876543210',
+      name: "Demo Tech Solutions Pvt Ltd",
+      legalName: "Demo Tech Solutions Private Limited",
+      gstin: "29AABCD1234E1ZX",
+      pan: "AABCD1234E",
+      email: "billing@demotechsolutions.in",
+      phone: "+919876543210",
       gstType: GstType.REGULAR,
-      address: '123, Tech Park, MG Road', city: 'Bengaluru', state: 'Karnataka', pincode: '560001',
-      bankName: 'HDFC Bank', accountNo: '50100123456789', ifsc: 'HDFC0001234', upiId: 'demo@hdfc',
-      invoicePrefix: 'DTS', invoiceSeq: 48,
-      termsAndConditions: 'Payment due within 30 days. Late payment will attract 2% interest per month.',
-      ownerId: demoUser.id, planId: proPlan.id,
+      address: "123, Tech Park, MG Road",
+      city: "Bengaluru",
+      state: "Karnataka",
+      pincode: "560001",
+      bankName: "HDFC Bank",
+      accountNo: "50100123456789",
+      ifsc: "HDFC0001234",
+      upiId: "demo@hdfc",
+      invoicePrefix: "DTS",
+      invoiceSeq: 48,
+      termsAndConditions:
+        "Payment due within 30 days. Late payment will attract 2% interest per month.",
+      ownerId: demoUser.id,
+      planId: proPlan.id,
     },
   });
 
   await prisma.membership.upsert({
-    where: { userId_businessId: { userId: demoUser.id, businessId: demoBiz.id } }, update: {},
-    create: { userId: demoUser.id, businessId: demoBiz.id, role: UserRole.OWNER, permissions: ['*'], isActive: true, joinedAt: new Date() },
+    where: {
+      userId_businessId: { userId: demoUser.id, businessId: demoBiz.id },
+    },
+    update: {},
+    create: {
+      userId: demoUser.id,
+      businessId: demoBiz.id,
+      role: UserRole.OWNER,
+      permissions: ["*"],
+      isActive: true,
+      joinedAt: new Date(),
+    },
   });
 
   // Enable core modules for demo biz
-  for (const slug of ['invoicing', 'payments', 'customers', 'products', 'gst-reports', 'expenses']) {
+  for (const slug of [
+    "invoicing",
+    "payments",
+    "customers",
+    "products",
+    "gst-reports",
+    "expenses",
+  ]) {
     const mod = moduleMap[slug];
     if (mod) {
       await prisma.businessModule.upsert({
-        where: { businessId_moduleId: { businessId: demoBiz.id, moduleId: mod.id } }, update: {},
+        where: {
+          businessId_moduleId: { businessId: demoBiz.id, moduleId: mod.id },
+        },
+        update: {},
         create: { businessId: demoBiz.id, moduleId: mod.id, isEnabled: true },
       });
     }
   }
 
   // Subscription
-  const existingSub = await prisma.subscription.findFirst({ where: { businessId: demoBiz.id } });
+  const existingSub = await prisma.subscription.findFirst({
+    where: { businessId: demoBiz.id },
+  });
   if (!existingSub) {
     await prisma.subscription.create({
-      data: { businessId: demoBiz.id, planId: proPlan.id, status: 'ACTIVE', startDate: new Date(), endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), amount: proPlan.price },
+      data: {
+        businessId: demoBiz.id,
+        planId: proPlan.id,
+        status: "ACTIVE",
+        startDate: new Date(),
+        endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        amount: proPlan.price,
+      },
     });
   }
 
-  console.log('  ✓ demo@yantrix.in / Demo@123');
-  console.log('  ✓ Business: Demo Tech Solutions (GSTIN: 29AABCD1234E1ZX, Plan: Pro)\n');
+  console.log("  ✓ demo@yantrix.in / Demo@123");
+  console.log(
+    "  ✓ Business: Demo Tech Solutions (GSTIN: 29AABCD1234E1ZX, Plan: Pro)\n",
+  );
 
   // Demo Customers
-  console.log('Creating demo customers...');
+  console.log("Creating demo customers...");
   const c1 = await prisma.customer.upsert({
-    where: { id: 'cust_001' }, update: {},
-    create: { id: 'cust_001', businessId: demoBiz.id, name: 'Acme Corporation', email: 'billing@acmecorp.com', phone: '+919811223344', gstin: '07AABCA1234B1ZX', gstType: GstType.REGULAR, billingAddress: '456, Connaught Place', billingCity: 'New Delhi', billingState: 'Delhi', billingPincode: '110001', creditDays: 30 },
+    where: { id: "cust_001" },
+    update: {},
+    create: {
+      id: "cust_001",
+      businessId: demoBiz.id,
+      name: "Acme Corporation",
+      email: "billing@acmecorp.com",
+      phone: "+919811223344",
+      gstin: "07AABCA1234B1ZX",
+      gstType: GstType.REGULAR,
+      billingAddress: "456, Connaught Place",
+      billingCity: "New Delhi",
+      billingState: "Delhi",
+      billingPincode: "110001",
+      creditDays: 30,
+    },
   });
   const c2 = await prisma.customer.upsert({
-    where: { id: 'cust_002' }, update: {},
-    create: { id: 'cust_002', businessId: demoBiz.id, name: 'Sharma Enterprises', email: 'accounts@sharmaent.in', phone: '+919922334455', gstin: '27AABCS5658K1ZQ', gstType: GstType.REGULAR, billingCity: 'Mumbai', billingState: 'Maharashtra', creditDays: 45 },
+    where: { id: "cust_002" },
+    update: {},
+    create: {
+      id: "cust_002",
+      businessId: demoBiz.id,
+      name: "Sharma Enterprises",
+      email: "accounts@sharmaent.in",
+      phone: "+919922334455",
+      gstin: "27AABCS5658K1ZQ",
+      gstType: GstType.REGULAR,
+      billingCity: "Mumbai",
+      billingState: "Maharashtra",
+      creditDays: 45,
+    },
   });
   const c3 = await prisma.customer.upsert({
-    where: { id: 'cust_003' }, update: {},
-    create: { id: 'cust_003', businessId: demoBiz.id, name: 'Patel Trading Co', phone: '+919988776655', gstType: GstType.UNREGISTERED, billingCity: 'Ahmedabad', billingState: 'Gujarat' },
+    where: { id: "cust_003" },
+    update: {},
+    create: {
+      id: "cust_003",
+      businessId: demoBiz.id,
+      name: "Patel Trading Co",
+      phone: "+919988776655",
+      gstType: GstType.UNREGISTERED,
+      billingCity: "Ahmedabad",
+      billingState: "Gujarat",
+    },
   });
-  console.log('  ✓ 3 customers created\n');
+  console.log("  ✓ 3 customers created\n");
 
   // Demo Products
-  console.log('Creating demo products...');
+  console.log("Creating demo products...");
   const p1 = await prisma.product.upsert({
-    where: { id: 'prod_001' }, update: {},
-    create: { id: 'prod_001', businessId: demoBiz.id, name: 'Web Development Services', hsnSac: '998314', type: 'service', price: 50000, gstRate: 18, category: 'Technology' },
+    where: { id: "prod_001" },
+    update: {},
+    create: {
+      id: "prod_001",
+      businessId: demoBiz.id,
+      name: "Web Development Services",
+      hsnSac: "998314",
+      type: "service",
+      price: 50000,
+      gstRate: 18,
+      category: "Technology",
+    },
   });
   const p2 = await prisma.product.upsert({
-    where: { id: 'prod_002' }, update: {},
-    create: { id: 'prod_002', businessId: demoBiz.id, name: 'Monthly Maintenance', hsnSac: '998313', type: 'service', price: 5000, gstRate: 18, category: 'Technology' },
+    where: { id: "prod_002" },
+    update: {},
+    create: {
+      id: "prod_002",
+      businessId: demoBiz.id,
+      name: "Monthly Maintenance",
+      hsnSac: "998313",
+      type: "service",
+      price: 5000,
+      gstRate: 18,
+      category: "Technology",
+    },
   });
-  console.log('  ✓ 2 products created\n');
+  console.log("  ✓ 2 products created\n");
 
   // Demo Invoice
-  console.log('Creating demo invoices...');
+  console.log("Creating demo invoices...");
   const inv1 = await prisma.invoice.upsert({
-    where: { businessId_invoiceNumber: { businessId: demoBiz.id, invoiceNumber: 'DTS-0047' } }, update: {},
+    where: {
+      businessId_invoiceNumber: {
+        businessId: demoBiz.id,
+        invoiceNumber: "DTS-0047",
+      },
+    },
+    update: {},
     create: {
-      businessId: demoBiz.id, customerId: c1.id, invoiceNumber: 'DTS-0047', type: 'INVOICE', status: 'PAID',
-      issueDate: new Date('2024-11-20'), dueDate: new Date('2024-12-20'),
-      subtotal: 21949.15, taxableAmount: 21949.15, cgstTotal: 1975.42, sgstTotal: 1975.42, gstTotal: 3950.85, total: 25900,
-      amountPaid: 25900, amountDue: 0, isPaid: true, paidAt: new Date('2024-11-22'), isInterState: false, placeOfSupply: 'Karnataka',
-      notes: 'Thank you for your business!', terms: 'Payment due within 30 days.', createdById: demoUser.id,
-      items: { create: [{ productId: p1.id, description: 'Web Development Services', hsnSac: '998314', quantity: 1, price: 21949.15, gstRate: 18, taxableAmount: 21949.15, cgst: 1975.42, sgst: 1975.42, total: 25900 }] },
+      businessId: demoBiz.id,
+      customerId: c1.id,
+      invoiceNumber: "DTS-0047",
+      type: "INVOICE",
+      status: "PAID",
+      issueDate: new Date("2024-11-20"),
+      dueDate: new Date("2024-12-20"),
+      subtotal: 21949.15,
+      taxableAmount: 21949.15,
+      cgstTotal: 1975.42,
+      sgstTotal: 1975.42,
+      gstTotal: 3950.85,
+      total: 25900,
+      amountPaid: 25900,
+      amountDue: 0,
+      isPaid: true,
+      paidAt: new Date("2024-11-22"),
+      isInterState: false,
+      placeOfSupply: "Karnataka",
+      notes: "Thank you for your business!",
+      terms: "Payment due within 30 days.",
+      createdById: demoUser.id,
+      items: {
+        create: [
+          {
+            productId: p1.id,
+            description: "Web Development Services",
+            hsnSac: "998314",
+            quantity: 1,
+            price: 21949.15,
+            gstRate: 18,
+            taxableAmount: 21949.15,
+            cgst: 1975.42,
+            sgst: 1975.42,
+            total: 25900,
+          },
+        ],
+      },
     },
   });
 
-  await prisma.payment.upsert({
-    where: { id: 'pay_001' }, update: {},
-    create: { id: 'pay_001', invoiceId: inv1.id, businessId: demoBiz.id, amount: 25900, method: 'BANK_TRANSFER', status: 'SUCCESS', transactionRef: 'HDFC/24/112233', paidAt: new Date('2024-11-22') },
-  }).catch(() => {});
+  await prisma.payment
+    .upsert({
+      where: { id: "pay_001" },
+      update: {},
+      create: {
+        id: "pay_001",
+        invoiceId: inv1.id,
+        businessId: demoBiz.id,
+        amount: 25900,
+        method: "BANK_TRANSFER",
+        status: "SUCCESS",
+        transactionRef: "HDFC/24/112233",
+        paidAt: new Date("2024-11-22"),
+      },
+    })
+    .catch(() => {});
 
-  console.log('  ✓ 1 invoice with payment created\n');
+  console.log("  ✓ 1 invoice with payment created\n");
 
   // Invoice Templates
-  console.log('Creating invoice templates...');
+  console.log("Creating invoice templates...");
 
   const classicHtml = `<!DOCTYPE html>
 <html>
@@ -615,11 +951,11 @@ async function main() {
 </html>`;
 
   await prisma.invoiceTemplate.upsert({
-    where: { id: 'tpl_classic' },
+    where: { id: "tpl_classic" },
     update: {},
     create: {
-      id: 'tpl_classic',
-      name: 'Classic',
+      id: "tpl_classic",
+      name: "Classic",
       html: classicHtml,
       isActive: true,
       isDefault: true,
@@ -628,11 +964,11 @@ async function main() {
   });
 
   await prisma.invoiceTemplate.upsert({
-    where: { id: 'tpl_professional' },
+    where: { id: "tpl_professional" },
     update: {},
     create: {
-      id: 'tpl_professional',
-      name: 'Professional',
+      id: "tpl_professional",
+      name: "Professional",
       html: professionalHtml,
       isActive: true,
       isDefault: false,
@@ -640,51 +976,55 @@ async function main() {
     },
   });
 
-  console.log('  ✓ 2 invoice templates created (Classic, Professional)\n');
+  console.log("  ✓ 2 invoice templates created (Classic, Professional)\n");
 
   // System Tools
-  console.log('Creating system tools...');
+  console.log("Creating system tools...");
   await prisma.tool.upsert({
-    where: { slug: 'gst-invoice' },
+    where: { slug: "gst-invoice" },
     update: {
-      title: 'GST Invoice Tool',
-      shortDescription: 'Professional GST billing, invoicing, and compliance. Auto-calculate CGST, SGST, IGST. Generate GSTR-1 and GSTR-3B reports. Built for Indian businesses.',
-      category: 'Invoice',
-      tags: ['GST', 'Invoice', 'Billing', 'India'],
-      status: 'PUBLISHED',
-      visibility: 'PUBLIC',
+      title: "GST Invoice Tool",
+      shortDescription:
+        "Professional GST billing, invoicing, and compliance. Auto-calculate CGST, SGST, IGST. Generate GSTR-1 and GSTR-3B reports. Built for Indian businesses.",
+      category: "Invoice",
+      tags: ["GST", "Invoice", "Billing", "India"],
+      status: "PUBLISHED",
+      visibility: "PUBLIC",
       featured: true,
-      toolType: 'INTERNAL_APP',
-      internalRoute: '/tools/gst-invoice',
-      ctaText: 'Launch Tool',
-      pricingType: 'FREE',
+      toolType: "INTERNAL_APP",
+      internalRoute: "/tools/gst-invoice",
+      ctaText: "Launch Tool",
+      pricingType: "FREE",
       isSystem: true,
       sortOrder: 0,
     },
     create: {
-      id: 'tool_gst_invoice',
-      title: 'GST Invoice Tool',
-      slug: 'gst-invoice',
-      shortDescription: 'Professional GST billing, invoicing, and compliance. Auto-calculate CGST, SGST, IGST. Generate GSTR-1 and GSTR-3B reports. Built for Indian businesses.',
-      category: 'Invoice',
-      tags: ['GST', 'Invoice', 'Billing', 'India'],
-      status: 'PUBLISHED',
-      visibility: 'PUBLIC',
+      id: "tool_gst_invoice",
+      title: "GST Invoice Tool",
+      slug: "gst-invoice",
+      shortDescription:
+        "Professional GST billing, invoicing, and compliance. Auto-calculate CGST, SGST, IGST. Generate GSTR-1 and GSTR-3B reports. Built for Indian businesses.",
+      category: "Invoice",
+      tags: ["GST", "Invoice", "Billing", "India"],
+      status: "PUBLISHED",
+      visibility: "PUBLIC",
       featured: true,
-      toolType: 'INTERNAL_APP',
-      internalRoute: '/tools/gst-invoice',
-      ctaText: 'Launch Tool',
-      pricingType: 'FREE',
+      toolType: "INTERNAL_APP",
+      internalRoute: "/tools/gst-invoice",
+      ctaText: "Launch Tool",
+      pricingType: "FREE",
       isSystem: true,
       sortOrder: 0,
     },
   });
-  console.log('  ✓ GST Invoice Tool (system, non-removable)\n');
+  console.log("  ✓ GST Invoice Tool (system, non-removable)\n");
 
-  console.log('✅ Seed complete!\n');
-  console.log('🔑 Credentials:');
-  console.log('   admin@yantrix.in / Admin@123 (Super Admin)');
-  console.log('   demo@yantrix.in  / Demo@123  (Business Owner)\n');
+  console.log("✅ Seed complete!\n");
+  console.log("🔑 Credentials:");
+  console.log(`   ${superAdminEmail} / [configured password] (Super Admin)`);
+  console.log("   demo@yantrix.in  / Demo@123  (Business Owner)\n");
 }
 
-main().catch(console.error).finally(() => prisma.$disconnect());
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());
