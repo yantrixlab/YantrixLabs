@@ -28,6 +28,7 @@ interface HomeHeader {
 
 interface HeroSectionProps {
   homeHeader: HomeHeader;
+  homeHeaderLoading: boolean;
   loggedIn: boolean;
   businessLogo: string | null;
   businessName: string | null;
@@ -100,7 +101,7 @@ function generateParticles(count: number) {
   });
 }
 
-export default function HeroSection({ homeHeader, loggedIn, businessLogo, businessName, initials }: HeroSectionProps) {
+export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, businessLogo, businessName, initials }: HeroSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -334,7 +335,7 @@ export default function HeroSection({ homeHeader, loggedIn, businessLogo, busine
                 className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 backdrop-blur-sm px-4 py-1.5 text-sm font-medium text-indigo-300 mb-8"
               >
                 <Zap className="h-3.5 w-3.5 text-indigo-400 flex-shrink-0" />
-                {homeHeader.badgeText}
+                {homeHeaderLoading ? <span className="inline-block h-4 w-48 animate-pulse rounded bg-indigo-300/30" /> : homeHeader.badgeText}
               </motion.div>
 
               {/* H1 */}
@@ -344,13 +345,13 @@ export default function HeroSection({ homeHeader, loggedIn, businessLogo, busine
                 transition={{ duration: 0.65, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
                 className="text-[2.85rem] sm:text-[3.5rem] lg:text-[3.8rem] xl:text-[4.1rem] font-extrabold tracking-tight leading-[1.07] mb-5"
               >
-                <span className="text-white">{homeHeader.titleLine1}</span>
+                <span className="text-white">{homeHeaderLoading ? '' : homeHeader.titleLine1}</span>
                 <br />
                 <span
                   className="inline-block bg-clip-text text-transparent"
                   style={{ backgroundImage: 'linear-gradient(95deg, #a5b4fc 0%, #c084fc 50%, #818cf8 100%)' }}
                 >
-                  {homeHeader.titleGradientText}
+                  {homeHeaderLoading ? '' : homeHeader.titleGradientText}
                 </span>
               </motion.h1>
 
@@ -361,7 +362,7 @@ export default function HeroSection({ homeHeader, loggedIn, businessLogo, busine
                 transition={{ duration: 0.55, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
                 className="text-[1.05rem] sm:text-lg text-white/50 max-w-lg mx-auto lg:mx-0 mb-10 leading-relaxed"
               >
-                {homeHeader.description}
+                {homeHeaderLoading ? '' : homeHeader.description}
               </motion.p>
 
               {/* CTAs */}
@@ -379,14 +380,14 @@ export default function HeroSection({ homeHeader, loggedIn, businessLogo, busine
                     boxShadow: '0 0 0 1px rgba(99,102,241,0.4), 0 12px 40px rgba(79,70,229,0.38)',
                   }}
                 >
-                  {homeHeader.primaryBtnLabel}
+                  {homeHeaderLoading ? 'Loading...' : homeHeader.primaryBtnLabel}
                   <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   href="/contact"
                   className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.14] bg-white/[0.05] backdrop-blur-sm px-8 py-4 text-base font-semibold text-white/80 hover:bg-white/[0.10] hover:border-white/[0.22] hover:text-white transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.975]"
                 >
-                  {homeHeader.secondaryBtnLabel}
+                  {homeHeaderLoading ? 'Loading...' : homeHeader.secondaryBtnLabel}
                 </Link>
               </motion.div>
 
@@ -396,6 +397,7 @@ export default function HeroSection({ homeHeader, loggedIn, businessLogo, busine
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="flex items-center gap-8 justify-center lg:justify-start"
+              style={homeHeaderLoading ? { opacity: 0.8 } : undefined}
               >
                 {[
                   { value: homeHeader.stat1Value, label: homeHeader.stat1Label },

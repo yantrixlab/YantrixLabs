@@ -6,55 +6,24 @@ import { useState, useEffect } from 'react';
 import { API_URL } from '@/lib/api';
 
 const CONTACT_DEFAULTS = {
-  contactEmail: 'support@yantrix.in',
-  contactPhone: '+91 80 4567 8900',
-  contactPhoneHref: 'tel:+918045678900',
-  officeCompanyName: 'Yantrix Technologies Pvt. Ltd.',
-  officeFloor: '4th Floor, Innovate Hub',
-  officeStreet: '80 Feet Road, Koramangala',
-  officeCity: 'Bengaluru',
-  officeState: 'Karnataka 560034',
+  contactEmail: '',
+  contactPhone: '',
+  contactPhoneHref: '',
+  officeCompanyName: '',
+  officeFloor: '',
+  officeStreet: '',
+  officeCity: '',
+  officeState: '',
   officePinCode: '',
-  officeCountry: 'India',
-  officeWebsite: 'yantrix.in',
-  hoursMondayFriday: '9 AM – 8 PM IST',
-  hoursSaturday: '10 AM – 6 PM IST',
-  hoursSunday: 'Email only',
-  hoursNote: 'Extended support hours during GST filing deadlines (20th – 22nd of each month).',
+  officeCountry: '',
+  officeWebsite: '',
+  hoursMondayFriday: '',
+  hoursSaturday: '',
+  hoursSunday: '',
+  hoursNote: '',
 };
 
-const DEFAULT_FAQS = [
-  {
-    id: 'default-1',
-    question: 'How do I get started with Yantrix?',
-    answer: 'Sign up for a free account at yantrix.in/auth/register. Add your business GSTIN, and you can start creating invoices immediately. No credit card required.',
-  },
-  {
-    id: 'default-2',
-    question: 'Can I import my existing data?',
-    answer: 'Yes. You can import customers and products via CSV. For invoice history, contact our support team and we\'ll help you migrate your data.',
-  },
-  {
-    id: 'default-3',
-    question: 'Is Yantrix GST compliant?',
-    answer: 'Absolutely. Yantrix is fully compliant with the CGST Act, SGST Act, and IGST Act. Our invoices meet all requirements including e-invoicing for applicable businesses.',
-  },
-  {
-    id: 'default-4',
-    question: 'What payment methods do you accept?',
-    answer: 'We accept all major credit/debit cards, UPI, net banking, and wallets through our payment partner Razorpay.',
-  },
-  {
-    id: 'default-5',
-    question: 'Can I cancel my subscription anytime?',
-    answer: 'Yes. You can cancel your subscription from Settings > Billing. Your plan remains active until the end of the billing period.',
-  },
-  {
-    id: 'default-6',
-    question: 'Do you offer a free trial?',
-    answer: 'Yes. Our Free plan is available with no time limit. Paid plans come with a 14-day money-back guarantee.',
-  },
-];
+const DEFAULT_FAQS: Array<{ id: string; question: string; answer: string }> = [];
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', phone: '', subject: '', message: '' });

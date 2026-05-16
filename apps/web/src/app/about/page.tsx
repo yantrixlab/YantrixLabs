@@ -7,42 +7,13 @@ import { Users, Target, Heart, Award, TrendingUp, Globe, LayoutDashboard, Shoppi
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 
 const ABOUT_STATS_DEFAULTS = [
-  { value: '10+', label: 'Products Built' },
-  { value: '500+', label: 'Businesses Served' },
-  { value: '5+', label: 'Industries Covered' },
-  { value: '3+', label: 'Years Building' },
+  { value: '0', label: '' },
+  { value: '0', label: '' },
+  { value: '0', label: '' },
+  { value: '0', label: '' },
 ];
 
-const TEAM_DEFAULTS = [
-  {
-    id: '1',
-    name: 'Arjun Mehta',
-    role: 'Co-Founder & CEO',
-    bio: 'Former CA with 10+ years in fintech. Passionate about simplifying tax compliance for Indian SMEs.',
-    imageUrl: null,
-  },
-  {
-    id: '2',
-    name: 'Sneha Reddy',
-    role: 'Co-Founder & CTO',
-    bio: 'Ex-Razorpay engineer. Built scalable payment systems serving millions of transactions.',
-    imageUrl: null,
-  },
-  {
-    id: '3',
-    name: 'Vikram Nair',
-    role: 'Head of Product',
-    bio: 'Product leader who previously scaled a SaaS to 100k users. Obsessed with user experience.',
-    imageUrl: null,
-  },
-  {
-    id: '4',
-    name: 'Divya Sharma',
-    role: 'Head of Customer Success',
-    bio: 'Spent 8 years helping small businesses navigate GST compliance. Your first call when you need help.',
-    imageUrl: null,
-  },
-];
+const TEAM_DEFAULTS: Array<{ id: string; name: string; role: string; bio: string; imageUrl: string | null }> = [];
 
 const AVATAR_COLORS = [
   'from-indigo-500 to-purple-600',
@@ -94,6 +65,8 @@ const MILESTONES = [
 export default function AboutPage() {
   const [stats, setStats] = useState(ABOUT_STATS_DEFAULTS);
   const [team, setTeam] = useState(TEAM_DEFAULTS);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [teamLoading, setTeamLoading] = useState(true);
 
   useEffect(() => {
     fetch(`${API_URL}/settings/about-stats`, { cache: 'no-store' })
@@ -110,7 +83,8 @@ export default function AboutPage() {
           setStats(updated);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setStatsLoading(false));
 
     fetch(`${API_URL}/settings/team-members`, { cache: 'no-store' })
       .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
@@ -119,7 +93,8 @@ export default function AboutPage() {
           setTeam(d.data);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setTeamLoading(false));
   }, []);
 
   return (
@@ -146,9 +121,14 @@ export default function AboutPage() {
       <section className="py-16 bg-indigo-600">
         <div className="container-wide">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((stat, i) => (
+            {statsLoading ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={`stat-skeleton-${i}`} className="animate-pulse">
+                <div className="h-8 w-16 mx-auto rounded bg-indigo-300/40" />
+                <div className="h-3 w-24 mx-auto mt-2 rounded bg-indigo-300/25" />
+              </div>
+            )) : stats.map((stat, i) => (
               <div key={`stat-${i}`}>
-                <p className="text-3xl font-bold text-white">{stat.value}</p>
+                <p className="text-3xl font-bold text-white">{stat.value || '0'}</p>
                 <p className="text-indigo-200 mt-1 text-sm">{stat.label}</p>
               </div>
             ))}
@@ -296,7 +276,14 @@ export default function AboutPage() {
             <p className="text-gray-600">A small, passionate group obsessed with making Indian businesses thrive.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {team.map((member, i) => {
+            {teamLoading ? Array.from({ length: 4 }).map((_, i) => (
+            <div key={`team-skeleton-${i}`} className="bg-white rounded-2xl border border-gray-100 p-6 text-center animate-pulse">
+              <div className="h-16 w-16 rounded-full bg-gray-200 mx-auto mb-4" />
+              <div className="h-4 w-32 bg-gray-200 rounded mx-auto mb-2" />
+              <div className="h-3 w-24 bg-gray-200 rounded mx-auto mb-3" />
+              <div className="h-3 w-full bg-gray-100 rounded" />
+            </div>
+          )) : team.map((member, i) => {
               const initials = member.name.split(' ').filter((n: string) => n).map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
               const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
               return (
