@@ -171,7 +171,7 @@ export default function SaaSDevelopmentServicesPage() {
 
           <h2 className="text-3xl font-bold text-gray-900">Our Agile SaaS Engineering Process</h2>
           <p className="text-gray-700 font-medium">
-            Discovery and Architecture -> UI/UX Wireframing -> Agile Sprint Coding -> QA and Security Audits -> Cloud Launch and Scale
+            Discovery and Architecture {'->'} UI/UX Wireframing {'->'} Agile Sprint Coding {'->'} QA and Security Audits {'->'} Cloud Launch and Scale
           </p>
           <ol className="list-decimal pl-6 space-y-2 text-gray-600">
             <li>Discovery and Architecture Design</li>
