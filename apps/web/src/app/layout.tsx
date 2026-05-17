@@ -69,6 +69,10 @@ export default function RootLayout({
           document.documentElement.setAttribute('data-gst-theme', 'dark');
           document.documentElement.style.backgroundColor = '#060b16';
           document.body.style.backgroundColor = '#060b16';
+        } else {
+          document.documentElement.removeAttribute('data-gst-theme');
+          document.documentElement.style.backgroundColor = '';
+          document.body.style.backgroundColor = '';
         }
       } catch (e) {}
     })();
