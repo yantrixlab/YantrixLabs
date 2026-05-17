@@ -31,6 +31,19 @@ interface Module {
   isActive: boolean;
 }
 
+const DEFAULT_QUICK_ADD_MODULES: Module[] = [
+  { id: 'default-dashboard', name: 'Dashboard', slug: 'dashboard', isCore: true, isActive: true },
+  { id: 'default-invoices', name: 'Invoices', slug: 'invoicing', isCore: true, isActive: true },
+  { id: 'default-customers', name: 'Customers', slug: 'customers', isCore: true, isActive: true },
+  { id: 'default-products', name: 'Products', slug: 'products', isCore: true, isActive: true },
+  { id: 'default-reports', name: 'Reports', slug: 'gst-reports', isCore: true, isActive: true },
+  { id: 'default-payments', name: 'Payments', slug: 'payments', isCore: true, isActive: true },
+  { id: 'default-expenses', name: 'Expenses', slug: 'expenses', isCore: true, isActive: true },
+  { id: 'default-inventory', name: 'Inventory', slug: 'inventory', isCore: true, isActive: true },
+  { id: 'default-hrm', name: 'HRM', slug: 'hrms', isCore: true, isActive: true },
+  { id: 'default-crm', name: 'CRM', slug: 'crm', isCore: true, isActive: true },
+];
+
 const DEFAULT_FORM = {
   name: '', slug: '', description: '', price: '0', dailyPrice: '', yearlyPrice: '',
   invoiceLimit: '100', customerLimit: '500', userLimit: '2', storageLimit: '500',
@@ -65,9 +78,13 @@ function PlanModal({ plan, onClose, onSaved }: { plan: Plan | null; onClose: () 
 
   useEffect(() => {
     adminFetch<{ data: Module[] }>('/admin/modules')
-      .then(res => setModules(res.data))
+      .then(res => {
+        const apiModules = Array.isArray(res.data) ? res.data : [];
+        setModules(apiModules.length > 0 ? apiModules : DEFAULT_QUICK_ADD_MODULES);
+      })
       .catch(() => {
-        // Modules are optional for the quick-add pills; failure is non-fatal
+        // Keep plan feature quick-add usable even when modules are missing/unavailable.
+        setModules(DEFAULT_QUICK_ADD_MODULES);
       });
   }, []);
 
