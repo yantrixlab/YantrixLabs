@@ -161,7 +161,6 @@ export interface Plan {
   slug: string;
   description: string | null;
   price: number;
-  yearlyPrice: number | null;
   currency: string;
   invoiceLimit: number;
   customerLimit: number;
@@ -509,3 +508,4 @@ export interface GstSummary {
   b2bInvoices: Invoice[];
   b2cInvoices: Invoice[];
 }
+

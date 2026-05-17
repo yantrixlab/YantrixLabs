@@ -15,8 +15,6 @@ interface Plan {
   slug: string;
   description: string | null;
   price: number;
-  dailyPrice: number | null;
-  yearlyPrice: number | null;
   currency: string;
   invoiceLimit: number;
   customerLimit: number;
@@ -44,10 +42,10 @@ function loadRazorpayScript(): Promise<boolean> {
 function getPlanDisplayPrice(plan: Plan): { amount: number; period: string; invoicePeriod: string } {
   const slug = plan.slug.toLowerCase();
   if (slug === 'daily') {
-    return { amount: plan.dailyPrice ?? plan.price, period: '/day', invoicePeriod: 'day' };
+    return { amount: plan.price, period: '/day', invoicePeriod: 'day' };
   }
   if (slug === 'yearly' || slug === 'yealty') {
-    return { amount: plan.yearlyPrice ?? plan.price, period: '/yr', invoicePeriod: 'year' };
+    return { amount: plan.price, period: '/yr', invoicePeriod: 'year' };
   }
   return { amount: plan.price, period: '/mo', invoicePeriod: 'month' };
 }
@@ -97,7 +95,7 @@ export default function PricingPage() {
       window.location.href = '/auth/register';
       return;
     }
-    if (plan.price === 0 && !plan.dailyPrice && !plan.yearlyPrice) {
+    if (plan.price === 0) {
       window.location.href = '/dashboard';
       return;
     }
@@ -509,3 +507,4 @@ export default function PricingPage() {
     </div>
   );
 }
+

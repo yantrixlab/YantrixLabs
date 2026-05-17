@@ -396,8 +396,6 @@ router.put(
 function getPlanBillingDetails(plan: {
   slug: string;
   price: number;
-  dailyPrice: number | null;
-  yearlyPrice: number | null;
   durationDays: number | null;
 }) {
   const now = new Date();
@@ -408,22 +406,15 @@ function getPlanBillingDetails(plan: {
     return { endDate, amount: plan.price };
   }
   const slug = plan.slug.toLowerCase();
-  // A plan is treated as daily when its slug is 'daily' OR when it has a dailyPrice
-  // with no monthly base price (price === 0).
-  if (slug === "daily" || (plan.dailyPrice !== null && plan.price === 0)) {
+  if (slug === "daily") {
     const endDate = new Date(now);
     endDate.setDate(endDate.getDate() + 1);
-    return { endDate, amount: plan.dailyPrice ?? plan.price };
+    return { endDate, amount: plan.price };
   }
-  // A plan is treated as yearly when its slug is 'yearly' OR when it has a yearlyPrice
-  // with no monthly base price (price === 0) and no daily price.
-  if (
-    slug === "yearly" ||
-    (plan.yearlyPrice !== null && plan.price === 0 && plan.dailyPrice === null)
-  ) {
+  if (slug === "yearly" || slug === "yealty") {
     const endDate = new Date(now);
     endDate.setFullYear(endDate.getFullYear() + 1);
-    return { endDate, amount: plan.yearlyPrice ?? plan.price };
+    return { endDate, amount: plan.price };
   }
   // default: monthly
   const endDate = new Date(now);

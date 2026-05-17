@@ -115,13 +115,12 @@ async function main() {
   });
   const dailyPlan = await prisma.plan.upsert({
     where: { slug: "daily" },
-    update: { dailyPrice: 10, features: DAILY_FEATURES },
+    update: { features: DAILY_FEATURES },
     create: {
       name: "Daily",
       slug: "daily",
       description: "Try out Yantrix for a day",
       price: 0,
-      dailyPrice: 10,
       invoiceLimit: 2,
       customerLimit: 2,
       productLimit: 5,
@@ -140,7 +139,6 @@ async function main() {
       slug: "starter",
       description: "For growing businesses",
       price: 149,
-      yearlyPrice: 1490,
       invoiceLimit: 100,
       customerLimit: 200,
       productLimit: 100,
@@ -159,7 +157,6 @@ async function main() {
       slug: "pro",
       description: "Most popular for established businesses",
       price: 299,
-      yearlyPrice: 2990,
       invoiceLimit: 500,
       customerLimit: 999999,
       productLimit: 999999,
@@ -179,7 +176,6 @@ async function main() {
       slug: "business",
       description: "For large enterprises",
       price: 599,
-      yearlyPrice: 5990,
       invoiceLimit: 999999,
       customerLimit: 999999,
       productLimit: 999999,
@@ -197,13 +193,12 @@ async function main() {
   });
   const yearlyPlan = await prisma.plan.upsert({
     where: { slug: "yearly" },
-    update: { yearlyPrice: 999, features: YEARLY_FEATURES },
+    update: { features: YEARLY_FEATURES },
     create: {
       name: "Yearly",
       slug: "yearly",
       description: "Annual plan — pay once, save more",
       price: 0,
-      yearlyPrice: 999,
       invoiceLimit: 500,
       customerLimit: 500,
       productLimit: 200,
@@ -1028,3 +1023,4 @@ async function main() {
 main()
   .catch(console.error)
   .finally(() => prisma.$disconnect());
+

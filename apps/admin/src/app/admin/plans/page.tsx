@@ -10,8 +10,6 @@ interface Plan {
   slug: string;
   description: string;
   price: number;
-  dailyPrice: number | null;
-  yearlyPrice: number | null;
   invoiceLimit: number;
   customerLimit: number;
   userLimit: number;
@@ -45,7 +43,7 @@ const DEFAULT_QUICK_ADD_MODULES: Module[] = [
 ];
 
 const DEFAULT_FORM = {
-  name: '', slug: '', description: '', price: '0', dailyPrice: '', yearlyPrice: '',
+  name: '', slug: '', description: '', price: '0',
   invoiceLimit: '100', customerLimit: '500', userLimit: '2', storageLimit: '500',
   features: [] as string[],
   isActive: true, isFeatured: false, sortOrder: '0',
@@ -59,7 +57,7 @@ const DEFAULT_FORM = {
 function PlanModal({ plan, onClose, onSaved }: { plan: Plan | null; onClose: () => void; onSaved: () => void }) {
   const [form, setForm] = useState(plan ? {
     name: plan.name, slug: plan.slug, description: plan.description || '',
-    price: String(plan.price), dailyPrice: String(plan.dailyPrice || ''), yearlyPrice: String(plan.yearlyPrice || ''),
+    price: String(plan.price),
     invoiceLimit: String(plan.invoiceLimit), customerLimit: String(plan.customerLimit),
     userLimit: String(plan.userLimit), storageLimit: String(plan.storageLimit),
     features: plan.features || [],
@@ -152,8 +150,6 @@ function PlanModal({ plan, onClose, onSaved }: { plan: Plan | null; onClose: () 
       const payload = {
         name: form.name, slug: form.slug, description: form.description,
         price: parseFloat(form.price) || 0,
-        dailyPrice: form.dailyPrice ? parseFloat(form.dailyPrice) : null,
-        yearlyPrice: form.yearlyPrice ? parseFloat(form.yearlyPrice) : null,
         invoiceLimit: parseInt(form.invoiceLimit) || 100,
         customerLimit: parseInt(form.customerLimit) || 500,
         userLimit: parseInt(form.userLimit) || 2,
@@ -199,9 +195,7 @@ function PlanModal({ plan, onClose, onSaved }: { plan: Plan | null; onClose: () 
             <input value={form.description} onChange={e => set('description', e.target.value)} placeholder="For growing businesses"
               className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white focus:border-orange-500 focus:outline-none" />
           </div>
-          {inp('Monthly Price (₹)', 'price', 'number', '999')}
-          {inp('Daily Price (₹)', 'dailyPrice', 'number', '10')}
-          {inp('Yearly Price (₹)', 'yearlyPrice', 'number', '9999')}
+          {inp('Price (₹)', 'price', 'number', '999')}
           {inp('Invoice Limit', 'invoiceLimit', 'number', '500')}
           {inp('Customer Limit', 'customerLimit', 'number', '1000')}
           {inp('User Limit', 'userLimit', 'number', '5')}
@@ -546,9 +540,9 @@ export default function AdminPlansPage() {
                   {(() => {
                     const slugLower = plan.slug.toLowerCase();
                     const displayPrice = slugLower === 'daily'
-                      ? { amount: plan.dailyPrice ?? plan.price, unit: '/day' }
+                      ? { amount: plan.price, unit: '/day' }
                       : (slugLower === 'yearly' || slugLower === 'yealty')
-                      ? { amount: plan.yearlyPrice ?? plan.price, unit: '/yr' }
+                      ? { amount: plan.price, unit: '/yr' }
                       : { amount: plan.price, unit: '/mo' };
                     return (
                       <div className="flex items-baseline gap-1 mt-3">
@@ -629,3 +623,4 @@ export default function AdminPlansPage() {
     </div>
   );
 }
+

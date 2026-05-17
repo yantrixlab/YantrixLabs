@@ -15,8 +15,6 @@ router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
         slug: true,
         description: true,
         price: true,
-        dailyPrice: true,
-        yearlyPrice: true,
         currency: true,
         invoiceLimit: true,
         customerLimit: true,

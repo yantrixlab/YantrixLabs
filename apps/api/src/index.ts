@@ -33,7 +33,6 @@ const DEFAULT_PLANS = [
     slug: "daily",
     description: "Try out Yantrix for a day",
     price: 0,
-    dailyPrice: 10,
     invoiceLimit: 2,
     customerLimit: 2,
     productLimit: 5,
@@ -55,7 +54,6 @@ const DEFAULT_PLANS = [
     slug: "starter",
     description: "For growing businesses",
     price: 149,
-    yearlyPrice: 1490,
     invoiceLimit: 100,
     customerLimit: 200,
     productLimit: 100,
@@ -77,7 +75,6 @@ const DEFAULT_PLANS = [
     slug: "pro",
     description: "Most popular for established businesses",
     price: 299,
-    yearlyPrice: 2990,
     invoiceLimit: 500,
     customerLimit: 999999,
     productLimit: 999999,
@@ -100,7 +97,6 @@ const DEFAULT_PLANS = [
     slug: "business",
     description: "For large enterprises",
     price: 599,
-    yearlyPrice: 5990,
     invoiceLimit: 999999,
     customerLimit: 999999,
     productLimit: 999999,
@@ -121,8 +117,7 @@ const DEFAULT_PLANS = [
     name: "Yearly",
     slug: "yearly",
     description: "Annual plan — pay once, save more",
-    price: 0,
-    yearlyPrice: 999,
+    price: 999,
     invoiceLimit: 500,
     customerLimit: 500,
     productLimit: 200,
@@ -261,3 +256,5 @@ async function bootstrap() {
 }
 
 bootstrap();
+
+

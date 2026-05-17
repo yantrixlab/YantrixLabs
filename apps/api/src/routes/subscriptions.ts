@@ -12,19 +12,11 @@ type PlanBillingType = "daily" | "yearly" | "monthly";
 /** Classifies a plan as daily, yearly, or monthly based on its slug and pricing fields. */
 function getPlanBillingType(plan: {
   slug: string;
-  price: number;
-  dailyPrice: number | null;
-  yearlyPrice: number | null;
+  durationDays: number | null;
 }): PlanBillingType {
   const slug = plan.slug.toLowerCase();
-  // Daily plans store their price in dailyPrice with price === 0
-  if (slug === "daily" || (plan.dailyPrice !== null && plan.price === 0))
-    return "daily";
-  // Yearly plans store their price in yearlyPrice with price === 0 and no dailyPrice
-  if (
-    slug === "yearly" ||
-    (plan.yearlyPrice !== null && plan.price === 0 && plan.dailyPrice === null)
-  )
+  if (plan.durationDays === 1 || slug === "daily") return "daily";
+  if (plan.durationDays === 365 || slug === "yearly" || slug === "yealty")
     return "yearly";
   return "monthly";
 }
@@ -33,22 +25,11 @@ function getPlanBillingType(plan: {
 function getPlanBillingDetails(plan: {
   slug: string;
   price: number;
-  dailyPrice: number | null;
-  yearlyPrice: number | null;
   durationDays: number | null;
 }) {
   const now = new Date();
   const billingType = getPlanBillingType(plan);
-
-  // Determine the effective charge amount based on billing period type.
-  // Daily and yearly plans store the real price in dailyPrice/yearlyPrice
-  // while price is 0, so we must pick the right field regardless of durationDays.
-  const amount =
-    billingType === "daily"
-      ? (plan.dailyPrice ?? plan.price)
-      : billingType === "yearly"
-        ? (plan.yearlyPrice ?? plan.price)
-        : plan.price;
+  const amount = plan.price;
 
   // Determine the subscription end-date.
   // An explicit durationDays on the plan takes precedence for the duration.

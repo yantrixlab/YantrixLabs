@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { CreditCard, AlertCircle, RefreshCw, CheckCircle, XCircle, Clock, UserCheck, X, Check, Search, Filter, CalendarDays } from 'lucide-react';
@@ -20,8 +20,6 @@ interface Plan {
   id: string;
   name: string;
   price: number;
-  dailyPrice: number | null;
-  yearlyPrice: number | null;
   isActive: boolean;
 }
 
@@ -43,7 +41,7 @@ const STATUS_CONFIG: Record<string, { label: string; class: string; icon: typeof
 
 const MILLISECONDS_PER_DAY = 86_400_000;
 
-/** Compute effective status: if DB still says ACTIVE/TRIAL but endDate is past → EXPIRED */
+/** Compute effective status: if DB still says ACTIVE/TRIAL but endDate is past â†’ EXPIRED */
 function getEffectiveStatus(sub: Subscription): string {
   if ((sub.status === 'ACTIVE' || sub.status === 'TRIAL') && new Date(sub.endDate) <= new Date()) {
     return 'EXPIRED';
@@ -51,7 +49,7 @@ function getEffectiveStatus(sub: Subscription): string {
   return sub.status;
 }
 
-/** Return { pct, daysLeft } for a subscription period. pct = 0–100 elapsed. */
+/** Return { pct, daysLeft } for a subscription period. pct = 0â€“100 elapsed. */
 function getPeriodProgress(sub: Subscription): { pct: number; daysLeft: number } {
   const start = new Date(sub.startDate).getTime();
   const end = new Date(sub.endDate).getTime();
@@ -63,14 +61,8 @@ function getPeriodProgress(sub: Subscription): { pct: number; daysLeft: number }
 
 /** Return a human-readable price label for a plan option */
 function planLabel(p: Plan): string {
-  if (p.dailyPrice != null && p.price === 0) {
-    return `${p.name} — ${p.dailyPrice === 0 ? 'Free' : `₹${p.dailyPrice}/day`}`;
-  }
   if (p.price > 0) {
-    return `${p.name} — ₹${p.price}/mo`;
-  }
-  if (p.yearlyPrice != null && p.yearlyPrice > 0) {
-    return `${p.name} — ₹${p.yearlyPrice}/yr`;
+    return `${p.name} — ₹${p.price}`;
   }
   return `${p.name} — Free`;
 }
@@ -191,7 +183,7 @@ export default function AdminSubscriptionsPage() {
 
   return (
     <div className="p-6">
-      {/* ── Assign Plan Modal ── */}
+      {/* â”€â”€ Assign Plan Modal â”€â”€ */}
       {assignModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70" onClick={() => { setAssignModal(null); setConfirmAssign(false); }} />
@@ -203,7 +195,7 @@ export default function AdminSubscriptionsPage() {
             <p className="text-xs text-gray-400 mb-3">Business: <span className="text-gray-200">{assignModal.business.name}</span></p>
 
             {confirmAssign ? (
-              /* ── Confirmation step ── */
+              /* â”€â”€ Confirmation step â”€â”€ */
               <>
                 <p className="text-sm text-gray-300 mb-4">
                   Are you sure you want to assign <span className="text-white font-semibold">{plans.find(p => p.id === selectedPlan)?.name ?? 'this plan'}</span> to <span className="text-white font-semibold">{assignModal.business.name}</span>?
@@ -218,7 +210,7 @@ export default function AdminSubscriptionsPage() {
                 </div>
               </>
             ) : (
-              /* ── Plan selection step ── */
+              /* â”€â”€ Plan selection step â”€â”€ */
               <>
                 <div>
                   <label className="block text-xs font-medium text-gray-400 mb-1">Select Plan</label>
@@ -242,7 +234,7 @@ export default function AdminSubscriptionsPage() {
         </div>
       )}
 
-      {/* ── Edit Dates Modal ── */}
+      {/* â”€â”€ Edit Dates Modal â”€â”€ */}
       {editModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70" onClick={() => setEditModal(null)} />
@@ -409,7 +401,7 @@ export default function AdminSubscriptionsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-300">
-                    {sub.amount === 0 ? 'Free' : `₹${sub.amount}/mo`}
+                    {sub.amount === 0 ? 'Free' : `â‚¹${sub.amount}/mo`}
                   </td>
                   <td className="px-4 py-4 text-sm text-gray-500">
                     {new Date(sub.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -435,7 +427,7 @@ export default function AdminSubscriptionsPage() {
                         </div>
                       </div>
                     ) : (
-                      <span className="text-xs text-gray-600">—</span>
+                      <span className="text-xs text-gray-600">â€”</span>
                     )}
                   </td>
                   <td className="px-4 py-4">
@@ -469,3 +461,6 @@ export default function AdminSubscriptionsPage() {
     </div>
   );
 }
+
+
+
