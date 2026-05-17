@@ -68,20 +68,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [activeModuleSlugs, setActiveModuleSlugs] = useState<Set<string> | null>(null);
   const [moduleRequiredPlans, setModuleRequiredPlans] = useState<Record<string, string | null>>({});
   const [moduleOrder, setModuleOrder] = useState<string[]>([]);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') return 'light';
     const stored = localStorage.getItem('gst_invoice_theme');
-    if (stored === 'dark' || stored === 'light') {
-      setTheme(stored);
-      return;
-    }
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setTheme(prefersDark ? 'dark' : 'light');
-  }, []);
+    if (stored === 'dark' || stored === 'light') return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
 
   useEffect(() => {
     localStorage.setItem('gst_invoice_theme', theme);
+    document.documentElement.setAttribute('data-gst-theme', theme);
+    document.body.style.backgroundColor = theme === 'dark' ? '#060b16' : '';
   }, [theme]);
 
   useEffect(() => {
