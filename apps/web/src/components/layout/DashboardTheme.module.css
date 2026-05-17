@@ -146,7 +146,7 @@
 }
 
 .dark :global(thead) {
-  background: rgba(16, 29, 55, 0.98) !important;
+  background: #0b152b !important;
 }
 
 .dark :global(tr) {
@@ -159,6 +159,17 @@
 }
 
 .dark :global(tbody tr:hover) {
+  background-color: #1a3470 !important;
+}
+
+/* Invoice page table title/header strip should be distinctly darker */
+.dark :global(.table-header) {
+  background-color: #0a1326 !important;
+  border-bottom-color: var(--bd-strong) !important;
+}
+
+/* Dashboard recent invoices hover in dark mode should be blue */
+.dark :global(.hover\:bg-indigo-50\/40:hover) {
   background-color: #1a3470 !important;
 }
 

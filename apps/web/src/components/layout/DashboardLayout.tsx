@@ -426,7 +426,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           className={`flex h-16 items-center border-b border-gray-100 ${collapsed ? "justify-center px-3" : "px-5"} flex-shrink-0`}
         >
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
+            <div className="h-8 w-8 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
               <img
                 src="/app_logo.png"
                 alt="Yeantrix Labs"
