@@ -4,11 +4,29 @@ import { ToastProvider } from '@/components/ui/Toast';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Yantrix Labs — Smart Business Software & Digital Products',
+    default: 'Website Development Company for Startups & Businesses | Yantrix Labs',
     template: '%s | Yantrix Labs',
   },
-  description: 'Yantrix Labs builds smart digital products and business tools. SaaS platforms, GST billing, HR tools, booking systems, and custom business software for startups, SMEs, and enterprises.',
-  keywords: ['software company India', 'business software', 'SaaS platform', 'GST billing software', 'custom software development', 'yantrix labs', 'startup software'],
+  description:
+    'Yantrix Labs is a website and mobile app development company building SaaS products, custom software, and AI-powered business tools for startups and SMEs.',
+  keywords: [
+    'website development company',
+    'website and mobile app development',
+    'SaaS development company',
+    'SaaS product development',
+    'mobile app development company',
+    'custom software development',
+    'web app development services',
+    'mobile app development services',
+    'business automation tools',
+    'passive income tools',
+    'income automation tools',
+    'AI business tools',
+    'startup app development',
+    'MVP development company',
+    'website development company in Kolkata',
+    'mobile app development company in Kolkata',
+  ],
   authors: [{ name: 'Yantrix Labs' }],
   creator: 'Yantrix Labs',
   icons: {
@@ -22,14 +40,16 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: 'https://yantrixlab.com',
     siteName: 'Yantrix Labs',
-    title: 'Yantrix Labs — Smart Business Software & Digital Products',
-    description: 'We build smart digital products and business tools for startups, SMEs, and enterprises.',
+    title: 'Website Development Company | Web, Mobile, SaaS & AI Tools',
+    description:
+      'Web app development, mobile app development, SaaS product engineering, and AI-powered business automation tools.',
     images: [{ url: '/og-image.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Yantrix Labs — Smart Business Software',
-    description: 'SaaS platforms, GST billing, booking systems & custom business software.',
+    title: 'Website and Mobile App Development Company | Yantrix Labs',
+    description:
+      'Custom software, SaaS product development, and AI-powered business automation tools.',
     images: ['/og-image.png'],
   },
   robots: {

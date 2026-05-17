@@ -359,6 +359,13 @@ export default function ToolsPage() {
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700 text-center">
         <div className="container-wide max-w-2xl mx-auto">
+          <div className="mb-8 text-indigo-100 text-sm leading-relaxed">
+            <Link href="/business-automation-tools" className="font-semibold text-white hover:underline">business automation tools</Link>
+            {' '}|{' '}
+            <Link href="/passive-income-tools-for-business" className="font-semibold text-white hover:underline">passive income tools</Link>
+            {' '}|{' '}
+            <Link href="/ai-tools-for-business-growth" className="font-semibold text-white hover:underline">AI business tools</Link>
+          </div>
           <h2 className="text-3xl font-bold text-white mb-4">Don&apos;t see what you need?</h2>
           <p className="text-indigo-200 mb-8 text-lg">We build custom software for any business requirement. Tell us what you need.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

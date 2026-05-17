@@ -190,6 +190,15 @@ export default function ServicesPage() {
       {/* CTA */}
       <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700 text-center">
         <div className="container-wide max-w-2xl mx-auto">
+          <div className="mb-8 text-indigo-100 text-sm leading-relaxed">
+            <Link href="/saas-development-services" className="font-semibold text-white hover:underline">SaaS development services</Link>
+            {' '}|{' '}
+            <Link href="/web-app-development-services" className="font-semibold text-white hover:underline">web app development services</Link>
+            {' '}|{' '}
+            <Link href="/mobile-app-development-services" className="font-semibold text-white hover:underline">mobile app development services</Link>
+            {' '}|{' '}
+            <Link href="/mvp-development-company" className="font-semibold text-white hover:underline">MVP app development services</Link>
+          </div>
           <h2 className="text-3xl font-bold text-white mb-4">
             Let&apos;s build your project
           </h2>

@@ -174,6 +174,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 <li><Link href="/tools/gst-invoice" className="hover:text-white transition-colors">GST Invoice Tool</Link></li>
                 <li><Link href="/tools" className="hover:text-white transition-colors">All Products</Link></li>
                 <li><Link href="/services" className="hover:text-white transition-colors">Custom Development</Link></li>
+                <li><Link href="/saas-development-services" className="hover:text-white transition-colors">SaaS Development</Link></li>
+                <li><Link href="/mobile-app-development-services" className="hover:text-white transition-colors">Mobile App Development</Link></li>
+                <li><Link href="/web-app-development-services" className="hover:text-white transition-colors">Web App Development</Link></li>
               </ul>
             </div>
             <div>
@@ -181,6 +184,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               <ul className="space-y-2 text-sm">
                 <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link href="/website-development-company-kolkata" className="hover:text-white transition-colors">Kolkata Services</Link></li>
                 <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
                 <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
               </ul>
