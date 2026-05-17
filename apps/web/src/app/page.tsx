@@ -465,7 +465,8 @@ export default function HomePage() {
       <section className="py-16 bg-[#f8fafc] border-y border-gray-100 overflow-hidden">
         <div className="container-wide text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-8">
-            Built for businesses across every industry
+            We use these technologies to build our products and power our
+            clients' businesses
           </p>
           <div className="mx-auto grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {HOME_ANIMATED_LOGOS.map((logo, idx) => {
@@ -1022,184 +1023,184 @@ export default function HomePage() {
                   </div>
                 ))
               : cmsTools.length > 0
-              ? cmsTools.map((tool, idx) => (
-                  <motion.div
-                    key={tool.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    viewport={{ once: true }}
-                    className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
-                    style={{
-                      background: getCardGradient(idx),
-                      boxShadow:
-                        "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
-                    }}
-                  >
-                    {/* Top highlight line */}
-                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
-                    {/* Corner radial glow */}
-                    <div
-                      className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[220ms]"
+                ? cmsTools.map((tool, idx) => (
+                    <motion.div
+                      key={tool.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      viewport={{ once: true }}
+                      className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
                       style={{
-                        background:
-                          "radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%)",
+                        background: getCardGradient(idx),
+                        boxShadow:
+                          "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
                       }}
-                    />
-
-                    {/* Header: icon + badge */}
-                    <div className="flex items-start justify-between mb-5">
+                    >
+                      {/* Top highlight line */}
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
+                      {/* Corner radial glow */}
                       <div
-                        className={`relative inline-flex h-12 w-12 items-center justify-center rounded-xl overflow-hidden flex-shrink-0 transition-transform duration-[220ms] group-hover:scale-105 ${getColorForIndex(idx)}`}
+                        className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[220ms]"
                         style={{
-                          background: getIconGradient(idx),
-                          boxShadow:
-                            "inset 0 1px 2px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.06)",
+                          background:
+                            "radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%)",
                         }}
-                      >
-                        {tool.logoUrl && isSafeImageUrl(tool.logoUrl) ? (
-                          <img
-                            src={tool.logoUrl}
-                            alt={tool.title}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <Wrench className="h-5 w-5" />
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 flex-shrink-0">
-                        {tool.featured && (
-                          <span
-                            className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200/80 text-amber-600"
-                            style={{
-                              background:
-                                "linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%)",
-                              boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                            }}
-                          >
-                            ★ Featured
-                          </span>
-                        )}
-                        <span
-                          className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full border ${
-                            tool.toolType === "COMING_SOON"
-                              ? "bg-gray-50 border-gray-200/80 text-gray-500"
-                              : tool.pricingType === "FREE"
-                                ? "border-emerald-200/80 text-emerald-700"
-                                : "border-indigo-200/80 text-indigo-700"
-                          }`}
-                          style={
-                            tool.toolType !== "COMING_SOON"
-                              ? tool.pricingType === "FREE"
-                                ? {
-                                    background:
-                                      "linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%)",
-                                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                                  }
-                                : {
-                                    background:
-                                      "linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%)",
-                                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                                  }
-                              : {}
-                          }
+                      />
+
+                      {/* Header: icon + badge */}
+                      <div className="flex items-start justify-between mb-5">
+                        <div
+                          className={`relative inline-flex h-12 w-12 items-center justify-center rounded-xl overflow-hidden flex-shrink-0 transition-transform duration-[220ms] group-hover:scale-105 ${getColorForIndex(idx)}`}
+                          style={{
+                            background: getIconGradient(idx),
+                            boxShadow:
+                              "inset 0 1px 2px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.06)",
+                          }}
                         >
-                          {tool.toolType === "COMING_SOON"
-                            ? "Coming Soon"
-                            : tool.pricingType}
+                          {tool.logoUrl && isSafeImageUrl(tool.logoUrl) ? (
+                            <img
+                              src={tool.logoUrl}
+                              alt={tool.title}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <Wrench className="h-5 w-5" />
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          {tool.featured && (
+                            <span
+                              className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200/80 text-amber-600"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%)",
+                                boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                              }}
+                            >
+                              ★ Featured
+                            </span>
+                          )}
+                          <span
+                            className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full border ${
+                              tool.toolType === "COMING_SOON"
+                                ? "bg-gray-50 border-gray-200/80 text-gray-500"
+                                : tool.pricingType === "FREE"
+                                  ? "border-emerald-200/80 text-emerald-700"
+                                  : "border-indigo-200/80 text-indigo-700"
+                            }`}
+                            style={
+                              tool.toolType !== "COMING_SOON"
+                                ? tool.pricingType === "FREE"
+                                  ? {
+                                      background:
+                                        "linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%)",
+                                      boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                                    }
+                                  : {
+                                      background:
+                                        "linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%)",
+                                      boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                                    }
+                                : {}
+                            }
+                          >
+                            {tool.toolType === "COMING_SOON"
+                              ? "Coming Soon"
+                              : tool.pricingType}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">
+                        {tool.title}
+                      </h3>
+                      {/* Description */}
+                      <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">
+                        {tool.shortDescription || ""}
+                      </p>
+
+                      {/* CTA */}
+                      <Link
+                        href={getCmsToolHref(tool)}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-[220ms]"
+                      >
+                        {tool.toolType === "COMING_SOON"
+                          ? "Get Notified"
+                          : tool.ctaText || "Launch Tool"}
+                        <ArrowRight className="h-4 w-4 transition-transform duration-[220ms] group-hover:translate-x-1" />
+                      </Link>
+                    </motion.div>
+                  ))
+                : PRODUCTS.map((product, idx) => (
+                    <motion.div
+                      key={product.title}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: idx * 0.05 }}
+                      viewport={{ once: true }}
+                      className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
+                      style={{
+                        background: getCardGradient(idx),
+                        boxShadow:
+                          "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
+                      }}
+                    >
+                      {/* Top highlight line */}
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
+                      {/* Corner radial glow */}
+                      <div
+                        className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[220ms]"
+                        style={{
+                          background:
+                            "radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%)",
+                        }}
+                      />
+
+                      {/* Header: icon + badge */}
+                      <div className="flex items-start justify-between mb-5">
+                        <div
+                          className={`relative inline-flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0 transition-transform duration-[220ms] group-hover:scale-105 ${product.color}`}
+                          style={{
+                            background: getIconGradient(idx),
+                            boxShadow:
+                              "inset 0 1px 2px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.06)",
+                          }}
+                        >
+                          <product.icon className="h-5 w-5" />
+                        </div>
+                        <span
+                          className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full border ${getProductBadgeClass(product.badge)}`}
+                          style={getProductBadgeStyle(product.badge)}
+                        >
+                          {product.badge}
                         </span>
                       </div>
-                    </div>
 
-                    {/* Title */}
-                    <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">
-                      {tool.title}
-                    </h3>
-                    {/* Description */}
-                    <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">
-                      {tool.shortDescription || ""}
-                    </p>
+                      {/* Title */}
+                      <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">
+                        {product.title}
+                      </h3>
+                      {/* Description */}
+                      <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">
+                        {product.desc}
+                      </p>
 
-                    {/* CTA */}
-                    <Link
-                      href={getCmsToolHref(tool)}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-[220ms]"
-                    >
-                      {tool.toolType === "COMING_SOON"
-                        ? "Get Notified"
-                        : tool.ctaText || "Launch Tool"}
-                      <ArrowRight className="h-4 w-4 transition-transform duration-[220ms] group-hover:translate-x-1" />
-                    </Link>
-                  </motion.div>
-                ))
-              : PRODUCTS.map((product, idx) => (
-                  <motion.div
-                    key={product.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    viewport={{ once: true }}
-                    className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
-                    style={{
-                      background: getCardGradient(idx),
-                      boxShadow:
-                        "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
-                    }}
-                  >
-                    {/* Top highlight line */}
-                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
-                    {/* Corner radial glow */}
-                    <div
-                      className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[220ms]"
-                      style={{
-                        background:
-                          "radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%)",
-                      }}
-                    />
-
-                    {/* Header: icon + badge */}
-                    <div className="flex items-start justify-between mb-5">
-                      <div
-                        className={`relative inline-flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0 transition-transform duration-[220ms] group-hover:scale-105 ${product.color}`}
-                        style={{
-                          background: getIconGradient(idx),
-                          boxShadow:
-                            "inset 0 1px 2px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.06)",
-                        }}
+                      {/* CTA */}
+                      <Link
+                        href={product.href}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-[220ms]"
                       >
-                        <product.icon className="h-5 w-5" />
-                      </div>
-                      <span
-                        className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full border ${getProductBadgeClass(product.badge)}`}
-                        style={getProductBadgeStyle(product.badge)}
-                      >
-                        {product.badge}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">
-                      {product.title}
-                    </h3>
-                    {/* Description */}
-                    <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">
-                      {product.desc}
-                    </p>
-
-                    {/* CTA */}
-                    <Link
-                      href={product.href}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-[220ms]"
-                    >
-                      {product.badge === "Coming Soon"
-                        ? "Get Notified"
-                        : product.badge === "Custom Build"
-                          ? "Build Custom"
-                          : "Launch Tool"}
-                      <ArrowRight className="h-4 w-4 transition-transform duration-[220ms] group-hover:translate-x-1" />
-                    </Link>
-                  </motion.div>
-                ))}
+                        {product.badge === "Coming Soon"
+                          ? "Get Notified"
+                          : product.badge === "Custom Build"
+                            ? "Build Custom"
+                            : "Launch Tool"}
+                        <ArrowRight className="h-4 w-4 transition-transform duration-[220ms] group-hover:translate-x-1" />
+                      </Link>
+                    </motion.div>
+                  ))}
           </div>
         </div>
       </section>
