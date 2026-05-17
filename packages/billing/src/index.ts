@@ -10,8 +10,8 @@ let _razorpay: Razorpay | null = null;
 
 function getRazorpay(): Razorpay {
   if (!_razorpay) {
-    const key_id = process.env.RAZORPAY_KEY_ID;
-    const key_secret = process.env.RAZORPAY_KEY_SECRET;
+    const key_id = process.env.RAZORPAY_KEY_ID?.trim();
+    const key_secret = process.env.RAZORPAY_KEY_SECRET?.trim();
     if (!key_id || !key_secret) {
       throw new Error(
         'RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET must be set in the environment before using Razorpay.'
@@ -163,14 +163,23 @@ export function verifyPaymentSignature(
   paymentId: string,
   signature: string
 ): boolean {
+  const keySecret = process.env.RAZORPAY_KEY_SECRET?.trim();
+  if (!keySecret) return false;
+
+  const normalizedSignature = signature?.trim();
+  if (!normalizedSignature) return false;
+
   const body = `${orderId}|${paymentId}`;
   const expectedSignature = crypto
-    .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || '')
+    .createHmac('sha256', keySecret)
     .update(body)
     .digest('hex');
+  // Prevent timingSafeEqual from throwing when lengths differ.
+  if (normalizedSignature.length !== expectedSignature.length) return false;
+
   return crypto.timingSafeEqual(
     Buffer.from(expectedSignature),
-    Buffer.from(signature)
+    Buffer.from(normalizedSignature)
   );
 }
 
@@ -255,5 +264,4 @@ export function calculateTax(
     total: taxableAmount + gstAmount + cessAmount,
   };
 }
-
 

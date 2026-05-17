@@ -146,8 +146,8 @@ export default function PricingPage() {
             setPaymentSuccess(true);
             setPaymentLoading(false);
             setTimeout(() => { window.location.href = '/dashboard'; }, 2000);
-          } catch {
-            setPaymentError('Payment verification failed. Please contact support.');
+          } catch (e: any) {
+            setPaymentError(e?.message || 'Payment verification failed. Please contact support.');
             setPaymentLoading(false);
           }
         },

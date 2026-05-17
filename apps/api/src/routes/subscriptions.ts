@@ -327,6 +327,14 @@ router.post(
         return;
       }
 
+      if (!process.env.RAZORPAY_KEY_SECRET?.trim()) {
+        res.status(500).json({
+          success: false,
+          error: "Payment verification is not configured. Missing RAZORPAY_KEY_SECRET.",
+        });
+        return;
+      }
+
       const isValid = verifyPaymentSignature(
         razorpay_order_id,
         razorpay_payment_id,

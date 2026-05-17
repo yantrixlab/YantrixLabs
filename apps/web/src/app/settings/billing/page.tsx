@@ -146,7 +146,7 @@ export default function BillingPage() {
             });
             window.location.reload();
           } catch (e: any) {
-            setError('Payment verification failed. Please contact support.');
+            setError(e?.message || 'Payment verification failed. Please contact support.');
           }
         },
         prefill: prefill || {},
