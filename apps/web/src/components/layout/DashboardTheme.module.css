@@ -3,16 +3,34 @@
 }
 
 .dark {
-  background: #0b1220 !important;
-  color: #e5e7eb;
+  --bg-app: #060b16;
+  --bg-elev-1: #0b1324;
+  --bg-elev-2: #0f1a30;
+  --bg-elev-3: #14203b;
+  --bd-subtle: #223251;
+  --bd-strong: #334a73;
+  --text-strong: #eef4ff;
+  --text-body: #c6d4f2;
+  --text-muted: #8ca2cd;
+  --brand: #6b6dff;
+  --brand-2: #8385ff;
+  --success: #22c55e;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+
+  background:
+    radial-gradient(1200px 500px at 55% -10%, rgba(96, 109, 255, 0.14), transparent 55%),
+    radial-gradient(900px 420px at 110% 0%, rgba(86, 165, 255, 0.12), transparent 52%),
+    var(--bg-app) !important;
+  color: var(--text-body);
 }
 
-.dark :global(.bg-white) { background-color: #111827 !important; }
-.dark :global(.bg-gray-50) { background-color: #0f172a !important; }
-.dark :global(.bg-gray-50\/80) { background-color: #0b1220 !important; }
-.dark :global(.bg-gray-100) { background-color: #1f2937 !important; }
-.dark :global(.bg-gray-800) { background-color: #111827 !important; }
-.dark :global(.bg-gray-900) { background-color: #0b1220 !important; }
+.dark :global(.bg-white) { background-color: var(--bg-elev-1) !important; }
+.dark :global(.bg-gray-50) { background-color: var(--bg-elev-2) !important; }
+.dark :global(.bg-gray-50\/80) { background-color: var(--bg-app) !important; }
+.dark :global(.bg-gray-100) { background-color: var(--bg-elev-3) !important; }
+.dark :global(.bg-gray-800) { background-color: var(--bg-elev-2) !important; }
+.dark :global(.bg-gray-900) { background-color: var(--bg-app) !important; }
 
 .dark :global(.border-gray-50),
 .dark :global(.border-gray-100),
@@ -20,17 +38,109 @@
 .dark :global(.border-gray-300),
 .dark :global(.border-gray-700),
 .dark :global(.border-gray-800) {
-  border-color: #334155 !important;
+  border-color: var(--bd-subtle) !important;
 }
 
-.dark :global(.text-gray-400) { color: #94a3b8 !important; }
-.dark :global(.text-gray-500) { color: #94a3b8 !important; }
-.dark :global(.text-gray-600) { color: #cbd5e1 !important; }
-.dark :global(.text-gray-700) { color: #d1d5db !important; }
-.dark :global(.text-gray-800) { color: #e2e8f0 !important; }
-.dark :global(.text-gray-900) { color: #f8fafc !important; }
+.dark :global(.text-gray-400) { color: var(--text-muted) !important; }
+.dark :global(.text-gray-500) { color: var(--text-muted) !important; }
+.dark :global(.text-gray-600) { color: var(--text-body) !important; }
+.dark :global(.text-gray-700) { color: var(--text-body) !important; }
+.dark :global(.text-gray-800) { color: #dde8ff !important; }
+.dark :global(.text-gray-900) { color: var(--text-strong) !important; }
 
-.dark :global(.hover\:bg-gray-50:hover) { background-color: #1f2937 !important; }
-.dark :global(.hover\:bg-gray-100:hover) { background-color: #273449 !important; }
-.dark :global(.hover\:bg-gray-700:hover) { background-color: #273449 !important; }
+.dark :global(.hover\:bg-gray-50:hover) { background-color: #182845 !important; }
+.dark :global(.hover\:bg-gray-100:hover) { background-color: #1c2f51 !important; }
+.dark :global(.hover\:bg-gray-700:hover) { background-color: #1c2f51 !important; }
 
+.dark :global(header),
+.dark :global(aside) {
+  backdrop-filter: blur(8px);
+}
+
+.dark :global(header) {
+  background-color: rgba(8, 15, 31, 0.86) !important;
+  border-bottom-color: var(--bd-subtle) !important;
+}
+
+.dark :global(aside) {
+  background-color: rgba(9, 16, 32, 0.9) !important;
+  border-right-color: var(--bd-subtle) !important;
+}
+
+.dark :global(main) {
+  background: transparent !important;
+}
+
+.dark :global(.section-label) {
+  color: var(--text-muted) !important;
+}
+
+.dark :global(.nav-item) {
+  color: var(--text-body) !important;
+}
+
+.dark :global(.nav-item-active) {
+  background: linear-gradient(90deg, rgba(104, 110, 255, 0.25), rgba(74, 86, 255, 0.18)) !important;
+  border: 1px solid rgba(123, 136, 255, 0.42) !important;
+  box-shadow: inset 0 0 0 1px rgba(129, 142, 255, 0.15), 0 6px 18px rgba(24, 32, 64, 0.45);
+}
+
+.dark :global(.nav-item-active span),
+.dark :global(.nav-item-active svg) {
+  color: #e6eaff !important;
+}
+
+.dark :global(input),
+.dark :global(select),
+.dark :global(textarea) {
+  background-color: #0f1d37 !important;
+  border-color: var(--bd-subtle) !important;
+  color: var(--text-strong) !important;
+}
+
+.dark :global(input::placeholder),
+.dark :global(textarea::placeholder) {
+  color: #7f95bf !important;
+}
+
+.dark :global(input:focus),
+.dark :global(select:focus),
+.dark :global(textarea:focus) {
+  border-color: #6f7dff !important;
+  box-shadow: 0 0 0 3px rgba(106, 117, 255, 0.2) !important;
+}
+
+.dark :global(table) {
+  background: rgba(11, 20, 39, 0.72) !important;
+}
+
+.dark :global(thead) {
+  background: rgba(16, 29, 55, 0.9) !important;
+}
+
+.dark :global(tr) {
+  border-color: var(--bd-subtle) !important;
+}
+
+.dark :global(button),
+.dark :global(a) {
+  transition: all 150ms ease;
+}
+
+.dark :global(.bg-indigo-600) {
+  background-color: var(--brand) !important;
+}
+
+.dark :global(.hover\:bg-indigo-700:hover) {
+  background-color: var(--brand-2) !important;
+}
+
+.dark :global(.shadow-sm),
+.dark :global(.shadow-md),
+.dark :global(.shadow-lg) {
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.35) !important;
+}
+
+.dark :global(.text-red-600) { color: #f87171 !important; }
+.dark :global(.text-green-600) { color: #4ade80 !important; }
+.dark :global(.text-amber-600) { color: #fbbf24 !important; }
