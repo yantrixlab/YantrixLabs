@@ -123,6 +123,18 @@ const PRODUCTS = [
   },
 ];
 
+const HOME_ANIMATED_LOGOS = [
+  "chat-gpt.webp",
+  "css.jpg",
+  "java.jpg",
+  "js.png",
+  "kotlin.png",
+  "next-js.png",
+  "node-js.png",
+  "python.png",
+  "react.png",
+];
+
 const SERVICES = [
   {
     icon: Zap,
@@ -450,27 +462,49 @@ export default function HomePage() {
       />
 
       {/* ─── TRUST STRIP ─────────────────────────────────────────────────── */}
-      <section className="py-16 bg-gray-50 border-y border-gray-100">
+      <section className="py-16 bg-[#f8fafc] border-y border-gray-100 overflow-hidden">
         <div className="container-wide text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-8">
             Built for businesses across every industry
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {[
-              "Retail",
-              "Logistics",
-              "Hospitality",
-              "Healthcare",
-              "Education",
-              "Local Business",
-            ].map((ind) => (
-              <span
-                key={ind}
-                className="rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-700 shadow-sm"
-              >
-                {ind}
-              </span>
-            ))}
+          <div className="mx-auto grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {HOME_ANIMATED_LOGOS.map((logo, idx) => {
+              const baseFloat = 10 + (idx % 3) * 4;
+              const duration = 3.4 + (idx % 4) * 0.45;
+              const brand = logo
+                .replace(/\.[^/.]+$/, "")
+                .replace(/[-_]/g, " ")
+                .toUpperCase();
+
+              return (
+                <motion.div
+                  key={logo}
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 0.55, delay: idx * 0.08 }}
+                  className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
+                  style={{
+                    boxShadow:
+                      "0 8px 22px rgba(15,23,42,0.07), 0 2px 6px rgba(15,23,42,0.05)",
+                  }}
+                >
+                  <motion.img
+                    src={`/home_animated_logos/${logo}`}
+                    alt={`${brand} logo`}
+                    className="h-full w-full object-contain"
+                    loading="lazy"
+                    animate={{ y: [0, -baseFloat, 0] }}
+                    transition={{
+                      duration,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: idx * 0.08 + 0.2,
+                    }}
+                  />
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
