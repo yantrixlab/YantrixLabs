@@ -9,12 +9,13 @@ import {
   IndianRupee, Building2, ChevronRight, Lock,
   Receipt, Boxes, UserCircle, Target, Crown,
   Settings, PanelLeftClose, PanelLeft,
-  Plus
+  Plus, Moon, Sun
 } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
 import { BusinessProfileSetupModal, type BusinessSettings as BizSettings } from '@/components/ui/BusinessProfileSetupModal';
 import { GlobalSearch } from '@/components/ui/GlobalSearch';
+import themeStyles from './DashboardTheme.module.css';
 
 const INVOICE_USAGE_WARNING_RATIO = 0.8;
 
@@ -67,6 +68,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [activeModuleSlugs, setActiveModuleSlugs] = useState<Set<string> | null>(null);
   const [moduleRequiredPlans, setModuleRequiredPlans] = useState<Record<string, string | null>>({});
   const [moduleOrder, setModuleOrder] = useState<string[]>([]);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    const stored = localStorage.getItem('gst_invoice_theme');
+    if (stored === 'dark' || stored === 'light') {
+      setTheme(stored);
+      return;
+    }
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    setTheme(prefersDark ? 'dark' : 'light');
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('gst_invoice_theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -577,7 +593,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50/80 overflow-hidden print:block print:h-auto print:overflow-visible print:bg-white">
+    <div className={`${themeStyles.gstModuleTheme} ${theme === 'dark' ? themeStyles.dark : ''} flex h-screen bg-gray-50/80 overflow-hidden print:block print:h-auto print:overflow-visible print:bg-white`}>
       {/* Desktop Sidebar */}
       <aside
         className={`hidden lg:flex flex-col border-r border-gray-100 bg-white print:hidden transition-all duration-300 ${sidebarCollapsed ? 'w-16' : 'w-64'} relative`}
@@ -647,6 +663,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex-1" />
 
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setTheme(t => (t === 'dark' ? 'light' : 'dark'))}
+              className="rounded-xl p-2.5 text-gray-500 hover:bg-gray-100 transition-colors"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {theme === 'dark' ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}
+            </button>
+
             {(() => {
               const invoiceBlocked = planInfo?.isExpired || (planInfo?.invoiceLimit != null && planInfo.invoiceLimit > 0 && planInfo.invoicesUsed >= planInfo.invoiceLimit);
               return invoiceBlocked ? (

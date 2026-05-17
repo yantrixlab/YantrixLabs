@@ -1,0 +1,36 @@
+.gstModuleTheme {
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+.dark {
+  background: #0b1220 !important;
+  color: #e5e7eb;
+}
+
+.dark :global(.bg-white) { background-color: #111827 !important; }
+.dark :global(.bg-gray-50) { background-color: #0f172a !important; }
+.dark :global(.bg-gray-50\/80) { background-color: #0b1220 !important; }
+.dark :global(.bg-gray-100) { background-color: #1f2937 !important; }
+.dark :global(.bg-gray-800) { background-color: #111827 !important; }
+.dark :global(.bg-gray-900) { background-color: #0b1220 !important; }
+
+.dark :global(.border-gray-50),
+.dark :global(.border-gray-100),
+.dark :global(.border-gray-200),
+.dark :global(.border-gray-300),
+.dark :global(.border-gray-700),
+.dark :global(.border-gray-800) {
+  border-color: #334155 !important;
+}
+
+.dark :global(.text-gray-400) { color: #94a3b8 !important; }
+.dark :global(.text-gray-500) { color: #94a3b8 !important; }
+.dark :global(.text-gray-600) { color: #cbd5e1 !important; }
+.dark :global(.text-gray-700) { color: #d1d5db !important; }
+.dark :global(.text-gray-800) { color: #e2e8f0 !important; }
+.dark :global(.text-gray-900) { color: #f8fafc !important; }
+
+.dark :global(.hover\:bg-gray-50:hover) { background-color: #1f2937 !important; }
+.dark :global(.hover\:bg-gray-100:hover) { background-color: #273449 !important; }
+.dark :global(.hover\:bg-gray-700:hover) { background-color: #273449 !important; }
+
