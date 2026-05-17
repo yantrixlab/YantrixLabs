@@ -31,17 +31,6 @@ const NAV_ITEMS = [
   { href: '/crm', label: 'CRM', icon: Target },
 ];
 
-const NAV_FEATURE_REQUIREMENTS: Record<string, string[]> = {
-  '/customers': ['customer'],
-  '/products': ['product'],
-  '/reports': ['report', 'gst'],
-  '/payments': ['payment'],
-  '/expenses': ['expense'],
-  '/inventory': ['inventory'],
-  '/hrm': ['hrm'],
-  '/crm': ['crm'],
-};
-
 const NAV_MODULE_SLUG: Record<string, string> = {
   '/invoices': 'invoicing',
   '/customers': 'customers',
@@ -70,12 +59,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [userData, setUserData] = useState<{ name?: string; email?: string; role?: string }>({});
-  const [planInfo, setPlanInfo] = useState<{ name: string; invoicesUsed: number; invoiceLimit: number; customersUsed: number; customerLimit: number; features: string[]; isExpired?: boolean; endDate?: string } | null>(null);
+  const [planInfo, setPlanInfo] = useState<{ name: string; slug: string; invoicesUsed: number; invoiceLimit: number; customersUsed: number; customerLimit: number; features: string[]; isExpired?: boolean; endDate?: string } | null>(null);
   const [businessLogo, setBusinessLogo] = useState<string | null>(null);
   const [businessName, setBusinessName] = useState<string | null>(null);
   const [setupSettings, setSetupSettings] = useState<BizSettings | null>(null);
   const [setupRequired, setSetupRequired] = useState(false);
   const [activeModuleSlugs, setActiveModuleSlugs] = useState<Set<string> | null>(null);
+  const [moduleRequiredPlans, setModuleRequiredPlans] = useState<Record<string, string | null>>({});
   const [moduleOrder, setModuleOrder] = useState<string[]>([]);
 
   useEffect(() => {
@@ -120,14 +110,25 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       .catch(() => {});
 
     apiFetch('/modules')
-      .then((res: { data?: Array<{ slug: string }> }) => {
+      .then((res: { data?: Array<{ slug: string; requiredPlan?: string | null }> }) => {
         const modules = res.data || [];
+        if (modules.length === 0) {
+          // Empty module config should not hide the whole sidebar.
+          setActiveModuleSlugs(null);
+          setModuleRequiredPlans({});
+          setModuleOrder([]);
+          return;
+        }
         const slugs = new Set<string>(modules.map(m => m.slug));
+        const requiredPlanBySlug: Record<string, string | null> = {};
+        modules.forEach(m => { requiredPlanBySlug[m.slug] = m.requiredPlan ?? null; });
         setActiveModuleSlugs(slugs);
+        setModuleRequiredPlans(requiredPlanBySlug);
         setModuleOrder(modules.map(m => m.slug));
       })
       .catch(() => {
         setActiveModuleSlugs(null);
+        setModuleRequiredPlans({});
       });
 
     apiFetch('/subscriptions')
@@ -182,6 +183,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               .then((statsRes: any) => {
                 setPlanInfo({
                   name: sub.plan?.name || 'Unknown',
+                  slug: 'free',
                   invoicesUsed: statsRes?.data?.invoicesThisMonth ?? 0,
                   invoiceLimit: freePlanInvoiceLimit,
                   customersUsed: statsRes?.data?.activeCustomers ?? 0,
@@ -194,6 +196,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               .catch(() => {
                 setPlanInfo({
                   name: sub.plan?.name || 'Unknown',
+                  slug: 'free',
                   invoicesUsed: 0,
                   invoiceLimit: freePlanInvoiceLimit,
                   customersUsed: 0,
@@ -208,6 +211,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               .then((statsRes: any) => {
                 setPlanInfo({
                   name: sub.plan?.name || 'Free',
+                  slug: sub.plan?.slug || 'free',
                   invoicesUsed: statsRes?.data?.invoicesThisMonth ?? 0,
                   invoiceLimit: sub.plan?.invoiceLimit || 5,
                   customersUsed: statsRes?.data?.activeCustomers ?? 0,
@@ -220,6 +224,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               .catch(() => {
                 setPlanInfo({
                   name: sub.plan?.name || 'Free',
+                  slug: sub.plan?.slug || 'free',
                   invoicesUsed: 0,
                   invoiceLimit: sub.plan?.invoiceLimit || 5,
                   customersUsed: 0,
@@ -237,6 +242,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             .then((statsRes: any) => {
               setPlanInfo({
                 name: 'Free',
+                slug: 'free',
                 invoicesUsed: statsRes?.data?.invoicesThisMonth ?? 0,
                 invoiceLimit: freePlanInvoiceLimit,
                 customersUsed: statsRes?.data?.activeCustomers ?? 0,
@@ -248,6 +254,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             .catch(() => {
               setPlanInfo({
                 name: 'Free',
+                slug: 'free',
                 invoicesUsed: 0,
                 invoiceLimit: freePlanInvoiceLimit,
                 customersUsed: 0,
@@ -263,13 +270,23 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const isActive = (href: string) => pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
 
+  const planRank = (slug: string): number => {
+    const s = slug.toLowerCase();
+    if (s === 'free') return 0;
+    if (s === 'daily') return 1;
+    if (s === 'starter' || s === 'monthly' || s === 'yearly') return 2;
+    if (s === 'pro') return 3;
+    if (s === 'business' || s === 'enterprise') return 4;
+    return 0;
+  };
+
   const isNavEnabled = (href: string): boolean => {
-    const requiredKeywords = NAV_FEATURE_REQUIREMENTS[href];
-    if (!requiredKeywords) return true;
+    const slug = NAV_MODULE_SLUG[href];
+    if (!slug) return true;
+    const requiredPlan = moduleRequiredPlans[slug];
+    if (!requiredPlan) return true;
     if (!planInfo) return true;
-    return requiredKeywords.some(keyword =>
-      planInfo.features.some(f => f.toLowerCase().includes(keyword.toLowerCase()))
-    );
+    return planRank(planInfo.slug) >= planRank(requiredPlan);
   };
 
   const isModuleGloballyActive = (href: string): boolean => {

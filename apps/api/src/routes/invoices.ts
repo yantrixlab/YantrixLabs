@@ -124,17 +124,16 @@ router.post('/', [
     if (!customer) { res.status(404).json({ success: false, error: 'Customer not found' }); return; }
 
     // Get next invoice number
-    const business = await prisma.business.findUnique({ where: { id: businessId }, include: { plan: true } });
+    const business = await prisma.business.findUnique({ where: { id: businessId } });
     if (!business) { res.status(404).json({ success: false, error: 'Business not found' }); return; }
 
-    // Enforce invoice limit per plan
-    if (business.plan && business.plan.invoiceLimit > 0) {
-      // Use the active subscription's startDate as the billing-period start so that
-      // upgrading a plan resets the invoice count immediately.
-      let activeSub = await prisma.subscription.findFirst({
-        where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] } },
-        orderBy: { startDate: 'desc' },
-      });
+    // Use the active subscription plan as source of truth for limits.
+    // If none is active, fall back to free-tier limits.
+    let activeSub = await prisma.subscription.findFirst({
+      where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] } },
+      orderBy: { startDate: 'desc' },
+      include: { plan: true },
+    });
       const now = new Date();
 
       // Auto-expire subscription when endDate has passed
@@ -168,21 +167,20 @@ router.post('/', [
           });
           return;
         }
-      } else {
+      } else if (activeSub.plan.invoiceLimit > 0) {
         const periodStart = activeSub.startDate;
         const invoicesThisPeriod = await prisma.invoice.count({
           where: { businessId, createdAt: { gte: periodStart } },
         });
-        if (invoicesThisPeriod >= business.plan.invoiceLimit) {
-          const periodLabel = (() => { const s = business.plan.slug.toLowerCase(); return s === 'daily' ? 'day' : s === 'yearly' ? 'year' : 'month'; })();
+        if (invoicesThisPeriod >= activeSub.plan.invoiceLimit) {
+          const periodLabel = (() => { const s = activeSub.plan.slug.toLowerCase(); return s === 'daily' ? 'day' : s === 'yearly' ? 'year' : 'month'; })();
           res.status(403).json({
             success: false,
-            error: `Invoice limit reached. Your ${business.plan.name} plan allows ${business.plan.invoiceLimit} invoice${business.plan.invoiceLimit === 1 ? '' : 's'} per ${periodLabel}. Please upgrade to create more invoices.`,
+            error: `Invoice limit reached. Your ${activeSub.plan.name} plan allows ${activeSub.plan.invoiceLimit} invoice${activeSub.plan.invoiceLimit === 1 ? '' : 's'} per ${periodLabel}. Please upgrade to create more invoices.`,
           });
           return;
         }
       }
-    }
 
     const invoiceNumber = `${business.invoicePrefix}-${String(business.invoiceSeq).padStart(4, '0')}`;
 

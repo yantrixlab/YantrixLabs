@@ -52,6 +52,30 @@ router.post('/', [
     const businessId = req.user!.businessId;
     if (!businessId) { res.status(400).json({ success: false, error: 'Business context required' }); return; }
 
+    // Enforce product limit per active subscription plan (fallback to free tier).
+    const now = new Date();
+    const activeSub = await prisma.subscription.findFirst({
+      where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] }, endDate: { gte: now } },
+      orderBy: { startDate: 'desc' },
+      include: { plan: true },
+    });
+    const effectivePlan = activeSub
+      ? activeSub.plan
+      : (await prisma.plan.findUnique({ where: { slug: 'free' } })) ??
+        (await prisma.plan.findFirst({ where: { price: 0 }, orderBy: { price: 'asc' } }));
+
+    if (effectivePlan && effectivePlan.productLimit > 0) {
+      const productCount = await prisma.product.count({ where: { businessId, isActive: true } });
+      if (productCount >= effectivePlan.productLimit) {
+        const planLabel = activeSub ? effectivePlan.name : 'free tier';
+        res.status(403).json({
+          success: false,
+          error: `Product limit reached. Your ${planLabel} allows ${effectivePlan.productLimit} product${effectivePlan.productLimit === 1 ? '' : 's'}. Please ${activeSub ? 'upgrade' : 'renew your plan'} to add more products.`,
+        });
+        return;
+      }
+    }
+
     const product = await prisma.product.create({ data: { ...req.body, businessId } });
     res.status(201).json({ success: true, data: product });
   } catch (error) { next(error); }

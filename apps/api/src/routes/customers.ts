@@ -61,18 +61,19 @@ router.post('/', [
     if (!businessId) { res.status(400).json({ success: false, error: 'Business context required' }); return; }
 
     // Enforce customer limit per plan
-    const business = await prisma.business.findUnique({ where: { id: businessId }, include: { plan: true } });
+    const business = await prisma.business.findUnique({ where: { id: businessId } });
 
     // Determine whether the subscription is currently active
     const now = new Date();
     const activeSub = await prisma.subscription.findFirst({
       where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] }, endDate: { gte: now } },
       orderBy: { startDate: 'desc' },
+      include: { plan: true },
     });
 
     // If no active subscription, fall back to free-plan limits
     const effectivePlan = activeSub
-      ? business?.plan
+      ? activeSub.plan
       : (await prisma.plan.findUnique({ where: { slug: 'free' } })) ??
         (await prisma.plan.findFirst({ where: { price: 0 }, orderBy: { price: 'asc' } }));
 
