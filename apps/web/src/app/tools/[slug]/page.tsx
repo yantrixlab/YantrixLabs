@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import Link from 'next/link';
@@ -42,6 +42,8 @@ export default function ToolSlugPage() {
   const [tool, setTool] = useState<Tool | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const [iframeHeight, setIframeHeight] = useState(600);
 
   useEffect(() => {
     if (!params.slug) return;
@@ -71,6 +73,23 @@ export default function ToolSlugPage() {
       .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [params.slug, router]);
+
+  useEffect(() => {
+    if (tool?.toolType !== 'CUSTOM_HTML_TOOL') return;
+
+    const handleIframeResize = (event: MessageEvent) => {
+      if (event.data?.type !== 'tool-iframe-height') return;
+      if (event.source !== iframeRef.current?.contentWindow) return;
+
+      const nextHeight = Number(event.data.height);
+      if (!Number.isFinite(nextHeight)) return;
+
+      setIframeHeight(Math.max(600, Math.ceil(nextHeight)));
+    };
+
+    window.addEventListener('message', handleIframeResize);
+    return () => window.removeEventListener('message', handleIframeResize);
+  }, [tool?.toolType]);
 
   if (loading) {
     return (
@@ -198,11 +217,38 @@ export default function ToolSlugPage() {
         </section>
 
         {/* Sandboxed tool */}
-        <section className="bg-gray-50 min-h-[600px]">
+        <section className="bg-gray-50">
           <iframe
+            ref={iframeRef}
             sandbox="allow-scripts"
-            className="w-full min-h-[600px] border-0"
-            srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${tool.customCss || ''}</style></head><body>${tool.customHtml || ''}<script>${tool.customJs || ''}<\/script></body></html>`}
+            className="w-full border-0"
+            style={{ height: `${iframeHeight}px` }}
+            srcDoc={`<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;}${tool.customCss || ''}</style></head><body>${tool.customHtml || ''}<script>${tool.customJs || ''}
+;(() => {
+  const sendHeight = () => {
+    const root = document.documentElement;
+    const body = document.body;
+    const height = Math.max(
+      root ? root.scrollHeight : 0,
+      root ? root.offsetHeight : 0,
+      body ? body.scrollHeight : 0,
+      body ? body.offsetHeight : 0
+    );
+    window.parent.postMessage({ type: 'tool-iframe-height', height }, '*');
+  };
+
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+
+  if ('ResizeObserver' in window) {
+    const observer = new ResizeObserver(sendHeight);
+    if (document.body) observer.observe(document.body);
+    if (document.documentElement) observer.observe(document.documentElement);
+  }
+
+  setInterval(sendHeight, 500);
+  sendHeight();
+})();<\/script></body></html>`}
             title={tool.title}
           />
         </section>
