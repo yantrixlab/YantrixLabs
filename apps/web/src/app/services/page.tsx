@@ -1,4 +1,4 @@
-import { PublicLayout } from '@/components/layout/PublicLayout';
+﻿import { PublicLayout } from '@/components/layout/PublicLayout';
 import Link from 'next/link';
 import {
   Zap, Shield, Star, ArrowRight, TrendingUp,
@@ -7,7 +7,7 @@ import {
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Software Development Services � Web, Mobile, SaaS | Yantrix Labs',
+  title: 'Software Development Services - Web, Mobile, SaaS | Yantrix Labs',
   description:
     'We offer web app development, mobile app development, SaaS product engineering, AI tool development, and API integrations. Serving startups and SMEs across India.',
   alternates: { canonical: 'https://yantrixlab.com/services' },
@@ -19,43 +19,43 @@ export const metadata: Metadata = {
 
 const SERVICES = [
   {
-    emoji: '🌐',
+    emoji: 'WEB',
     title: 'Web Applications',
     description: 'Fast, responsive web applications built to scale. We use modern frameworks like Next.js and React to deliver lightning-fast web experiences.',
     features: ['Next.js / React / Vue', 'SEO optimized', 'Mobile-first design', 'API-driven architecture'],
   },
   {
-    emoji: '📱',
+    emoji: 'APP',
     title: 'Mobile Apps',
     description: 'Native and cross-platform mobile apps for iOS and Android. From consumer apps to enterprise tools, we build mobile-first.',
     features: ['React Native / Flutter', 'iOS & Android', 'Offline support', 'Push notifications'],
   },
   {
-    emoji: '☁️',
+    emoji: 'SAAS',
     title: 'SaaS Platforms',
     description: 'Multi-tenant SaaS with billing, auth, and admin built in. Launch your software product with a solid foundation.',
     features: ['Multi-tenancy', 'Subscription billing', 'Role-based access', 'Admin dashboard'],
   },
   {
-    emoji: '📊',
+    emoji: 'DATA',
     title: 'Admin Dashboards',
     description: 'Data-rich dashboards for operations and analytics. Give your team the visibility they need to make better decisions.',
     features: ['Real-time data', 'Custom charts', 'Export reports', 'Role-based views'],
   },
   {
-    emoji: '🔗',
+    emoji: 'API',
     title: 'API Integrations',
-    description: 'Connect your tools with third-party APIs and services. Stripe, Razorpay, WhatsApp, GST APIs — we handle the complexity.',
+    description: 'Connect your tools with third-party APIs and services. Stripe, Razorpay, WhatsApp, GST APIs - we handle the complexity.',
     features: ['Payment gateways', 'Government APIs', 'Webhooks & events', 'REST & GraphQL'],
   },
   {
-    emoji: '🤖',
+    emoji: 'AI',
     title: 'AI & Automation',
     description: 'Intelligent automation and AI-powered features. Add AI to your existing product or build AI-first from scratch.',
     features: ['OpenAI integration', 'Workflow automation', 'Document processing', 'Chatbots & assistants'],
   },
   {
-    emoji: '🏢',
+    emoji: 'ENT',
     title: 'Enterprise Systems',
     description: 'Large-scale ERP, HRM, and business management systems. Custom-built for your specific industry and workflow.',
     features: ['ERP / HRM / CRM', 'Multi-branch support', 'Advanced reporting', 'Legacy migration'],
@@ -72,11 +72,11 @@ const WHY_US = [
 ];
 
 const PROCESS = [
-  { emoji: '💡', title: 'Idea', desc: 'We understand your requirements through discovery sessions.' },
-  { emoji: '🎨', title: 'Design', desc: 'UI/UX wireframes, prototypes, and design system creation.' },
-  { emoji: '⚙️', title: 'Develop', desc: 'Clean, tested, scalable code using modern tech stacks.' },
-  { emoji: '🚀', title: 'Launch', desc: 'Deploy, configure, and go live with confidence.' },
-  { emoji: '🤝', title: 'Support', desc: 'Ongoing maintenance, updates, and growth support.' },
+  { emoji: 'IDEA', title: 'Idea', desc: 'We understand your requirements through discovery sessions.' },
+  { emoji: 'DESIGN', title: 'Design', desc: 'UI/UX wireframes, prototypes, and design system creation.' },
+  { emoji: 'BUILD', title: 'Develop', desc: 'Clean, tested, scalable code using modern tech stacks.' },
+  { emoji: 'LAUNCH', title: 'Launch', desc: 'Deploy, configure, and go live with confidence.' },
+  { emoji: 'SUPPORT', title: 'Support', desc: 'Ongoing maintenance, updates, and growth support.' },
 ];
 
 export default function ServicesPage() {
@@ -95,7 +95,7 @@ export default function ServicesPage() {
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed">
             Web apps, mobile apps, SaaS platforms, and enterprise systems.
-            From idea to production — we handle it all.
+            From idea to production - we handle it all.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -223,4 +223,3 @@ export default function ServicesPage() {
     </PublicLayout>
   );
 }
-
