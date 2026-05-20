@@ -440,7 +440,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               />
             </div>
             {!collapsed && (
-              <span className="text-base font-bold text-slate-100 truncate">
+              <span className="text-base font-bold text-white truncate">
                 {businessName || "Yeantrix Labs"}
               </span>
             )}
@@ -452,7 +452,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           className={`flex-1 overflow-y-auto overflow-x-hidden py-4 ${collapsed ? "px-2" : "px-3"}`}
         >
           {!collapsed && (
-            <p className="section-label px-3 mb-2 text-slate-400 uppercase tracking-wider text-[11px] font-semibold">
+            <p className="section-label px-3 mb-2 text-white uppercase tracking-wider text-[11px] font-semibold">
               Main
             </p>
           )}
@@ -483,28 +483,30 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 );
               }
               return (
-                <div key={item.href} className="group flex items-center gap-1">
+                <div key={item.href} className="group/menu flex items-center gap-1">
                   <Link
                     href={item.href}
                     onClick={() => mobile && setSidebarOpen(false)}
                     title={collapsed ? item.label : undefined}
-                    className={`nav-item relative flex-1 ${collapsed ? "justify-center" : ""} ${
-                      active ? "nav-item-active" : "nav-item-inactive"
+                    className={`nav-item group/link relative flex-1 ${collapsed ? "justify-center" : ""} ${
+                      active
+                        ? "bg-white text-[#152246] border border-white shadow-sm"
+                        : "text-white hover:bg-white hover:text-[#152246] hover:border hover:border-white"
                     }`}
                   >
                     <item.icon
-                      className={`h-4 w-4 flex-shrink-0 ${active ? "text-blue-200" : "text-slate-300"}`}
+                      className={`h-4 w-4 flex-shrink-0 ${active ? "text-[#3f6fcc]" : "text-white group-hover/link:text-[#152246]"}`}
                     />
                     {!collapsed && (
                       <>
                         <span className="flex-1">{item.label}</span>
                         {active && (
-                          <div className="h-1.5 w-1.5 rounded-full bg-blue-300" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-[#69a6ff]" />
                         )}
                       </>
                     )}
                     {collapsed && active && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-blue-300" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-[#69a6ff]" />
                     )}
                   </Link>
 
@@ -514,7 +516,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       onClick={() => mobile && setSidebarOpen(false)}
                       title={`Create ${item.label.slice(0, -1)}`}
                       aria-label={`Create ${item.label.slice(0, -1)}`}
-                      className={`nav-item-create flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-slate-300 transition-all duration-150 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:text-white hover:bg-slate-700/90 ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto text-white bg-slate-700/90 border-slate-600" : ""}`}
+                      className={`nav-item-create flex h-8 w-8 items-center justify-center rounded-lg border-l border-slate-500/40 bg-slate-600/45 text-white transition-all duration-150 opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto hover:bg-slate-500/70 ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto bg-slate-500/70" : ""}`}
                     >
                       <Plus className="h-3.5 w-3.5" />
                     </Link>
@@ -527,7 +529,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           {/* Settings section */}
           <div className="mt-6">
             {!collapsed && (
-              <p className="section-label px-3 mb-2 text-slate-400 uppercase tracking-wider text-[11px] font-semibold">
+              <p className="section-label px-3 mb-2 text-white uppercase tracking-wider text-[11px] font-semibold">
                 Settings
               </p>
             )}
@@ -540,19 +542,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   className={`nav-item justify-center ${isActive("/settings") ? "nav-item-active" : "nav-item-inactive"}`}
                 >
                   <Settings
-                    className={`h-4 w-4 flex-shrink-0 ${isActive("/settings") ? "text-blue-200" : "text-slate-300"}`}
+                    className={`h-4 w-4 flex-shrink-0 ${isActive("/settings") ? "text-[#3f6fcc]" : "text-white"}`}
                   />
                 </Link>
               ) : (
                 <>
                   <button
                     onClick={() => setSettingsOpen(!settingsOpen)}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800/80 hover:text-white transition-all duration-150"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white hover:bg-white hover:text-[#152246] transition-all duration-150"
                   >
-                    <Settings className="h-4 w-4 text-slate-300 flex-shrink-0" />
+                    <Settings className="h-4 w-4 text-white flex-shrink-0" />
                     <span className="flex-1 text-left">Settings</span>
                     <ChevronRight
-                      className={`h-3.5 w-3.5 text-slate-300 transition-transform duration-200 ${settingsOpen ? "rotate-90" : ""}`}
+                      className={`h-3.5 w-3.5 text-white transition-transform duration-200 ${settingsOpen ? "rotate-90" : ""}`}
                     />
                   </button>
                   <AnimatePresence>
@@ -572,7 +574,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                             className={`nav-item ${isActive(item.href) ? "nav-item-active" : "nav-item-inactive"}`}
                           >
                             <item.icon
-                              className={`h-4 w-4 flex-shrink-0 ${isActive(item.href) ? "text-blue-200" : "text-slate-300"}`}
+                              className={`h-4 w-4 flex-shrink-0 ${isActive(item.href) ? "text-[#3f6fcc]" : "text-white"}`}
                             />
                             <span className="flex-1">{item.label}</span>
                           </Link>
