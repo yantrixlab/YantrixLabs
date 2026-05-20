@@ -490,8 +490,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     title={collapsed ? item.label : undefined}
                     className={`nav-item group/link relative flex-1 ${collapsed ? "justify-center" : ""} ${
                       active
-                        ? "bg-[#343b5b] text-white"
-                        : "text-white hover:bg-[#343b5b]"
+                        ? "bg-[#353d5b] text-white"
+                        : "text-white hover:bg-[#353d5b]"
                     } ${!collapsed && NAV_CREATE_ROUTES[item.href] ? "rounded-r-none" : ""}`}
                   >
                     <item.icon
@@ -516,7 +516,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       onClick={() => mobile && setSidebarOpen(false)}
                       title={`Create ${item.label.slice(0, -1)}`}
                       aria-label={`Create ${item.label.slice(0, -1)}`}
-                      className={`nav-item-create flex h-9 w-9 items-center justify-center rounded-r-xl rounded-l-none border-l border-white/10 bg-[#4a5270] text-white transition-all duration-150 opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto hover:bg-[#596180] ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto bg-[#596180]" : ""}`}
+                      className={`nav-item-create flex h-9 w-9 items-center justify-center rounded-r-xl rounded-l-none border-l border-white/10 bg-[#4b5474] text-white transition-all duration-150 opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto bg-[#4b5474]" : ""}`}
                     >
                       <Plus className="h-3.5 w-3.5" />
                     </Link>
