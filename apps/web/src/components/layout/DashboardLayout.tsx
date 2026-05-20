@@ -483,7 +483,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 );
               }
               return (
-                <div key={item.href} className="group/menu flex items-center gap-1">
+                <div key={item.href} className="group/menu flex items-center gap-0">
                   <Link
                     href={item.href}
                     onClick={() => mobile && setSidebarOpen(false)}
@@ -516,7 +516,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       onClick={() => mobile && setSidebarOpen(false)}
                       title={`Create ${item.label.slice(0, -1)}`}
                       aria-label={`Create ${item.label.slice(0, -1)}`}
-                      className={`nav-item-create flex h-8 w-8 items-center justify-center rounded-lg border-l border-white/10 bg-[#4a5270] text-white transition-all duration-150 opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto hover:bg-[#596180] ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto bg-[#596180]" : ""}`}
+                      className={`nav-item-create -ml-1 flex h-8 w-8 items-center justify-center rounded-r-lg rounded-l-none border-l border-white/10 bg-[#4a5270] text-white transition-all duration-150 opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto hover:bg-[#596180] ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto bg-[#596180]" : ""}`}
                     >
                       <Plus className="h-3.5 w-3.5" />
                     </Link>
