@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     'passive income software for businesses',
     'online business automation platform',
   ],
+  alternates: {
+    canonical: 'https://yantrixlab.com/passive-income-tools-for-business',
+  },
 };
 
 const pillars = [
@@ -221,10 +224,10 @@ export default function PassiveIncomeToolsForBusinessPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-3">Connect Passive Income with Product Engineering</h2>
             <p className="text-gray-700 mb-4">Build a full growth ecosystem using linked service pages that support your recurring revenue strategy.</p>
             <div className="flex flex-wrap gap-4 text-sm">
-              <Link href="/business-automation-tools" className="font-semibold text-emerald-700">business automation tools</Link>
-              <Link href="/saas-development-services" className="font-semibold text-emerald-700">SaaS development services</Link>
-              <Link href="/mvp-development-company" className="font-semibold text-emerald-700">MVP development company</Link>
-              <Link href="/ai-tools-for-business-growth" className="font-semibold text-emerald-700">AI tools for business growth</Link>
+              <Link href="/tools" className="font-semibold text-emerald-700">business automation tools</Link>
+              <Link href="/tools/gst-invoice" className="font-semibold text-emerald-700">GST invoice tool</Link>
+              <Link href="/tools" className="font-semibold text-emerald-700">automation tool stack</Link>
+              <Link href="/tools" className="font-semibold text-emerald-700">AI tools for growth</Link>
             </div>
           </div>
         </div>

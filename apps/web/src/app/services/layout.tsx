@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Custom software development services for startups and SMEs: web apps, mobile apps, SaaS platforms, MVP builds, and long-term product engineering support.',
   alternates: {
-    canonical: '/services',
+    canonical: 'https://yantrixlab.com/services',
   },
 };
 

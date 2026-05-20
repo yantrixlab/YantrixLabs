@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
@@ -13,19 +13,22 @@ export const metadata: Metadata = {
     'cross-platform app agency Kolkata',
     'custom mobile applications',
   ],
+  alternates: {
+    canonical: 'https://yantrixlab.com/mobile-app-development-services',
+  },
   openGraph: {
     type: 'website',
     title: 'Mobile App Development Services in India | Cross-Platform and Native',
     description:
       'Transform your vision into a scalable mobile product. We engineer enterprise-grade native and cross-platform apps for startups and growing businesses.',
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Mobile App Development Services in India',
     description:
       'Expert mobile app engineering using React Native and deep native integrations. Built for speed, scale, and high user retention.',
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
 };
 

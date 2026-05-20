@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Guides on AI business tools, SaaS development, mobile apps, automation systems, and growth strategies for startups and small businesses.',
   alternates: {
-    canonical: '/blog',
+    canonical: 'https://yantrixlab.com/blog',
   },
 };
 
@@ -16,4 +16,3 @@ export default function BlogLayout({
 }) {
   return children;
 }
-

@@ -4,29 +4,10 @@ import { ToastProvider } from '@/components/ui/Toast';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Website Development Company for Startups & Businesses | Yantrix Labs',
+    default: 'Yantrix Labs',
     template: '%s | Yantrix Labs',
   },
-  description:
-    'Yantrix Labs is a website and mobile app development company building SaaS products, custom software, and AI-powered business tools for startups and SMEs.',
-  keywords: [
-    'website development company',
-    'website and mobile app development',
-    'SaaS development company',
-    'SaaS product development',
-    'mobile app development company',
-    'custom software development',
-    'web app development services',
-    'mobile app development services',
-    'business automation tools',
-    'passive income tools',
-    'income automation tools',
-    'AI business tools',
-    'startup app development',
-    'MVP development company',
-    'website development company in Kolkata',
-    'mobile app development company in Kolkata',
-  ],
+  description: 'Yantrix Labs builds software products and digital solutions.',
   authors: [{ name: 'Yantrix Labs' }],
   creator: 'Yantrix Labs',
   icons: {
@@ -40,17 +21,15 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: 'https://yantrixlab.com',
     siteName: 'Yantrix Labs',
-    title: 'Website Development Company | Web, Mobile, SaaS & AI Tools',
-    description:
-      'Web app development, mobile app development, SaaS product engineering, and AI-powered business automation tools.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    title: 'Yantrix Labs',
+    description: 'Software products and digital solutions by Yantrix Labs.',
+    images: [{ url: '/og-agency.png', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Website and Mobile App Development Company | Yantrix Labs',
-    description:
-      'Custom software, SaaS product development, and AI-powered business automation tools.',
-    images: ['/og-image.png'],
+    title: 'Yantrix Labs',
+    description: 'Software products and digital solutions by Yantrix Labs.',
+    images: ['/og-agency.png'],
   },
   robots: {
     index: true,

@@ -70,6 +70,12 @@ const NAV_MODULE_SLUG: Record<string, string> = {
   "/crm": "crm",
 };
 
+const NAV_CREATE_ROUTES: Record<string, string> = {
+  "/invoices": "/invoices/new",
+  "/customers": "/customers/new",
+  "/products": "/products/new",
+};
+
 const SETTINGS_ITEMS = [
   { href: "/settings", label: "Business Settings", icon: Building2 },
   { href: "/settings/billing", label: "Billing & Plans", icon: IndianRupee },
@@ -423,7 +429,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       >
         {/* Logo */}
         <div
-          className={`flex h-16 items-center border-b border-gray-100 ${collapsed ? "justify-center px-3" : "px-5"} flex-shrink-0`}
+          className={`flex h-16 items-center border-b border-slate-700/70 ${collapsed ? "justify-center px-3" : "px-5"} flex-shrink-0`}
         >
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
             <div className="h-8 w-8 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
@@ -434,7 +440,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               />
             </div>
             {!collapsed && (
-              <span className="text-base font-bold text-gray-900 truncate">
+              <span className="text-base font-bold text-slate-100 truncate">
                 {businessName || "Yeantrix Labs"}
               </span>
             )}
@@ -445,7 +451,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <nav
           className={`flex-1 overflow-y-auto overflow-x-hidden py-4 ${collapsed ? "px-2" : "px-3"}`}
         >
-          {!collapsed && <p className="section-label px-3 mb-2">Main</p>}
+          {!collapsed && (
+            <p className="section-label px-3 mb-2 text-slate-400 uppercase tracking-wider text-[11px] font-semibold">
+              Main
+            </p>
+          )}
 
           <div className="space-y-0.5">
             {sortedNavItems.map((item) => {
@@ -460,51 +470,68 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     href="/settings/billing"
                     onClick={() => mobile && setSidebarOpen(false)}
                     title={`Upgrade to unlock ${item.label}`}
-                    className={`nav-item ${collapsed ? "justify-center" : ""} text-gray-300 hover:bg-gray-50/60`}
+                    className={`nav-item ${collapsed ? "justify-center" : ""} text-slate-500 hover:bg-slate-800/70`}
                   >
-                    <item.icon className="h-4 w-4 text-gray-300 flex-shrink-0" />
+                    <item.icon className="h-4 w-4 text-slate-500 flex-shrink-0" />
                     {!collapsed && (
                       <>
                         <span className="flex-1">{item.label}</span>
-                        <Lock className="h-3 w-3 text-gray-300" />
+                        <Lock className="h-3 w-3 text-slate-500" />
                       </>
                     )}
                   </Link>
                 );
               }
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => mobile && setSidebarOpen(false)}
-                  title={collapsed ? item.label : undefined}
-                  className={`nav-item relative ${collapsed ? "justify-center" : ""} ${
-                    active ? "nav-item-active" : "nav-item-inactive"
-                  }`}
-                >
-                  <item.icon
-                    className={`h-4 w-4 flex-shrink-0 ${active ? "text-indigo-600" : "text-gray-400"}`}
-                  />
-                  {!collapsed && (
-                    <>
-                      <span className="flex-1">{item.label}</span>
-                      {active && (
-                        <div className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
-                      )}
-                    </>
+                <div key={item.href} className="group flex items-center gap-1">
+                  <Link
+                    href={item.href}
+                    onClick={() => mobile && setSidebarOpen(false)}
+                    title={collapsed ? item.label : undefined}
+                    className={`nav-item relative flex-1 ${collapsed ? "justify-center" : ""} ${
+                      active ? "nav-item-active" : "nav-item-inactive"
+                    }`}
+                  >
+                    <item.icon
+                      className={`h-4 w-4 flex-shrink-0 ${active ? "text-blue-200" : "text-slate-300"}`}
+                    />
+                    {!collapsed && (
+                      <>
+                        <span className="flex-1">{item.label}</span>
+                        {active && (
+                          <div className="h-1.5 w-1.5 rounded-full bg-blue-300" />
+                        )}
+                      </>
+                    )}
+                    {collapsed && active && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-blue-300" />
+                    )}
+                  </Link>
+
+                  {!collapsed && NAV_CREATE_ROUTES[item.href] && (
+                    <Link
+                      href={NAV_CREATE_ROUTES[item.href]}
+                      onClick={() => mobile && setSidebarOpen(false)}
+                      title={`Create ${item.label.slice(0, -1)}`}
+                      aria-label={`Create ${item.label.slice(0, -1)}`}
+                      className={`nav-item-create flex h-8 w-8 items-center justify-center rounded-lg border border-transparent text-slate-300 transition-all duration-150 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto hover:text-white hover:bg-slate-700/90 ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto text-white bg-slate-700/90 border-slate-600" : ""}`}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </Link>
                   )}
-                  {collapsed && active && (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-indigo-500" />
-                  )}
-                </Link>
+                </div>
               );
             })}
           </div>
 
           {/* Settings section */}
           <div className="mt-6">
-            {!collapsed && <p className="section-label px-3 mb-2">Settings</p>}
-            {collapsed && <div className="my-3 border-t border-gray-100" />}
+            {!collapsed && (
+              <p className="section-label px-3 mb-2 text-slate-400 uppercase tracking-wider text-[11px] font-semibold">
+                Settings
+              </p>
+            )}
+            {collapsed && <div className="my-3 border-t border-slate-700/70" />}
             <div className="space-y-0.5">
               {collapsed ? (
                 <Link
@@ -513,19 +540,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                   className={`nav-item justify-center ${isActive("/settings") ? "nav-item-active" : "nav-item-inactive"}`}
                 >
                   <Settings
-                    className={`h-4 w-4 flex-shrink-0 ${isActive("/settings") ? "text-indigo-600" : "text-gray-400"}`}
+                    className={`h-4 w-4 flex-shrink-0 ${isActive("/settings") ? "text-blue-200" : "text-slate-300"}`}
                   />
                 </Link>
               ) : (
                 <>
                   <button
                     onClick={() => setSettingsOpen(!settingsOpen)}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-150"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800/80 hover:text-white transition-all duration-150"
                   >
-                    <Settings className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                    <Settings className="h-4 w-4 text-slate-300 flex-shrink-0" />
                     <span className="flex-1 text-left">Settings</span>
                     <ChevronRight
-                      className={`h-3.5 w-3.5 text-gray-400 transition-transform duration-200 ${settingsOpen ? "rotate-90" : ""}`}
+                      className={`h-3.5 w-3.5 text-slate-300 transition-transform duration-200 ${settingsOpen ? "rotate-90" : ""}`}
                     />
                   </button>
                   <AnimatePresence>
@@ -545,7 +572,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                             className={`nav-item ${isActive(item.href) ? "nav-item-active" : "nav-item-inactive"}`}
                           >
                             <item.icon
-                              className={`h-4 w-4 flex-shrink-0 ${isActive(item.href) ? "text-indigo-600" : "text-gray-400"}`}
+                              className={`h-4 w-4 flex-shrink-0 ${isActive(item.href) ? "text-blue-200" : "text-slate-300"}`}
                             />
                             <span className="flex-1">{item.label}</span>
                           </Link>
@@ -561,7 +588,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* User / Plan section */}
         <div
-          className={`border-t border-gray-100 ${collapsed ? "p-2" : "p-3"} flex-shrink-0`}
+          className={`border-t border-slate-700/70 ${collapsed ? "p-2" : "p-3"} flex-shrink-0`}
         >
           {!collapsed &&
             planInfo &&
@@ -736,11 +763,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
             {!collapsed && (
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-gray-900 truncate">
+                <p className="text-xs font-semibold text-slate-100 truncate">
                   {displayName}
                 </p>
                 {userData.email && (
-                  <p className="text-[11px] text-gray-400 truncate">
+                  <p className="text-[11px] text-slate-400 truncate">
                     {userData.email}
                   </p>
                 )}
@@ -751,7 +778,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           {!collapsed && (
             <button
               onClick={handleLogout}
-              className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all duration-150"
+              className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all duration-150"
             >
               <LogOut className="h-4 w-4" />
               <span>Log out</span>
@@ -761,7 +788,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <button
               onClick={handleLogout}
               title="Log out"
-              className="flex items-center justify-center rounded-xl p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-900 transition-all w-full mt-1"
+              className="flex items-center justify-center rounded-xl p-2 text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all w-full mt-1"
             >
               <LogOut className="h-4 w-4" />
             </button>
@@ -777,14 +804,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     >
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:flex flex-col border-r border-gray-100 bg-white print:hidden transition-all duration-300 ${sidebarCollapsed ? "w-16" : "w-64"} relative`}
+        className={`hidden lg:flex flex-col border-r border-slate-700/70 bg-[#111a35] print:hidden transition-all duration-300 ${sidebarCollapsed ? "w-16" : "w-64"} relative`}
         style={{ flexShrink: 0 }}
       >
         <Sidebar />
         {/* Collapse toggle */}
         <button
           onClick={() => setSidebarCollapsed((c) => !c)}
-          className="absolute -right-3 top-20 z-10 hidden lg:flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm text-gray-400 hover:text-gray-600 hover:shadow-md transition-all duration-150"
+          className="absolute -right-3 top-20 z-10 hidden lg:flex h-6 w-6 items-center justify-center rounded-full border border-slate-700 bg-[#1b2646] shadow-sm text-slate-300 hover:text-white hover:shadow-md transition-all duration-150"
           title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {sidebarCollapsed ? (
@@ -811,12 +838,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "tween", duration: 0.22 }}
-              className="fixed left-0 top-0 bottom-0 z-50 w-72 bg-white shadow-xl lg:hidden"
+              className="fixed left-0 top-0 bottom-0 z-50 w-72 bg-[#111a35] shadow-xl lg:hidden"
             >
               <div className="absolute right-3 top-3">
                 <button
                   onClick={() => setSidebarOpen(false)}
-                  className="rounded-xl p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
+                  className="rounded-xl p-2 text-slate-300 hover:bg-slate-800/80 hover:text-white transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>

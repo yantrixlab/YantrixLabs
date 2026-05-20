@@ -3,24 +3,24 @@
 }
 
 .dark {
-  --bg-app: #060b16;
-  --bg-elev-1: #0b1324;
-  --bg-elev-2: #0f1a30;
-  --bg-elev-3: #14203b;
-  --bd-subtle: #223251;
-  --bd-strong: #334a73;
-  --text-strong: #eef4ff;
-  --text-body: #c6d4f2;
-  --text-muted: #8ca2cd;
-  --brand: #6b6dff;
-  --brand-2: #8385ff;
+  --bg-app: #070c14;
+  --bg-elev-1: #0d1421;
+  --bg-elev-2: #111b2b;
+  --bg-elev-3: #172235;
+  --bd-subtle: #25344a;
+  --bd-strong: #35506f;
+  --text-strong: #edf3ff;
+  --text-body: #c9d5e8;
+  --text-muted: #90a3c1;
+  --brand: #4f79c7;
+  --brand-2: #608ad8;
   --success: #22c55e;
   --warn: #f59e0b;
   --danger: #ef4444;
 
   background:
-    radial-gradient(1200px 500px at 55% -10%, rgba(96, 109, 255, 0.14), transparent 55%),
-    radial-gradient(900px 420px at 110% 0%, rgba(86, 165, 255, 0.12), transparent 52%),
+    radial-gradient(1200px 500px at 55% -10%, rgba(79, 121, 199, 0.16), transparent 55%),
+    radial-gradient(900px 420px at 110% 0%, rgba(49, 100, 176, 0.14), transparent 52%),
     var(--bg-app) !important;
   color: var(--text-body);
 }
@@ -99,8 +99,8 @@
 .dark :global(.nav-item:hover),
 .dark :global(a.nav-item:hover),
 .dark :global(button.nav-item:hover) {
-  background-color: rgba(52, 88, 180, 0.35) !important;
-  border-color: rgba(102, 132, 225, 0.42) !important;
+  background-color: rgba(56, 92, 146, 0.3) !important;
+  border-color: rgba(100, 134, 184, 0.45) !important;
   color: #e9f0ff !important;
 }
 
@@ -111,9 +111,14 @@
 }
 
 .dark :global(.nav-item-active) {
-  background: linear-gradient(90deg, rgba(104, 110, 255, 0.25), rgba(74, 86, 255, 0.18)) !important;
-  border: 1px solid rgba(123, 136, 255, 0.42) !important;
+  background: linear-gradient(90deg, rgba(79, 121, 199, 0.28), rgba(67, 101, 164, 0.2)) !important;
+  border: 1px solid rgba(106, 144, 205, 0.44) !important;
   box-shadow: inset 0 0 0 1px rgba(129, 142, 255, 0.15), 0 6px 18px rgba(24, 32, 64, 0.45);
+}
+
+.dark :global(.nav-item-create:hover) {
+  background-color: rgba(79, 121, 199, 0.24) !important;
+  border-color: rgba(106, 144, 205, 0.55) !important;
 }
 
 .dark :global(.nav-item-active span),

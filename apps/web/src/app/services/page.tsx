@@ -7,8 +7,14 @@ import {
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Custom Software Development Services â€” Yantrix Labs',
-  description: 'We build web apps, mobile apps, SaaS platforms, and enterprise systems tailored to your business. Fast delivery, scalable architecture, and ongoing support.',
+  title: 'Software Development Services — Web, Mobile, SaaS | Yantrix Labs',
+  description:
+    'We offer web app development, mobile app development, SaaS product engineering, AI tool development, and API integrations. Serving startups and SMEs across India.',
+  alternates: { canonical: 'https://yantrixlab.com/services' },
+  openGraph: {
+    title: 'Software Development Services | Yantrix Labs',
+    url: 'https://yantrixlab.com/services',
+  },
 };
 
 const SERVICES = [
@@ -217,3 +223,4 @@ export default function ServicesPage() {
     </PublicLayout>
   );
 }
+

@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!result) return { title: 'Article Not Found' };
   const { post } = result;
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yantrixlabs.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yantrixlab.com';
 
   return {
     title: post.seoTitle || post.title,
@@ -119,7 +119,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   if (!result) notFound();
   const { post, related } = result;
 
-  const pageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yantrixlabs.com'}/blog/${post.slug}`;
+  const pageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yantrixlab.com'}/blog/${post.slug}`;
   const contentHtml = addIdsToHeadings(post.contentHtml || post.content || '');
   const toc = extractToc(contentHtml);
 
@@ -135,7 +135,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     publisher: {
       '@type': 'Organization',
       name: 'Yantrix Labs',
-      logo: { '@type': 'ImageObject', url: 'https://yantrixlabs.com/logo.png' },
+      logo: { '@type': 'ImageObject', url: 'https://yantrixlab.com/app_logo.png' },
     },
   };
 

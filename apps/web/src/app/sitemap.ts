@@ -15,17 +15,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/mobile-app-development-services',
     '/web-app-development-services',
     '/mvp-development-company',
-    '/business-automation-tools',
+    '/tools/gst-invoice',
     '/passive-income-tools-for-business',
     '/ai-tools-for-business-growth',
     '/website-development-company-kolkata',
+    '/blog/how-to-create-gst-invoice-free',
+    '/blog/cgst-sgst-igst-difference',
+    '/blog/gst-invoice-format-india',
+    '/blog/gst-invoice-for-freelancers',
+    '/blog/free-gst-billing-software-small-business',
+    '/blog/web-app-development-cost-india',
+    '/blog/saas-development-company-india',
+    '/blog/mobile-app-development-kolkata',
   ];
+
+  const priorityMap: Record<string, number> = {
+    '/': 1.0,
+    '/services': 0.9,
+    '/tools/gst-invoice': 0.9,
+    '/tools': 0.8,
+    '/blog': 0.7,
+  };
 
   return routes.map((route) => ({
     url: `${baseUrl}${route}`,
     changeFrequency: route === '/' ? 'weekly' : 'monthly',
-    priority: route === '/' ? 1 : 0.8,
+    priority: priorityMap[route] ?? 0.7,
     lastModified: new Date(),
   }));
 }
-

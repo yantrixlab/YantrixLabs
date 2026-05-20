@@ -37,7 +37,7 @@ const FALLBACK_PRODUCTS = [
   { icon: MapPin, title: 'GPS Fleet Tracking', description: 'Real-time fleet tracking and route optimization for logistics businesses. Live map, trip history, and fuel monitoring.', href: '/contact', badge: 'Coming Soon', color: 'bg-cyan-50 text-cyan-600', badgeColor: 'bg-cyan-100 text-cyan-700' },
   { icon: BarChart3, title: 'CRM', description: 'Manage leads, customers, and sales pipelines. Track deals, send follow-ups, and measure conversion.', href: '/contact', badge: 'Coming Soon', color: 'bg-orange-50 text-orange-600', badgeColor: 'bg-orange-100 text-orange-700' },
   { icon: Briefcase, title: 'HRMS', description: 'HR, payroll, and employee lifecycle management. Onboarding, leaves, appraisals, and salary processing.', href: '/contact', badge: 'Coming Soon', color: 'bg-pink-50 text-pink-600', badgeColor: 'bg-pink-100 text-pink-700' },
-  { icon: Settings, title: 'Custom ERP', description: 'Tailored enterprise resource planning systems built for your specific workflow and industry requirements.', href: '/services', badge: 'Custom Build', color: 'bg-violet-50 text-violet-600', badgeColor: 'bg-violet-100 text-violet-700' },
+  { icon: Settings, title: 'Custom ERP', description: 'Tailored enterprise resource planning systems built for your specific workflow and industry requirements.', href: '/contact', badge: 'Custom Build', color: 'bg-violet-50 text-violet-600', badgeColor: 'bg-violet-100 text-violet-700' },
 ];
 
 
@@ -360,7 +360,7 @@ export default function ToolsPage() {
       <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700 text-center">
         <div className="container-wide max-w-2xl mx-auto">
           <div className="mb-8 text-indigo-100 text-sm leading-relaxed">
-            <Link href="/business-automation-tools" className="font-semibold text-white hover:underline">business automation tools</Link>
+            <Link href="/tools" className="font-semibold text-white hover:underline">business automation tools</Link>
             {' '}|{' '}
             <Link href="/passive-income-tools-for-business" className="font-semibold text-white hover:underline">passive income tools</Link>
             {' '}|{' '}
@@ -370,7 +370,7 @@ export default function ToolsPage() {
           <p className="text-indigo-200 mb-8 text-lg">We build custom software for any business requirement. Tell us what you need.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/contact" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-lg">Start a Project<ArrowRight className="h-4 w-4" /></Link>
-            <Link href="/services" className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-400 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-500/20 transition-all">View Services</Link>
+            <Link href="/tools/gst-invoice" className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-400 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-500/20 transition-all">Try GST Tool</Link>
           </div>
         </div>
       </section>

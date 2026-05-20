@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
@@ -14,19 +14,22 @@ export const metadata: Metadata = {
     'MVP cost in India',
     'agile app development',
   ],
+  alternates: {
+    canonical: 'https://yantrixlab.com/mvp-development-company',
+  },
   openGraph: {
     type: 'website',
     title: 'MVP Development Company in India | Startup App Agency',
     description:
       'Test your app idea in the market quickly with a high-performance, scalable MVP built by expert developers in India.',
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MVP Development Company in India',
     description:
       'Validate your startup idea with a custom-engineered MVP. We build scalable web and mobile apps in 8-12 weeks.',
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
 };
 

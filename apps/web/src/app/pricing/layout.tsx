@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Compare pricing for subscription-based business tools, GST invoicing, and business automation software for startups and SMEs.',
   alternates: {
-    canonical: '/pricing',
+    canonical: 'https://yantrixlab.com/pricing',
   },
 };
 
@@ -16,4 +16,3 @@ export default function PricingLayout({
 }) {
   return children;
 }
-

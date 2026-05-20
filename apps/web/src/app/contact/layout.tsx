@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Talk to Yantrix Labs about website development, mobile app development, SaaS product builds, and business automation solutions.',
   alternates: {
-    canonical: '/contact',
+    canonical: 'https://yantrixlab.com/contact',
   },
 };
 
@@ -16,4 +16,3 @@ export default function ContactLayout({
 }) {
   return children;
 }
-

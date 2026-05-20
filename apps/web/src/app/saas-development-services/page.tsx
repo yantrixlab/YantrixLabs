@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
@@ -13,19 +13,22 @@ export const metadata: Metadata = {
     'hire SaaS developers India',
     'multi tenant architecture',
   ],
+  alternates: {
+    canonical: 'https://yantrixlab.com/saas-development-services',
+  },
   openGraph: {
     type: 'website',
     title: 'SaaS Development Company in India | Startups & Small Business',
     description:
       "Scale your software concept with a secure, production-ready SaaS application built by India's premier engineering talent.",
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'SaaS Development Company in India',
     description:
       'Launch scalable MVPs and full-cycle enterprise platforms faster with optimized multi-tenant architectures.',
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
 };
 
@@ -220,3 +223,4 @@ export default function SaaSDevelopmentServicesPage() {
     </PublicLayout>
   );
 }
+

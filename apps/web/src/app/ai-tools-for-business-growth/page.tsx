@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
@@ -14,19 +14,22 @@ export const metadata: Metadata = {
     'Computer Vision automation',
     'enterprise AI solutions',
   ],
+  alternates: {
+    canonical: 'https://yantrixlab.com/ai-tools-for-business-growth',
+  },
   openGraph: {
     type: 'website',
     title: 'AI Tools for Business Growth & Automation | Custom Solutions India',
     description:
       'Transform operations with custom AI, RPA, and intelligent automation workflows built for scale.',
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'AI Tools for Business Growth and Automation',
     description:
       'Custom AI engineering for startups and SMEs using Computer Vision, NLP, and workflow automation.',
-    images: ['/og-image.png'],
+    images: ['/og-agency.png'],
   },
 };
 
@@ -88,8 +91,8 @@ export default function AIToolsForBusinessGrowthPage() {
             and enterprise teams.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Link href="/business-automation-tools" className="rounded-xl bg-indigo-600 px-6 py-3 text-white font-semibold">
-              View Business Automation Tools
+            <Link href="/services" className="rounded-xl bg-indigo-600 px-6 py-3 text-white font-semibold">
+              View Software Services
             </Link>
             <Link href="/contact" className="rounded-xl border border-gray-200 px-6 py-3 font-semibold text-gray-700">
               Plan AI Implementation
@@ -192,3 +195,4 @@ export default function AIToolsForBusinessGrowthPage() {
     </PublicLayout>
   );
 }
+

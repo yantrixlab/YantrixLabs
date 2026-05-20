@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Learn about Yantrix Labs, a web and mobile app development company building SaaS products, custom software, and AI-powered business tools.',
   alternates: {
-    canonical: '/about',
+    canonical: 'https://yantrixlab.com/about',
   },
 };
 
@@ -16,4 +16,3 @@ export default function AboutLayout({
 }) {
   return children;
 }
-

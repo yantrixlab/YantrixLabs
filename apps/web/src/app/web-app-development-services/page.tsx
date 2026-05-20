@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     'startup app development',
     'MVP app development services',
   ],
+  alternates: {
+    canonical: 'https://yantrixlab.com/web-app-development-services',
+  },
 };
 
 const capabilities = [
@@ -222,7 +225,7 @@ export default function WebAppDevelopmentServicesPage() {
               <Link href="/mobile-app-development-services" className="font-semibold text-blue-700">mobile app development services</Link>
               <Link href="/saas-development-services" className="font-semibold text-blue-700">SaaS development services</Link>
               <Link href="/mvp-development-company" className="font-semibold text-blue-700">MVP development company</Link>
-              <Link href="/business-automation-tools" className="font-semibold text-blue-700">business automation tools</Link>
+              <Link href="/services" className="font-semibold text-blue-700">custom software services</Link>
             </div>
           </div>
         </div>
