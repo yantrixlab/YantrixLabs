@@ -426,7 +426,21 @@ router.delete(
   "/plans/:id",
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      await prisma.plan.delete({ where: { id: req.params.id } });
+      const planId = req.params.id;
+      const linkedSubscriptions = await prisma.subscription.count({
+        where: { planId },
+      });
+
+      if (linkedSubscriptions > 0) {
+        res.status(409).json({
+          success: false,
+          error:
+            "This plan is used by existing subscriptions and cannot be deleted. Set it to inactive instead.",
+        });
+        return;
+      }
+
+      await prisma.plan.delete({ where: { id: planId } });
       res.json({ success: true, message: "Plan deleted" });
     } catch (error) {
       next(error);

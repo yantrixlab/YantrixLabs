@@ -462,11 +462,22 @@ export default function AdminPlansPage() {
   const deletePlan = async (planId: string) => {
     if (!confirm('Delete this plan? This cannot be undone.')) return;
     setDeletingId(planId);
+    setError('');
     try {
       const token = getAdminToken();
-      await fetch(`${API_URL}/admin/plans/${planId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${API_URL}/admin/plans/${planId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.success) {
+        setError(data?.error || 'Failed to delete plan');
+        return;
+      }
       setPlans(prev => prev.filter(p => p.id !== planId));
-    } catch {} finally { setDeletingId(null); }
+    } catch (err: any) {
+      setError(err?.message || 'Failed to delete plan');
+    } finally { setDeletingId(null); }
   };
 
   const planColorMap: Record<string, { border: string; header: string }> = {
