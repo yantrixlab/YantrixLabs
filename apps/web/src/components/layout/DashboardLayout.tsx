@@ -490,23 +490,23 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     title={collapsed ? item.label : undefined}
                     className={`nav-item group/link relative flex-1 ${collapsed ? "justify-center" : ""} ${
                       active
-                        ? "bg-white text-[#152246] border border-white shadow-sm"
-                        : "text-white hover:bg-white hover:text-[#152246] hover:border hover:border-white"
+                        ? "bg-[#343b5b] text-white"
+                        : "text-white hover:bg-[#343b5b]"
                     }`}
                   >
                     <item.icon
-                      className={`h-4 w-4 flex-shrink-0 ${active ? "text-[#3f6fcc]" : "text-white group-hover/link:text-[#152246]"}`}
+                      className="h-4 w-4 flex-shrink-0 text-white"
                     />
                     {!collapsed && (
                       <>
                         <span className="flex-1">{item.label}</span>
                         {active && (
-                          <div className="h-1.5 w-1.5 rounded-full bg-[#69a6ff]" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-white/80" />
                         )}
                       </>
                     )}
                     {collapsed && active && (
-                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-[#69a6ff]" />
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-white/80" />
                     )}
                   </Link>
 
@@ -516,7 +516,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                       onClick={() => mobile && setSidebarOpen(false)}
                       title={`Create ${item.label.slice(0, -1)}`}
                       aria-label={`Create ${item.label.slice(0, -1)}`}
-                      className={`nav-item-create flex h-8 w-8 items-center justify-center rounded-lg border-l border-slate-500/40 bg-slate-600/45 text-white transition-all duration-150 opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto hover:bg-slate-500/70 ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto bg-slate-500/70" : ""}`}
+                      className={`nav-item-create flex h-8 w-8 items-center justify-center rounded-lg border-l border-white/10 bg-[#4a5270] text-white transition-all duration-150 opacity-0 pointer-events-none group-hover/menu:opacity-100 group-hover/menu:pointer-events-auto hover:bg-[#596180] ${pathname === NAV_CREATE_ROUTES[item.href] ? "opacity-100 pointer-events-auto bg-[#596180]" : ""}`}
                     >
                       <Plus className="h-3.5 w-3.5" />
                     </Link>
@@ -549,7 +549,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 <>
                   <button
                     onClick={() => setSettingsOpen(!settingsOpen)}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white hover:bg-white hover:text-[#152246] transition-all duration-150"
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white hover:bg-[#343b5b] transition-all duration-150"
                   >
                     <Settings className="h-4 w-4 text-white flex-shrink-0" />
                     <span className="flex-1 text-left">Settings</span>
