@@ -19,6 +19,14 @@ interface ScanSessionData {
   status: string;
   pairingPayloadText: string;
 }
+interface ScanLogData {
+  id: string;
+  rawCode: string;
+  status: string;
+  message: string | null;
+  createdAt: string;
+  product: Product | null;
+}
 
 const GST_RATES = [0, 5, 12, 18, 28];
 const INVOICE_WARNING_THRESHOLD = 2;
@@ -203,6 +211,7 @@ export default function NewInvoicePage() {
   const [scannerConnectionState, setScannerConnectionState] = useState<'disconnected' | 'qr_ready' | 'connected' | 'receiving' | 'offline'>('disconnected');
   const [scanSession, setScanSession] = useState<ScanSessionData | null>(null);
   const [pairingQrUrl, setPairingQrUrl] = useState<string>('');
+  const [lastScanLogAt, setLastScanLogAt] = useState<string | null>(null);
 
   const [items, setItems] = useState<InvoiceItem[]>([
     calcItem({ id: generateId(), description: '', quantity: 1, price: 0, gstRate: 18, unit: 'PCS' }, false),
@@ -528,6 +537,49 @@ export default function NewInvoicePage() {
     };
     return () => es.close();
   }, [scanSession?.sessionId]);
+
+  useEffect(() => {
+    if (!scanSession?.sessionId) return;
+    let cancelled = false;
+    const tick = async () => {
+      try {
+        const [sessionRes, logsRes] = await Promise.all([
+          apiFetch<{ data: { connectedDeviceId?: string | null; status?: string } }>(`/scan/sessions/${scanSession.sessionId}`),
+          apiFetch<{ data: ScanLogData[] }>(`/scan/sessions/${scanSession.sessionId}/logs${lastScanLogAt ? `?since=${encodeURIComponent(lastScanLogAt)}` : ''}`),
+        ]);
+        if (cancelled) return;
+
+        if (sessionRes.data?.connectedDeviceId) {
+          setScannerConnectionState((prev) => (prev === 'receiving' ? prev : 'connected'));
+        }
+
+        const logs = logsRes.data || [];
+        if (logs.length > 0) {
+          for (const log of logs) {
+            if (log.product) {
+              addOrIncrementProduct(log.product);
+              setScanStatus('found');
+              setScannerConnectionState('receiving');
+              success('Scanned item added', log.product.name);
+            } else {
+              setScanStatus('not_found');
+              warning('Item not found', log.message || `No matching product for ${log.rawCode}`);
+            }
+          }
+          setLastScanLogAt(logs[logs.length - 1].createdAt);
+        }
+      } catch {
+        // ignore polling failure; SSE may still be active
+      }
+    };
+
+    tick();
+    const interval = setInterval(tick, 2000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [scanSession?.sessionId, lastScanLogAt]);
 
   // Close product suggestions on outside click
   useEffect(() => {

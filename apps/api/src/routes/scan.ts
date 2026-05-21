@@ -181,6 +181,81 @@ router.get(
   },
 );
 
+// Web: fetch session state (polling fallback)
+router.get(
+  "/sessions/:id",
+  authenticate,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const businessId = req.user?.businessId;
+      if (!businessId) {
+        res.status(400).json({ success: false, error: "Business context required" });
+        return;
+      }
+      const session = await prisma.scannerSession.findFirst({
+        where: { id: req.params.id, businessId },
+        include: {
+          connectedDevice: {
+            select: { id: true, name: true, isActive: true, lastSeenAt: true },
+          },
+        },
+      });
+      if (!session) {
+        res.status(404).json({ success: false, error: "Session not found" });
+        return;
+      }
+      res.json({ success: true, data: session });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+// Web: fetch latest scan logs for session (polling fallback)
+router.get(
+  "/sessions/:id/logs",
+  authenticate,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const businessId = req.user?.businessId;
+      if (!businessId) {
+        res.status(400).json({ success: false, error: "Business context required" });
+        return;
+      }
+      const since = String(req.query.since || "").trim();
+      const sinceDate = since ? new Date(since) : null;
+      const logs = await prisma.scannerScanLog.findMany({
+        where: {
+          businessId,
+          sessionId: req.params.id,
+          ...(sinceDate && !Number.isNaN(sinceDate.getTime())
+            ? { createdAt: { gt: sinceDate } }
+            : {}),
+        },
+        include: {
+          product: {
+            select: {
+              id: true,
+              name: true,
+              hsnSac: true,
+              price: true,
+              gstRate: true,
+              unit: true,
+              barcode: true,
+              sku: true,
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+        take: 50,
+      });
+      res.json({ success: true, data: logs });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 // App: pair without login
 router.post("/pair", async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -439,4 +514,3 @@ router.patch(
 );
 
 export default router;
-
