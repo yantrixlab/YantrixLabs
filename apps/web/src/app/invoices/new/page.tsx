@@ -192,6 +192,8 @@ export default function NewInvoicePage() {
   const [scanInput, setScanInput] = useState('');
   const [scanLoading, setScanLoading] = useState(false);
   const scanInputRef = useRef<HTMLInputElement>(null);
+  const [scanStatus, setScanStatus] = useState<'idle' | 'listening' | 'found' | 'not_found' | 'no_input'>('idle');
+  const scanIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [items, setItems] = useState<InvoiceItem[]>([
     calcItem({ id: generateId(), description: '', quantity: 1, price: 0, gstRate: 18, unit: 'PCS' }, false),
@@ -425,6 +427,7 @@ export default function NewInvoicePage() {
     const code = scanInput.trim();
     if (!code || scanLoading) return;
     setScanLoading(true);
+    setScanStatus('listening');
     try {
       const res = await apiFetch<{ data: Product[] }>(`/products?search=${encodeURIComponent(code)}&limit=20`);
       const products = res.data || [];
@@ -437,11 +440,14 @@ export default function NewInvoicePage() {
       if (exact) {
         addOrIncrementProduct(exact);
         success('Item scanned', exact.name);
+        setScanStatus('found');
       } else {
         warning('Item not found', `No product matched "${code}"`);
+        setScanStatus('not_found');
       }
     } catch {
       warning('Scan failed', 'Could not fetch products for scanned code.');
+      setScanStatus('not_found');
     } finally {
       setScanLoading(false);
       setScanInput('');
@@ -449,8 +455,21 @@ export default function NewInvoicePage() {
     }
   };
 
+  const activateScanMode = () => {
+    if (scanIdleTimerRef.current) clearTimeout(scanIdleTimerRef.current);
+    setScanStatus('listening');
+    scanInputRef.current?.focus();
+    success('Scanner ready', 'USB scanners usually type like a keyboard. Scan into the scanner field.');
+    scanIdleTimerRef.current = setTimeout(() => {
+      setScanStatus('no_input');
+    }, 8000);
+  };
+
   useEffect(() => {
     scanInputRef.current?.focus();
+    return () => {
+      if (scanIdleTimerRef.current) clearTimeout(scanIdleTimerRef.current);
+    };
   }, []);
 
   // Close product suggestions on outside click
@@ -642,6 +661,12 @@ export default function NewInvoicePage() {
               {scanLoading ? 'Scanning...' : 'Scan'}
             </button>
           </div>
+          <div className="mt-2 text-xs min-h-4">
+            {scanStatus === 'listening' && <p className="text-indigo-600">Listening for scanner input...</p>}
+            {scanStatus === 'found' && <p className="text-green-600">Scan received and item added.</p>}
+            {scanStatus === 'not_found' && <p className="text-amber-600">Scan received, but product was not found.</p>}
+            {scanStatus === 'no_input' && <p className="text-amber-600">No scan input detected. Ensure scanner is in keyboard (HID) mode.</p>}
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-5">
@@ -790,6 +815,7 @@ export default function NewInvoicePage() {
                 </div>
                 <button
                   type="button"
+                  onClick={activateScanMode}
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700"
                 >
                   <ScanLine className="h-4 w-4" />
