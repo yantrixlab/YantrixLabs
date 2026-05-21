@@ -13,6 +13,12 @@ import { useToast } from '@/components/ui/Toast';
 interface Customer { id: string; name: string; email: string | null; phone: string | null; gstin: string | null; billingCity: string | null; billingState: string | null; }
 interface InvoiceItem { id: string; description: string; productId: string | null; hsnSac: string; quantity: number; unit: string; price: number; discount: number; gstRate: number; taxableAmount: number; cgst: number; sgst: number; igst: number; total: number; }
 interface Product { id: string; name: string; hsnSac: string | null; price: number; gstRate: number; unit: string; barcode?: string | null; sku?: string | null; }
+interface ScanSessionData {
+  sessionId: string;
+  invoiceSessionId: string;
+  status: string;
+  pairingPayloadText: string;
+}
 
 const GST_RATES = [0, 5, 12, 18, 28];
 const INVOICE_WARNING_THRESHOLD = 2;
@@ -194,6 +200,9 @@ export default function NewInvoicePage() {
   const scanInputRef = useRef<HTMLInputElement>(null);
   const [scanStatus, setScanStatus] = useState<'idle' | 'listening' | 'found' | 'not_found' | 'no_input'>('idle');
   const scanIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [scannerConnectionState, setScannerConnectionState] = useState<'disconnected' | 'qr_ready' | 'connected' | 'receiving' | 'offline'>('disconnected');
+  const [scanSession, setScanSession] = useState<ScanSessionData | null>(null);
+  const [pairingQrUrl, setPairingQrUrl] = useState<string>('');
 
   const [items, setItems] = useState<InvoiceItem[]>([
     calcItem({ id: generateId(), description: '', quantity: 1, price: 0, gstRate: 18, unit: 'PCS' }, false),
@@ -423,6 +432,23 @@ export default function NewInvoicePage() {
     });
   };
 
+  const connectScanner = async () => {
+    try {
+      const invoiceSessionId = crypto.randomUUID();
+      const res = await apiFetch<{ data: ScanSessionData }>('/scan/sessions', {
+        method: 'POST',
+        body: JSON.stringify({ invoiceSessionId }),
+      });
+      setScanSession(res.data);
+      setScannerConnectionState('qr_ready');
+      const encoded = encodeURIComponent(res.data.pairingPayloadText);
+      setPairingQrUrl(`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encoded}`);
+      success('Scanner session ready', 'Open scanner app and scan this QR.');
+    } catch (err: any) {
+      toastError('Scanner connect failed', err?.message || 'Could not create scanner session');
+    }
+  };
+
   const handleScanSubmit = async () => {
     const code = scanInput.trim();
     if (!code || scanLoading) return;
@@ -471,6 +497,37 @@ export default function NewInvoicePage() {
       if (scanIdleTimerRef.current) clearTimeout(scanIdleTimerRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!scanSession?.sessionId) return;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+    if (!token) return;
+    const es = new EventSource(`${process.env.NEXT_PUBLIC_API_URL?.replace(/\/+$/, '') || 'http://localhost:4000/api/v1'}/scan/sessions/${scanSession.sessionId}/events?accessToken=${encodeURIComponent(token)}`);
+    es.addEventListener('scan.status', (evt: MessageEvent) => {
+      try {
+        const payload = JSON.parse(evt.data);
+        if (payload?.state === 'paired' || payload?.state === 'connected') setScannerConnectionState('connected');
+      } catch {}
+    });
+    es.addEventListener('scan.item', (evt: MessageEvent) => {
+      try {
+        const payload = JSON.parse(evt.data);
+        setScannerConnectionState('receiving');
+        if (payload?.found && payload.product) {
+          addOrIncrementProduct(payload.product as Product);
+          setScanStatus('found');
+          success('Scanned item added', payload.product.name);
+        } else {
+          setScanStatus('not_found');
+          warning('Item not found', payload?.message || 'No matching product found');
+        }
+      } catch {}
+    });
+    es.onerror = () => {
+      setScannerConnectionState('offline');
+    };
+    return () => es.close();
+  }, [scanSession?.sessionId]);
 
   // Close product suggestions on outside click
   useEffect(() => {
@@ -636,8 +693,42 @@ export default function NewInvoicePage() {
               <ScanLine className="h-4 w-4 text-indigo-600" />
               <p className="text-sm font-semibold text-indigo-900">Item Details</p>
             </div>
-            <p className="text-xs text-indigo-500">Scan barcode, SKU, serial no, or item code</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-indigo-500">Scan barcode, SKU, serial no, or item code</p>
+              <button
+                type="button"
+                onClick={connectScanner}
+                className="rounded-lg border border-indigo-300 bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-50"
+              >
+                Connect Scanner
+              </button>
+            </div>
           </div>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={connectScanner}
+              className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+            >
+              Connect Android Scanner
+            </button>
+            {!scanSession && (
+              <p className="text-xs text-indigo-700">
+                Click connect to generate pairing QR for scanner app.
+              </p>
+            )}
+          </div>
+          {scanSession && (
+            <div className="mt-2 rounded-lg border border-indigo-100 bg-white p-2.5">
+              <div className="flex items-start gap-3">
+                {pairingQrUrl && <img src={pairingQrUrl} alt="Scanner Pairing QR" className="h-24 w-24 rounded border border-gray-200" />}
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold text-indigo-700">Scanner State: {scannerConnectionState.replace('_', ' ')}</p>
+                  <p className="mt-1 text-[11px] text-gray-600 break-all">{scanSession.pairingPayloadText}</p>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="mt-3 flex gap-2">
             <input
               ref={scanInputRef}

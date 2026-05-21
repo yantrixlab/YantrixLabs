@@ -31,6 +31,7 @@ import contactRoutes from "./routes/contact";
 import settingsRoutes from "./routes/settings";
 import blogRoutes from "./routes/blog";
 import faqRoutes from "./routes/faq";
+import scanRoutes from "./routes/scan";
 
 const app = express();
 
@@ -164,6 +165,7 @@ app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/settings", settingsRoutes);
 app.use("/api/v1/blog", blogRoutes);
 app.use("/api/v1/faqs", faqRoutes);
+app.use("/api/v1/scan", scanRoutes);
 
 // ─── 404 Handler ────────────────────────────────────────────────────────────
 app.use((_req, res) => {

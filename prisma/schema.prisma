@@ -192,8 +192,72 @@ model Business {
   leads        Lead[]
   deals        Deal[]
   crmActivities CRMActivity[]
+  scannerDevices ScannerDevice[]
+  scannerSessions ScannerSession[]
+  scannerScanLogs ScannerScanLog[]
 
   @@map("businesses")
+}
+
+model ScannerDevice {
+  id               String   @id @default(cuid())
+  businessId       String
+  name             String
+  deviceToken      String   @unique
+  deviceFingerprint String?
+  isActive         Boolean  @default(true)
+  lastSeenAt       DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  business         Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  sessions         ScannerSession[] @relation("ScannerSessionDevice")
+  scanLogs         ScannerScanLog[]
+
+  @@unique([businessId, deviceFingerprint])
+  @@map("scanner_devices")
+}
+
+model ScannerSession {
+  id               String   @id @default(cuid())
+  businessId       String
+  invoiceSessionId String
+  pairingToken     String   @unique
+  pairingExpiresAt DateTime
+  expiresAt        DateTime
+  status           String   @default("QR_READY")
+  connectedDeviceId String?
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  business         Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  connectedDevice  ScannerDevice? @relation("ScannerSessionDevice", fields: [connectedDeviceId], references: [id])
+  scanLogs         ScannerScanLog[]
+
+  @@unique([businessId, invoiceSessionId])
+  @@map("scanner_sessions")
+}
+
+model ScannerScanLog {
+  id               String   @id @default(cuid())
+  businessId       String
+  deviceId         String?
+  sessionId        String
+  rawCode          String
+  symbology        String?
+  foundProductId   String?
+  status           String   @default("NOT_FOUND")
+  message          String?
+  createdAt        DateTime @default(now())
+
+  business         Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  device           ScannerDevice? @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  session          ScannerSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  product          Product? @relation(fields: [foundProductId], references: [id], onDelete: SetNull)
+
+  @@index([businessId, createdAt])
+  @@map("scanner_scan_logs")
 }
 
 model Branch {
@@ -406,6 +470,7 @@ model Product {
   business       Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
   invoiceItems   InvoiceItem[]
   stockMovements StockMovement[]
+  scannerScanLogs ScannerScanLog[]
 
   @@map("products")
 }
