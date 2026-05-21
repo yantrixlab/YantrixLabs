@@ -46,3 +46,4 @@ coverage/
 .vercel
 .turbo
 tsconfig.tsbuildinfo
+scanner-android/
