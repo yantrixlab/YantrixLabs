@@ -405,6 +405,58 @@ export default function NewInvoicePage() {
   const [showCreateFromScanModal, setShowCreateFromScanModal] = useState(false);
   const [pendingScannedCode, setPendingScannedCode] = useState('');
 
+  const scannerStateUi: Record<
+    'disconnected' | 'qr_ready' | 'connected' | 'receiving' | 'offline',
+    { label: string; hint: string; dot: string; pulse: string; ring: string; badge: string; text: string }
+  > = {
+    disconnected: {
+      label: 'Disconnected',
+      hint: 'Generate a QR and pair scanner app to begin.',
+      dot: 'bg-slate-500',
+      pulse: 'bg-slate-400/35',
+      ring: 'ring-slate-300',
+      badge: 'bg-slate-100 border-slate-300',
+      text: 'text-slate-700',
+    },
+    qr_ready: {
+      label: 'QR Ready',
+      hint: 'Waiting for scanner app to scan and pair.',
+      dot: 'bg-indigo-500',
+      pulse: 'bg-indigo-400/35',
+      ring: 'ring-indigo-300',
+      badge: 'bg-indigo-50 border-indigo-200',
+      text: 'text-indigo-700',
+    },
+    connected: {
+      label: 'Connected',
+      hint: 'Scanner paired and ready to receive product scans.',
+      dot: 'bg-emerald-500',
+      pulse: 'bg-emerald-400/35',
+      ring: 'ring-emerald-300',
+      badge: 'bg-emerald-50 border-emerald-200',
+      text: 'text-emerald-700',
+    },
+    receiving: {
+      label: 'Receiving',
+      hint: 'Live scans are being processed in this invoice session.',
+      dot: 'bg-cyan-500',
+      pulse: 'bg-cyan-400/35',
+      ring: 'ring-cyan-300',
+      badge: 'bg-cyan-50 border-cyan-200',
+      text: 'text-cyan-700',
+    },
+    offline: {
+      label: 'Offline',
+      hint: 'Realtime stream interrupted. Polling fallback is active.',
+      dot: 'bg-amber-500',
+      pulse: 'bg-amber-400/35',
+      ring: 'ring-amber-300',
+      badge: 'bg-amber-50 border-amber-200',
+      text: 'text-amber-700',
+    },
+  };
+  const scannerUi = scannerStateUi[scannerConnectionState];
+
   const [items, setItems] = useState<InvoiceItem[]>([
     calcItem({ id: generateId(), description: '', quantity: 1, price: 0, gstRate: 18, unit: 'PCS' }, false),
   ]);
@@ -502,6 +554,20 @@ export default function NewInvoicePage() {
   const removeItem = (id: string) => { if (items.length > 1) setItems(prev => prev.filter(i => i.id !== id)); };
   const updateItem = useCallback((id: string, field: keyof InvoiceItem, value: number | string) => {
     setItems(prev => prev.map(item => item.id === id ? calcItem({ ...item, [field]: value }, isInterState) : item));
+  }, [isInterState]);
+  const updateItemAmount = useCallback((id: string, enteredTotal: number) => {
+    setItems(prev =>
+      prev.map(item => {
+        if (item.id !== id) return item;
+        const qty = item.quantity > 0 ? item.quantity : 1;
+        const discountFactor = 1 - (item.discount || 0) / 100;
+        const safeDiscountFactor = discountFactor > 0 ? discountFactor : 1;
+        const gstRate = item.gstRate || 0;
+        const taxable = enteredTotal / (1 + gstRate / 100);
+        const unitPrice = taxable / (qty * safeDiscountFactor);
+        return calcItem({ ...item, price: Number.isFinite(unitPrice) ? Math.max(0, unitPrice) : 0 }, isInterState);
+      }),
+    );
   }, [isInterState]);
   useEffect(() => { setItems(prev => prev.map(i => calcItem(i, isInterState))); }, [isInterState]);
 
@@ -978,12 +1044,39 @@ export default function NewInvoicePage() {
             )}
           </div>
           {scanSession && (
-            <div className="mt-2 rounded-lg border border-indigo-100 bg-white p-2.5">
-              <div className="flex items-start gap-3">
-                {pairingQrUrl && <img src={pairingQrUrl} alt="Scanner Pairing QR" className="h-24 w-24 rounded border border-gray-200" />}
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold text-indigo-700">Scanner State: {scannerConnectionState.replace('_', ' ')}</p>
-                  <p className="mt-1 text-[11px] text-gray-600 break-all">{scanSession.pairingPayloadText}</p>
+            <div className="mt-2 rounded-xl border border-indigo-100 bg-white p-3">
+              <div className="grid gap-3 md:grid-cols-[auto,1fr]">
+                <div className="w-fit">
+                  {pairingQrUrl && <img src={pairingQrUrl} alt="Scanner Pairing QR" className="h-24 w-24 rounded-lg border border-gray-200 shadow-sm" />}
+                </div>
+                <div className="min-w-0">
+                  <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 ${scannerUi.badge}`}>
+                    <div className="relative h-3 w-3">
+                      <motion.span
+                        className={`absolute inset-0 rounded-full ${scannerUi.dot}`}
+                        animate={{ scale: [1, 0.92, 1], opacity: [1, 0.85, 1] }}
+                        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                      />
+                      <motion.span
+                        className={`absolute inset-0 rounded-full ${scannerUi.pulse}`}
+                        animate={{ scale: [1, 2.2], opacity: [0.65, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+                      />
+                      <motion.span
+                        className={`absolute inset-[-4px] rounded-full ring-1 ${scannerUi.ring}`}
+                        animate={{ scale: [0.9, 1.5], opacity: [0.35, 0] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut", delay: 0.25 }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold uppercase tracking-wide ${scannerUi.text}`}>
+                      Scanner State: {scannerUi.label}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-xs text-gray-600">{scannerUi.hint}</p>
+                  <div className="mt-2 rounded-lg border border-gray-100 bg-gray-50/80 px-2.5 py-2">
+                    <p className="text-[11px] text-gray-500 mb-1">Pairing Payload</p>
+                    <p className="text-[11px] text-gray-700 break-all font-mono">{scanSession.pairingPayloadText}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1220,7 +1313,14 @@ export default function NewInvoicePage() {
                           </select>
                         </td>
                         <td className="px-4 py-2.5 text-right">
-                          <span className="text-sm font-semibold text-gray-900">{item.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={Number(item.total.toFixed(2))}
+                            onChange={e => updateItemAmount(item.id, parseFloat(e.target.value) || 0)}
+                            className="w-24 border-0 bg-transparent text-right text-sm font-semibold text-gray-900 focus:outline-none"
+                          />
                         </td>
                         <td className="px-3 py-2.5">
                           <button onClick={() => removeItem(item.id)} disabled={items.length === 1}
