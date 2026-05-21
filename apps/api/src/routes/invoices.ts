@@ -4,6 +4,7 @@ import { validate } from '../middleware/validation';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../utils/prisma';
 import { calculateTax } from '@yantrix/billing';
+import { isSubscriptionEnforced } from '../utils/subscriptionControl';
 
 const router = Router();
 router.use(authenticate);
@@ -127,13 +128,15 @@ router.post('/', [
     const business = await prisma.business.findUnique({ where: { id: businessId } });
     if (!business) { res.status(404).json({ success: false, error: 'Business not found' }); return; }
 
-    // Use the active subscription plan as source of truth for limits.
-    // If none is active, fall back to free-tier limits.
-    let activeSub = await prisma.subscription.findFirst({
-      where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] } },
-      orderBy: { startDate: 'desc' },
-      include: { plan: true },
-    });
+    const subscriptionEnforced = await isSubscriptionEnforced();
+    if (subscriptionEnforced) {
+      // Use the active subscription plan as source of truth for limits.
+      // If none is active, fall back to free-tier limits.
+      let activeSub = await prisma.subscription.findFirst({
+        where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] } },
+        orderBy: { startDate: 'desc' },
+        include: { plan: true },
+      });
       const now = new Date();
 
       // Auto-expire subscription when endDate has passed
@@ -181,6 +184,7 @@ router.post('/', [
           return;
         }
       }
+    }
 
     const invoiceNumber = `${business.invoicePrefix}-${String(business.invoiceSeq).padStart(4, '0')}`;
 

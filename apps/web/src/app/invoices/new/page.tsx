@@ -6,13 +6,13 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Search, Save, Send, ArrowLeft, Calculator, UserPlus, X, Check, Lock, FileText, AlertTriangle } from 'lucide-react';
+import { Plus, Trash2, Search, Save, Send, ArrowLeft, Calculator, UserPlus, X, Check, Lock, FileText, AlertTriangle, ScanLine, Layers } from 'lucide-react';
 import { apiFetch, getUserData } from '@/lib/api';
 import { useToast } from '@/components/ui/Toast';
 
 interface Customer { id: string; name: string; email: string | null; phone: string | null; gstin: string | null; billingCity: string | null; billingState: string | null; }
 interface InvoiceItem { id: string; description: string; productId: string | null; hsnSac: string; quantity: number; unit: string; price: number; discount: number; gstRate: number; taxableAmount: number; cgst: number; sgst: number; igst: number; total: number; }
-interface Product { id: string; name: string; hsnSac: string | null; price: number; gstRate: number; unit: string; }
+interface Product { id: string; name: string; hsnSac: string | null; price: number; gstRate: number; unit: string; barcode?: string | null; sku?: string | null; }
 
 const GST_RATES = [0, 5, 12, 18, 28];
 const INVOICE_WARNING_THRESHOLD = 2;
@@ -184,6 +184,14 @@ export default function NewInvoicePage() {
   const [invoiceLimitReached, setInvoiceLimitReached] = useState(false);
   const [customerLimitReached, setCustomerLimitReached] = useState(false);
   const [invoicesLeft, setInvoicesLeft] = useState<number | null>(null);
+  const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
+  const [showBulkAdd, setShowBulkAdd] = useState(false);
+  const [bulkProducts, setBulkProducts] = useState<Product[]>([]);
+  const [bulkSearch, setBulkSearch] = useState('');
+  const [bulkSelected, setBulkSelected] = useState<Record<string, boolean>>({});
+  const [scanInput, setScanInput] = useState('');
+  const [scanLoading, setScanLoading] = useState(false);
+  const scanInputRef = useRef<HTMLInputElement>(null);
 
   const [items, setItems] = useState<InvoiceItem[]>([
     calcItem({ id: generateId(), description: '', quantity: 1, price: 0, gstRate: 18, unit: 'PCS' }, false),
@@ -213,11 +221,19 @@ export default function NewInvoicePage() {
         .catch(() => {});
     }
 
-    // Check plan limits
     Promise.all([
+      apiFetch('/settings/subscription-control'),
       apiFetch('/subscriptions'),
       apiFetch('/business/stats'),
-    ]).then(([subRes, statsRes]: [any, any]) => {
+    ]).then(([controlRes, subRes, statsRes]: [any, any, any]) => {
+      const enforced = controlRes?.data?.isSubscriptionEnforced !== false;
+      setSubscriptionEnforced(enforced);
+      if (!enforced) {
+        setInvoiceLimitReached(false);
+        setCustomerLimitReached(false);
+        setInvoicesLeft(null);
+        return;
+      }
       const subs: any[] = subRes.data || [];
       const sub = subs.find((s: any) => s.status === 'ACTIVE' || s.status === 'TRIAL') || null;
       if (!sub) return;
@@ -314,6 +330,129 @@ export default function NewInvoicePage() {
     setActiveSuggestionItem(null);
   }, [isInterState]);
 
+  const openBulkAdd = async () => {
+    setShowBulkAdd(true);
+    try {
+      const res = await apiFetch<{ data: Product[] }>(`/products?limit=100`);
+      setBulkProducts(res.data || []);
+    } catch {
+      setBulkProducts([]);
+    }
+  };
+
+  const toggleBulkProduct = (id: string) => {
+    setBulkSelected(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const addBulkSelectedProducts = () => {
+    const selected = bulkProducts.filter(p => bulkSelected[p.id]);
+    if (selected.length === 0) return;
+    setItems(prev => {
+      const next = [...prev];
+      for (const p of selected) {
+        const existingIdx = next.findIndex(i => i.productId === p.id);
+        if (existingIdx !== -1) {
+          const existing = next[existingIdx];
+          next[existingIdx] = calcItem(
+            {
+              ...existing,
+              quantity: (existing.quantity || 0) + 1,
+            },
+            isInterState,
+          );
+        } else {
+          next.push(
+            calcItem(
+              {
+                id: generateId(),
+                description: p.name,
+                productId: p.id,
+                hsnSac: p.hsnSac || '',
+                quantity: 1,
+                unit: p.unit || 'PCS',
+                price: p.price || 0,
+                gstRate: p.gstRate || 0,
+                discount: 0,
+              },
+              isInterState,
+            ),
+          );
+        }
+      }
+      return next;
+    });
+    setShowBulkAdd(false);
+    setBulkSearch('');
+    setBulkSelected({});
+  };
+
+  const addOrIncrementProduct = (p: Product) => {
+    setItems(prev => {
+      const next = [...prev];
+      const existingIdx = next.findIndex(i => i.productId === p.id);
+      if (existingIdx !== -1) {
+        const existing = next[existingIdx];
+        next[existingIdx] = calcItem(
+          {
+            ...existing,
+            quantity: (existing.quantity || 0) + 1,
+          },
+          isInterState,
+        );
+      } else {
+        next.push(
+          calcItem(
+            {
+              id: generateId(),
+              description: p.name,
+              productId: p.id,
+              hsnSac: p.hsnSac || '',
+              quantity: 1,
+              unit: p.unit || 'PCS',
+              price: p.price || 0,
+              gstRate: p.gstRate || 0,
+              discount: 0,
+            },
+            isInterState,
+          ),
+        );
+      }
+      return next;
+    });
+  };
+
+  const handleScanSubmit = async () => {
+    const code = scanInput.trim();
+    if (!code || scanLoading) return;
+    setScanLoading(true);
+    try {
+      const res = await apiFetch<{ data: Product[] }>(`/products?search=${encodeURIComponent(code)}&limit=20`);
+      const products = res.data || [];
+      const exact = products.find(
+        p =>
+          p.barcode?.toLowerCase() === code.toLowerCase() ||
+          p.sku?.toLowerCase() === code.toLowerCase() ||
+          p.name.toLowerCase() === code.toLowerCase(),
+      ) || products[0];
+      if (exact) {
+        addOrIncrementProduct(exact);
+        success('Item scanned', exact.name);
+      } else {
+        warning('Item not found', `No product matched "${code}"`);
+      }
+    } catch {
+      warning('Scan failed', 'Could not fetch products for scanned code.');
+    } finally {
+      setScanLoading(false);
+      setScanInput('');
+      setTimeout(() => scanInputRef.current?.focus(), 0);
+    }
+  };
+
+  useEffect(() => {
+    scanInputRef.current?.focus();
+  }, []);
+
   // Close product suggestions on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -356,6 +495,10 @@ export default function NewInvoicePage() {
   }), { subtotal: 0, taxableAmount: 0, cgst: 0, sgst: 0, igst: 0, total: 0 });
 
   const handleSave = async (statusOverride?: string) => {
+    if (subscriptionEnforced && invoiceLimitReached) {
+      warning('Invoice limit reached', 'Please upgrade your plan to create more invoices.');
+      return;
+    }
     if (!selectedCustomer) { warning('Customer required', 'Please select or add a customer first.'); return; }
     const validItems = items.filter(i => i.description.trim());
     if (validItems.length === 0) { warning('Items required', 'Add at least one line item.'); return; }
@@ -387,8 +530,8 @@ export default function NewInvoicePage() {
     } finally { setIsLoading(false); }
   };
 
-  const inputCls = "w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all";
-  const labelCls = "block text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1.5";
+  const inputCls = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all";
+  const labelCls = "block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1.5";
 
   return (
     <>
@@ -397,10 +540,10 @@ export default function NewInvoicePage() {
           customerLimitReached={customerLimitReached}
           onCreated={(c) => { setSelectedCustomer(c); setCustomerSearch(c.name); setShowAddCustomer(false); }} />
       )}
-      <div className="p-4 lg:p-6 xl:p-8 w-full max-w-full">
+      <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-[#f8f9fc] min-h-screen">
 
         {/* Page Header */}
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-4 mb-5">
           <button
             onClick={() => router.back()}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-700 transition-all"
@@ -408,8 +551,8 @@ export default function NewInvoicePage() {
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">New Invoice</h1>
-            <p className="text-sm text-gray-400 mt-0.5">Create a GST-compliant invoice</p>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">New Invoice</h1>
+            <p className="text-sm text-slate-500 mt-0.5">Create a GST-compliant invoice</p>
           </div>
           <div className="ml-auto flex flex-col items-end gap-2">
             {invoiceLimitReached && (
@@ -468,19 +611,52 @@ export default function NewInvoicePage() {
           </div>
         )}
 
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-5">
+        <div className="mb-4 rounded-xl border border-indigo-200 bg-indigo-50/40 p-3.5">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <ScanLine className="h-4 w-4 text-indigo-600" />
+              <p className="text-sm font-semibold text-indigo-900">Item Details</p>
+            </div>
+            <p className="text-xs text-indigo-500">Scan barcode, SKU, serial no, or item code</p>
+          </div>
+          <div className="mt-3 flex gap-2">
+            <input
+              ref={scanInputRef}
+              value={scanInput}
+              onChange={(e) => setScanInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleScanSubmit();
+                }
+              }}
+              placeholder="Scan item by barcode, SKU, or name"
+              className="flex-1 rounded-xl border border-indigo-200 bg-white px-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={handleScanSubmit}
+              disabled={scanLoading}
+              className="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+            >
+              {scanLoading ? 'Scanning...' : 'Scan'}
+            </button>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-5">
+          <div className="lg:col-span-2 space-y-4">
 
             {/* Invoice Details */}
-            <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center gap-3 bg-gray-50">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50">
                   <FileText className="h-3.5 w-3.5 text-indigo-600" />
                 </span>
                 <h2 className="text-sm font-semibold text-gray-800">Invoice Details</h2>
               </div>
-              <div className="p-6">
-                <div className="grid sm:grid-cols-2 gap-5">
+              <div className="p-5">
+                <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className={labelCls}>Invoice Type</label>
                     <select value={formData.type} onChange={e => setFormData(p => ({ ...p, type: e.target.value }))} className={inputCls}>
@@ -503,7 +679,7 @@ export default function NewInvoicePage() {
                     <input type="text" value={formData.placeOfSupply} onChange={e => setFormData(p => ({ ...p, placeOfSupply: e.target.value }))} placeholder="e.g. Karnataka" className={inputCls} />
                   </div>
                 </div>
-                <div className="mt-5 flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+                <div className="mt-4 flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5">
                   <label className="relative inline-flex cursor-pointer items-center">
                     <input type="checkbox" checked={isInterState} onChange={e => setIsInterState(e.target.checked)} className="sr-only peer" />
                     <div className="peer h-5 w-9 rounded-full bg-gray-300 transition-all after:absolute after:left-[2px] after:top-[2px] after:h-4 after:w-4 after:rounded-full after:bg-white after:shadow-sm after:transition-all peer-checked:bg-indigo-600 peer-checked:after:translate-x-full" />
@@ -517,14 +693,14 @@ export default function NewInvoicePage() {
             </div>
 
             {/* Bill To */}
-            <div className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-              <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center gap-3 bg-gray-50">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-50">
                   <UserPlus className="h-3.5 w-3.5 text-violet-600" />
                 </span>
                 <h2 className="text-sm font-semibold text-gray-800">Bill To</h2>
               </div>
-              <div className="p-6">
+              <div className="p-5">
                 {selectedCustomer ? (
                   <div className="flex items-start justify-between rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 p-4">
                     <div className="flex items-start gap-3">
@@ -566,7 +742,7 @@ export default function NewInvoicePage() {
                       </div>
                       <button
                         onClick={() => setShowAddCustomer(true)}
-                        className="inline-flex items-center gap-1.5 rounded-xl border border-dashed border-indigo-300 bg-indigo-50 px-3.5 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100 whitespace-nowrap transition-all"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3.5 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100 whitespace-nowrap transition-all"
                       >
                         <UserPlus className="h-4 w-4" />
                         Add New
@@ -604,64 +780,73 @@ export default function NewInvoicePage() {
             </div>
 
             {/* Items & Services */}
-            <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+              <div className="px-5 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+                <div className="flex items-center gap-3">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50">
                   <Calculator className="h-3.5 w-3.5 text-emerald-600" />
                 </span>
-                <h2 className="text-sm font-semibold text-gray-800">Items &amp; Services</h2>
+                  <h2 className="text-sm font-semibold text-gray-800">Item Table</h2>
+                </div>
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700"
+                >
+                  <ScanLine className="h-4 w-4" />
+                  Scan Item
+                </button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-100 bg-gray-50/60">
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 min-w-[200px]">Description</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 w-24">HSN/SAC</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 w-20">Qty</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 w-28">Price (&#8377;)</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 w-20">Disc%</th>
-                      <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 w-20">GST%</th>
-                      <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-400 w-28">Total (&#8377;)</th>
+                    <tr className="border-b border-gray-200 bg-[#f6f7fb]">
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 min-w-[220px]">Item Details</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 w-24">HSN/SAC</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 w-20">Quantity</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 w-28">Rate</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 w-20">Disc%</th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 w-20">GST%</th>
+                      <th className="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wider text-slate-500 w-28">Amount</th>
                       <th className="px-3 py-3 w-10" />
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-gray-100">
                     {items.map((item, idx) => (
-                      <tr key={item.id} className="group hover:bg-indigo-50/30 transition-colors">
-                        <td className="px-4 py-3" data-product-suggestions>
+                      <tr key={item.id} className="group hover:bg-indigo-50/20 transition-colors">
+                        <td className="px-4 py-2.5" data-product-suggestions>
                           <input type="text" value={item.description}
                             ref={el => { descInputRefs.current[item.id] = el; }}
                             onChange={e => handleDescriptionChange(item.id, e.target.value)}
                             onFocus={() => { if (productSuggestions[item.id]?.length) setActiveSuggestionItem(item.id); }}
-                            placeholder={`Item ${idx + 1}`}
+                            placeholder={idx === 0 ? "Type or click to select an item." : `Item ${idx + 1}`}
                             className="w-full border-0 bg-transparent text-sm text-gray-900 placeholder:text-gray-300 focus:outline-none" />
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2.5">
                           <input type="text" value={item.hsnSac} onChange={e => updateItem(item.id, 'hsnSac', e.target.value)} placeholder="998314"
                             className="w-full border-0 bg-transparent text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none" />
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2.5">
                           <input type="number" min="0.01" step="0.01" value={item.quantity} onChange={e => updateItem(item.id, 'quantity', parseFloat(e.target.value) || 0)}
                             className="w-full border-0 bg-transparent text-sm text-gray-700 focus:outline-none" />
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2.5">
                           <input type="number" min="0" step="0.01" value={item.price} onChange={e => updateItem(item.id, 'price', parseFloat(e.target.value) || 0)}
                             className="w-full border-0 bg-transparent text-sm text-gray-700 focus:outline-none" />
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2.5">
                           <input type="number" min="0" max="100" step="0.5" value={item.discount} onChange={e => updateItem(item.id, 'discount', parseFloat(e.target.value) || 0)}
                             className="w-full border-0 bg-transparent text-sm text-gray-700 focus:outline-none" />
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2.5">
                           <select value={item.gstRate} onChange={e => updateItem(item.id, 'gstRate', parseFloat(e.target.value))}
                             className="w-full border-0 bg-transparent text-sm text-gray-700 focus:outline-none cursor-pointer">
                             {GST_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
                           </select>
                         </td>
-                        <td className="px-4 py-3 text-right">
+                        <td className="px-4 py-2.5 text-right">
                           <span className="text-sm font-semibold text-gray-900">{item.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                         </td>
-                        <td className="px-3 py-3">
+                        <td className="px-3 py-2.5">
                           <button onClick={() => removeItem(item.id)} disabled={items.length === 1}
                             className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-300 hover:bg-red-50 hover:text-red-500 disabled:opacity-20 transition-all opacity-0 group-hover:opacity-100">
                             <Trash2 className="h-3.5 w-3.5" />
@@ -672,23 +857,27 @@ export default function NewInvoicePage() {
                   </tbody>
                 </table>
               </div>
-              <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/40">
-                <button onClick={addItem} className="inline-flex items-center gap-2 rounded-xl border border-dashed border-indigo-300 bg-white px-4 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
+              <div className="px-5 py-3 border-t border-gray-200 bg-gray-50/70 flex flex-wrap items-center gap-2">
+                <button onClick={addItem} className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-white px-3.5 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
                   <Plus className="h-4 w-4" />
-                  Add Line Item
+                  Add New Row
+                </button>
+                <button onClick={openBulkAdd} className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-white px-3.5 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
+                  <Layers className="h-4 w-4" />
+                  Add Items in Bulk
                 </button>
               </div>
             </div>
 
             {/* Notes & Terms */}
-            <div className="rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3">
+            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center gap-3 bg-gray-50">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50">
                   <FileText className="h-3.5 w-3.5 text-amber-600" />
                 </span>
                 <h2 className="text-sm font-semibold text-gray-800">Notes &amp; Terms</h2>
               </div>
-              <div className="p-6 grid sm:grid-cols-2 gap-5">
+              <div className="p-5 grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className={labelCls}>Notes</label>
                   <textarea
@@ -715,10 +904,10 @@ export default function NewInvoicePage() {
 
           {/* Sidebar */}
           <div>
-            <div className="rounded-2xl border border-gray-100/80 bg-white shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.05)] sticky top-6 overflow-hidden">
+            <div className="rounded-xl border border-gray-200 bg-white shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.05)] sticky top-6 overflow-hidden">
 
               {/* Header */}
-              <div className="px-6 pt-6 pb-5">
+              <div className="px-5 pt-5 pb-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-50 ring-1 ring-indigo-100/80">
                     <Calculator className="h-4 w-4 text-indigo-600" />
@@ -731,7 +920,7 @@ export default function NewInvoicePage() {
               </div>
 
               {/* Line items */}
-              <div className="px-6 pb-5 space-y-0.5">
+              <div className="px-5 pb-4 space-y-0.5">
                 <div className="flex justify-between items-center py-2.5 border-b border-gray-50">
                   <span className="text-sm text-gray-500 font-medium">Subtotal</span>
                   <span className="text-sm font-semibold text-gray-800 tabular-nums">&#8377;{totals.subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
@@ -771,14 +960,14 @@ export default function NewInvoicePage() {
               </div>
 
               {/* Total hero block */}
-              <div className="mx-4 mb-5 rounded-2xl bg-gradient-to-br from-[#5B4BFF] via-indigo-600 to-[#4338ca] px-5 py-5 text-white shadow-[0_8px_24px_-4px_rgba(91,75,255,0.40),0_4px_12px_-4px_rgba(91,75,255,0.25)] ring-1 ring-white/10">
+              <div className="mx-4 mb-4 rounded-xl bg-gradient-to-br from-[#5B4BFF] via-indigo-600 to-[#4338ca] px-5 py-4 text-white shadow-[0_8px_24px_-4px_rgba(91,75,255,0.40),0_4px_12px_-4px_rgba(91,75,255,0.25)] ring-1 ring-white/10">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-indigo-200 mb-2">Invoice Total</p>
                 <p className="text-[2.25rem] font-bold tracking-tight leading-none tabular-nums">&#8377;{totals.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
                 <p className="text-[11px] text-indigo-300/90 mt-2.5 font-medium">Includes all applicable taxes</p>
               </div>
 
               {/* CTA buttons */}
-              <div className="px-4 pb-5 space-y-2.5">
+              <div className="px-4 pb-4 space-y-2.5">
                 {invoiceLimitReached && (
                   <motion.div
                     animate={{ y: [0, -4, 0] }}
@@ -816,6 +1005,30 @@ export default function NewInvoicePage() {
           </div>
         </div>
       </div>
+      <div className="sticky bottom-0 z-30 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85 px-4 py-3">
+        <div className="mx-auto flex w-full max-w-[1600px] items-center gap-2">
+          <button
+            onClick={() => handleSave()}
+            disabled={isLoading || (subscriptionEnforced && invoiceLimitReached)}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+          >
+            Save as Draft
+          </button>
+          <button
+            onClick={() => handleSave('SENT')}
+            disabled={isLoading || (subscriptionEnforced && invoiceLimitReached)}
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+          >
+            Save and Send
+          </button>
+          <button
+            onClick={() => router.back()}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
       {typeof window !== 'undefined' && activeSuggestionItem && productSuggestions[activeSuggestionItem]?.length > 0 && dropdownPos && createPortal(
         <AnimatePresence>
           <motion.div
@@ -839,6 +1052,71 @@ export default function NewInvoicePage() {
         </AnimatePresence>,
         document.body
       )}
+      <AnimatePresence>
+        {showBulkAdd && (
+          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/40"
+              onClick={() => setShowBulkAdd(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              className="relative z-10 w-full max-w-2xl rounded-2xl border border-gray-200 bg-white shadow-2xl"
+            >
+              <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+                <h3 className="text-base font-semibold text-gray-900">Add Items in Bulk</h3>
+                <button onClick={() => setShowBulkAdd(false)} className="rounded-lg p-1 text-gray-500 hover:bg-gray-100">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="p-5">
+                <div className="relative mb-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <input
+                    value={bulkSearch}
+                    onChange={(e) => setBulkSearch(e.target.value)}
+                    placeholder="Search product by name, barcode, or SKU"
+                    className="w-full rounded-xl border border-gray-200 pl-9 pr-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none"
+                  />
+                </div>
+                <div className="max-h-80 overflow-y-auto rounded-xl border border-gray-200">
+                  {bulkProducts
+                    .filter(p => !bulkSearch.trim() || p.name.toLowerCase().includes(bulkSearch.toLowerCase()))
+                    .map((p) => (
+                      <label key={p.id} className="flex cursor-pointer items-center justify-between gap-3 border-b border-gray-100 px-4 py-3 last:border-0 hover:bg-gray-50">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={!!bulkSelected[p.id]}
+                            onChange={() => toggleBulkProduct(p.id)}
+                            className="h-4 w-4 rounded border-gray-300"
+                          />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{p.name}</p>
+                            <p className="text-xs text-gray-500">₹{p.price} · GST {p.gstRate}% {p.hsnSac ? `· HSN ${p.hsnSac}` : ''}</p>
+                          </div>
+                        </div>
+                      </label>
+                    ))}
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4">
+                <button onClick={() => setShowBulkAdd(false)} className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                  Cancel
+                </button>
+                <button onClick={addBulkSelectedProducts} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
+                  Add Selected Items
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

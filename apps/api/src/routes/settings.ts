@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import prisma from '../utils/prisma';
+import { isSubscriptionEnforced } from '../utils/subscriptionControl';
 
 const router = Router();
 
@@ -92,6 +93,13 @@ router.get('/team-members', async (_req: Request, res: Response, next: NextFunct
       select: { id: true, name: true, role: true, bio: true, imageUrl: true, displayOrder: true },
     });
     res.json({ success: true, data: members });
+  } catch (error) { next(error); }
+});
+
+router.get('/subscription-control', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const enforced = await isSubscriptionEnforced();
+    res.json({ success: true, data: { isSubscriptionEnforced: enforced } });
   } catch (error) { next(error); }
 });
 

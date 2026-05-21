@@ -3,6 +3,7 @@ import { body, query } from 'express-validator';
 import { validate } from '../middleware/validation';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth';
 import prisma from '../utils/prisma';
+import { isSubscriptionEnforced } from '../utils/subscriptionControl';
 
 const router = Router();
 router.use(authenticate);
@@ -60,32 +61,32 @@ router.post('/', [
     const businessId = req.user!.businessId;
     if (!businessId) { res.status(400).json({ success: false, error: 'Business context required' }); return; }
 
-    // Enforce customer limit per plan
-    const business = await prisma.business.findUnique({ where: { id: businessId } });
+    const subscriptionEnforced = await isSubscriptionEnforced();
+    if (subscriptionEnforced) {
+      // Determine whether the subscription is currently active
+      const now = new Date();
+      const activeSub = await prisma.subscription.findFirst({
+        where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] }, endDate: { gte: now } },
+        orderBy: { startDate: 'desc' },
+        include: { plan: true },
+      });
 
-    // Determine whether the subscription is currently active
-    const now = new Date();
-    const activeSub = await prisma.subscription.findFirst({
-      where: { businessId, status: { in: ['ACTIVE', 'TRIAL'] }, endDate: { gte: now } },
-      orderBy: { startDate: 'desc' },
-      include: { plan: true },
-    });
+      // If no active subscription, fall back to free-plan limits
+      const effectivePlan = activeSub
+        ? activeSub.plan
+        : (await prisma.plan.findUnique({ where: { slug: 'free' } })) ??
+          (await prisma.plan.findFirst({ where: { price: 0 }, orderBy: { price: 'asc' } }));
 
-    // If no active subscription, fall back to free-plan limits
-    const effectivePlan = activeSub
-      ? activeSub.plan
-      : (await prisma.plan.findUnique({ where: { slug: 'free' } })) ??
-        (await prisma.plan.findFirst({ where: { price: 0 }, orderBy: { price: 'asc' } }));
-
-    if (effectivePlan && effectivePlan.customerLimit > 0) {
-      const customerCount = await prisma.customer.count({ where: { businessId, isActive: true } });
-      if (customerCount >= effectivePlan.customerLimit) {
-        const planLabel = activeSub ? effectivePlan.name : 'free tier';
-        res.status(403).json({
-          success: false,
-          error: `Customer limit reached. Your ${planLabel} allows ${effectivePlan.customerLimit} customer${effectivePlan.customerLimit === 1 ? '' : 's'}. Please ${activeSub ? 'upgrade' : 'renew your plan'} to add more customers.`,
-        });
-        return;
+      if (effectivePlan && effectivePlan.customerLimit > 0) {
+        const customerCount = await prisma.customer.count({ where: { businessId, isActive: true } });
+        if (customerCount >= effectivePlan.customerLimit) {
+          const planLabel = activeSub ? effectivePlan.name : 'free tier';
+          res.status(403).json({
+            success: false,
+            error: `Customer limit reached. Your ${planLabel} allows ${effectivePlan.customerLimit} customer${effectivePlan.customerLimit === 1 ? '' : 's'}. Please ${activeSub ? 'upgrade' : 'renew your plan'} to add more customers.`,
+          });
+          return;
+        }
       }
     }
 

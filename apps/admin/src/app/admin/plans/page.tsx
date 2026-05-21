@@ -410,6 +410,8 @@ export default function AdminPlansPage() {
   const [showModal, setShowModal] = useState(false);
   const [editPlan, setEditPlan] = useState<Plan | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
+  const [updatingSubscriptionControl, setUpdatingSubscriptionControl] = useState(false);
 
   const fetchPlans = async () => {
     setLoading(true);
@@ -425,6 +427,36 @@ export default function AdminPlansPage() {
   };
 
   useEffect(() => { fetchPlans(); }, []);
+
+  useEffect(() => {
+    adminFetch<{ data: { isSubscriptionEnforced: boolean } }>('/admin/settings/subscription-control')
+      .then((res) => setSubscriptionEnforced(res.data?.isSubscriptionEnforced !== false))
+      .catch(() => setSubscriptionEnforced(true));
+  }, []);
+
+  const toggleSubscriptionControl = async () => {
+    const next = !subscriptionEnforced;
+    setUpdatingSubscriptionControl(true);
+    setError('');
+    try {
+      const token = getAdminToken();
+      const res = await fetch(`${API_URL}/admin/settings/subscription-control`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ isSubscriptionEnforced: next }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.success) {
+        setError(data?.error || 'Failed to update subscription control');
+        return;
+      }
+      setSubscriptionEnforced(data.data?.isSubscriptionEnforced !== false);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to update subscription control');
+    } finally {
+      setUpdatingSubscriptionControl(false);
+    }
+  };
 
   const savePrice = async (planId: string) => {
     setSaving(true);
@@ -504,6 +536,28 @@ export default function AdminPlansPage() {
           </button>
           <button onClick={() => { setEditPlan(null); setShowModal(true); }} className="inline-flex items-center gap-2 rounded-lg bg-orange-600 px-3 py-2 text-sm font-medium text-white hover:bg-orange-700">
             <Plus className="h-4 w-4" /> New Plan
+          </button>
+        </div>
+      </div>
+
+      <div className="mb-5 rounded-xl border border-gray-700 bg-gray-900/70 p-4">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-white">Subscription Enforcement</p>
+            <p className="mt-1 text-xs text-gray-400">
+              Turn off to allow unlimited invoices and remove subscription-based restrictions in GST Invoice.
+            </p>
+          </div>
+          <button
+            onClick={toggleSubscriptionControl}
+            disabled={updatingSubscriptionControl}
+            className={`inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold border ${
+              subscriptionEnforced
+                ? 'border-green-700 bg-green-900/30 text-green-400'
+                : 'border-amber-700 bg-amber-900/30 text-amber-400'
+            } disabled:opacity-60`}
+          >
+            {updatingSubscriptionControl ? 'Updating...' : subscriptionEnforced ? 'Enabled' : 'Disabled'}
           </button>
         </div>
       </div>

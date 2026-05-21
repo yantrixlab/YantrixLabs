@@ -6,6 +6,10 @@ import {
 } from "../middleware/auth";
 import prisma from "../utils/prisma";
 import bcrypt from "bcryptjs";
+import {
+  isSubscriptionEnforced,
+  SUBSCRIPTION_CONTROL_KEY,
+} from "../utils/subscriptionControl";
 
 const router = Router();
 router.use(authenticate);
@@ -1490,6 +1494,9 @@ router.delete(
 // ─── Contact Details Settings ─────────────────────────────────────────────
 
 const CONTACT_DETAILS_KEY = "contact_details";
+const SUBSCRIPTION_CONTROL_DEFAULTS = {
+  isSubscriptionEnforced: true,
+};
 
 const CONTACT_DETAILS_DEFAULTS = {
   contactEmail: "support@yantrix.in",
@@ -1565,6 +1572,46 @@ router.put(
         update: data,
       });
       res.json({ success: true, data: config });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.get(
+  "/settings/subscription-control",
+  async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const enforced = await isSubscriptionEnforced();
+      res.json({
+        success: true,
+        data: { ...SUBSCRIPTION_CONTROL_DEFAULTS, isSubscriptionEnforced: enforced },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.put(
+  "/settings/subscription-control",
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const isEnforced = req.body?.isSubscriptionEnforced !== false;
+      await prisma.siteConfig.upsert({
+        where: { key: SUBSCRIPTION_CONTROL_KEY },
+        create: {
+          key: SUBSCRIPTION_CONTROL_KEY,
+          primaryBtnLabel: isEnforced ? "enabled" : "disabled",
+        },
+        update: {
+          primaryBtnLabel: isEnforced ? "enabled" : "disabled",
+        },
+      });
+      res.json({
+        success: true,
+        data: { ...SUBSCRIPTION_CONTROL_DEFAULTS, isSubscriptionEnforced: isEnforced },
+      });
     } catch (error) {
       next(error);
     }

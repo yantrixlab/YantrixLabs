@@ -31,6 +31,7 @@ export default function NewCustomerPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [customerLimitReached, setCustomerLimitReached] = useState(false);
+  const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -54,9 +55,16 @@ export default function NewCustomerPage() {
 
   useEffect(() => {
     Promise.all([
+      apiFetch('/settings/subscription-control'),
       apiFetch('/subscriptions'),
       apiFetch('/business/stats'),
-    ]).then(([subRes, statsRes]: [any, any]) => {
+    ]).then(([controlRes, subRes, statsRes]: [any, any, any]) => {
+      const enforced = controlRes?.data?.isSubscriptionEnforced !== false;
+      setSubscriptionEnforced(enforced);
+      if (!enforced) {
+        setCustomerLimitReached(false);
+        return;
+      }
       const sub = subRes.data?.[0];
       if (!sub) return;
       const customerLimit: number = sub.plan?.customerLimit || 0;
@@ -85,7 +93,7 @@ export default function NewCustomerPage() {
   };
 
   const handleSubmit = async () => {
-    if (customerLimitReached) { toastError('Customer limit reached', 'Please upgrade your plan to add more customers.'); return; }
+    if (subscriptionEnforced && customerLimitReached) { toastError('Customer limit reached', 'Please upgrade your plan to add more customers.'); return; }
     if (!validate()) return;
     setLoading(true);
     try {

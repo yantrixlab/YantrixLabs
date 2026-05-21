@@ -125,6 +125,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       ? "dark"
       : "light";
   });
+  const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
 
   useEffect(() => {
     localStorage.setItem("gst_invoice_theme", theme);
@@ -207,6 +208,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       .catch(() => {
         setActiveModuleSlugs(null);
         setModuleRequiredPlans({});
+      });
+
+    apiFetch("/settings/subscription-control")
+      .then((res: any) => {
+        setSubscriptionEnforced(res?.data?.isSubscriptionEnforced !== false);
+      })
+      .catch(() => {
+        setSubscriptionEnforced(true);
       });
 
     apiFetch("/subscriptions")
@@ -372,6 +381,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const isNavEnabled = (href: string): boolean => {
+    if (!subscriptionEnforced) return true;
     const slug = NAV_MODULE_SLUG[href];
     if (!slug) return true;
     const requiredPlan = moduleRequiredPlans[slug];
@@ -569,7 +579,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden pl-3 space-y-0.5"
                       >
-                        {SETTINGS_ITEMS.map((item) => (
+                        {SETTINGS_ITEMS.filter((item) => (
+                          subscriptionEnforced || item.href !== "/settings/billing"
+                        )).map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
@@ -597,6 +609,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         >
           {!collapsed &&
             planInfo &&
+            subscriptionEnforced &&
             (() => {
               const isPremium =
                 !planInfo.isExpired && planInfo.name.toLowerCase() !== "free";
@@ -903,8 +916,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
             {(() => {
               const invoiceBlocked =
-                planInfo?.isExpired ||
+                (subscriptionEnforced && planInfo?.isExpired) ||
                 (planInfo?.invoiceLimit != null &&
+                  subscriptionEnforced &&
                   planInfo.invoiceLimit > 0 &&
                   planInfo.invoicesUsed >= planInfo.invoiceLimit);
               return invoiceBlocked ? (
