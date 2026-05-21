@@ -431,7 +431,15 @@ export default function AdminPlansPage() {
   useEffect(() => {
     adminFetch<{ data: { isSubscriptionEnforced: boolean } }>('/admin/settings/subscription-control')
       .then((res) => setSubscriptionEnforced(res.data?.isSubscriptionEnforced !== false))
-      .catch(() => setSubscriptionEnforced(true));
+      .catch(async () => {
+        // Backward-compat fallback when backend is not yet deployed with admin setting route.
+        try {
+          const res = await adminFetch<{ data: { isSubscriptionEnforced: boolean } }>('/settings/subscription-control');
+          setSubscriptionEnforced(res.data?.isSubscriptionEnforced !== false);
+        } catch {
+          setSubscriptionEnforced(true);
+        }
+      });
   }, []);
 
   const toggleSubscriptionControl = async () => {
@@ -447,6 +455,10 @@ export default function AdminPlansPage() {
       });
       const data = await res.json();
       if (!res.ok || !data?.success) {
+        if (res.status === 404) {
+          setError('Subscription control API is not deployed on backend yet. Please restart/redeploy API.');
+          return;
+        }
         setError(data?.error || 'Failed to update subscription control');
         return;
       }
