@@ -28,6 +28,196 @@ interface ScanLogData {
   product: Product | null;
 }
 
+interface CreateProductFromScanModalProps {
+  scannedCode: string;
+  onClose: () => void;
+  onCreated: (product: Product) => void;
+}
+
+function CreateProductFromScanModal({ scannedCode, onClose, onCreated }: CreateProductFromScanModalProps) {
+  const { success, error: toastError } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState('');
+  const [form, setForm] = useState({
+    name: '',
+    description: '',
+    sku: scannedCode,
+    barcode: scannedCode,
+    hsnSac: '',
+    type: 'product',
+    unit: 'PCS',
+    price: '0',
+    costPrice: '',
+    mrp: '',
+    gstRate: '18',
+    cessRate: '',
+    category: '',
+    brand: '',
+    stockCount: '0',
+    lowStockAlert: '',
+    isTaxable: true,
+    isActive: true,
+  });
+
+  const set = (k: string, v: any) => setForm(prev => ({ ...prev, [k]: v }));
+
+  const handleCreate = async () => {
+    setErr('');
+    if (!form.name.trim()) {
+      setErr('Product name is required');
+      return;
+    }
+    if ((parseFloat(form.price) || 0) < 0) {
+      setErr('Price cannot be negative');
+      return;
+    }
+    setLoading(true);
+    try {
+      const payload: Record<string, any> = {
+        name: form.name.trim(),
+        description: form.description || undefined,
+        sku: form.sku || undefined,
+        barcode: form.barcode || undefined,
+        hsnSac: form.hsnSac || undefined,
+        type: form.type,
+        unit: form.unit,
+        price: parseFloat(form.price) || 0,
+        gstRate: parseFloat(form.gstRate) || 0,
+        category: form.category || undefined,
+        brand: form.brand || undefined,
+        isTaxable: form.isTaxable,
+        isActive: form.isActive,
+      };
+      if (form.costPrice) payload.costPrice = parseFloat(form.costPrice);
+      if (form.mrp) payload.mrp = parseFloat(form.mrp);
+      if (form.cessRate) payload.cessRate = parseFloat(form.cessRate);
+      if (form.stockCount) payload.stockCount = parseFloat(form.stockCount);
+      if (form.lowStockAlert) payload.lowStockAlert = parseFloat(form.lowStockAlert);
+
+      const res = await apiFetch<{ data: Product }>('/products', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      success('Product created', res.data.name);
+      onCreated(res.data);
+    } catch (e: any) {
+      const msg = e?.message || 'Failed to create product';
+      setErr(msg);
+      toastError('Create product failed', msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const input = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none";
+  const label = "block text-xs font-semibold text-gray-600 mb-1";
+
+  return (
+    <div className="fixed inset-0 z-[10020] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div className="relative z-10 w-full max-w-3xl rounded-2xl border border-gray-200 bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Create Product from Scanned Item</h3>
+            <p className="text-xs text-gray-500 mt-1">Scanned code: <span className="font-mono">{scannedCode}</span></p>
+          </div>
+          <button onClick={onClose} className="rounded-lg p-1 text-gray-500 hover:bg-gray-100"><X className="h-4 w-4" /></button>
+        </div>
+        <div className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="sm:col-span-2">
+            <label className={label}>Product Name *</label>
+            <input className={input} value={form.name} onChange={e => set('name', e.target.value)} placeholder="Enter product name" />
+          </div>
+          <div>
+            <label className={label}>Type</label>
+            <select className={input} value={form.type} onChange={e => set('type', e.target.value)}>
+              <option value="product">Product</option>
+              <option value="service">Service</option>
+            </select>
+          </div>
+          <div className="sm:col-span-2 lg:col-span-3">
+            <label className={label}>Description</label>
+            <input className={input} value={form.description} onChange={e => set('description', e.target.value)} placeholder="Optional description" />
+          </div>
+          <div>
+            <label className={label}>SKU</label>
+            <input className={input} value={form.sku} onChange={e => set('sku', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>Barcode</label>
+            <input className={input} value={form.barcode} onChange={e => set('barcode', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>HSN/SAC</label>
+            <input className={input} value={form.hsnSac} onChange={e => set('hsnSac', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>Unit</label>
+            <input className={input} value={form.unit} onChange={e => set('unit', e.target.value)} placeholder="PCS" />
+          </div>
+          <div>
+            <label className={label}>Price *</label>
+            <input className={input} type="number" min="0" step="0.01" value={form.price} onChange={e => set('price', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>Cost Price</label>
+            <input className={input} type="number" min="0" step="0.01" value={form.costPrice} onChange={e => set('costPrice', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>MRP</label>
+            <input className={input} type="number" min="0" step="0.01" value={form.mrp} onChange={e => set('mrp', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>GST Rate (%)</label>
+            <input className={input} type="number" min="0" max="100" step="0.01" value={form.gstRate} onChange={e => set('gstRate', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>CESS Rate (%)</label>
+            <input className={input} type="number" min="0" max="100" step="0.01" value={form.cessRate} onChange={e => set('cessRate', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>Category</label>
+            <input className={input} value={form.category} onChange={e => set('category', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>Brand</label>
+            <input className={input} value={form.brand} onChange={e => set('brand', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>Stock Count</label>
+            <input className={input} type="number" step="0.01" value={form.stockCount} onChange={e => set('stockCount', e.target.value)} />
+          </div>
+          <div>
+            <label className={label}>Low Stock Alert</label>
+            <input className={input} type="number" step="0.01" value={form.lowStockAlert} onChange={e => set('lowStockAlert', e.target.value)} />
+          </div>
+          <div className="flex items-center gap-4 sm:col-span-2 lg:col-span-3 mt-1">
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={form.isTaxable} onChange={e => set('isTaxable', e.target.checked)} />
+              Taxable
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={form.isActive} onChange={e => set('isActive', e.target.checked)} />
+              Active
+            </label>
+          </div>
+          {err && (
+            <div className="sm:col-span-2 lg:col-span-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
+              {err}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4">
+          <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
+          <button onClick={handleCreate} disabled={loading} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60">
+            {loading ? 'Creating...' : 'Save & Add to Invoice'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const GST_RATES = [0, 5, 12, 18, 28];
 const INVOICE_WARNING_THRESHOLD = 2;
 
@@ -212,6 +402,8 @@ export default function NewInvoicePage() {
   const [scanSession, setScanSession] = useState<ScanSessionData | null>(null);
   const [pairingQrUrl, setPairingQrUrl] = useState<string>('');
   const [lastScanLogAt, setLastScanLogAt] = useState<string | null>(null);
+  const [showCreateFromScanModal, setShowCreateFromScanModal] = useState(false);
+  const [pendingScannedCode, setPendingScannedCode] = useState('');
 
   const [items, setItems] = useState<InvoiceItem[]>([
     calcItem({ id: generateId(), description: '', quantity: 1, price: 0, gstRate: 18, unit: 'PCS' }, false),
@@ -479,6 +671,8 @@ export default function NewInvoicePage() {
       } else {
         warning('Item not found', `No product matched "${code}"`);
         setScanStatus('not_found');
+        setPendingScannedCode(code);
+        setShowCreateFromScanModal(true);
       }
     } catch {
       warning('Scan failed', 'Could not fetch products for scanned code.');
@@ -564,6 +758,8 @@ export default function NewInvoicePage() {
             } else {
               setScanStatus('not_found');
               warning('Item not found', log.message || `No matching product for ${log.rawCode}`);
+              setPendingScannedCode(log.rawCode);
+              setShowCreateFromScanModal(true);
             }
           }
           setLastScanLogAt(logs[logs.length - 1].createdAt);
@@ -667,6 +863,17 @@ export default function NewInvoicePage() {
         <AddCustomerModal onClose={() => setShowAddCustomer(false)}
           customerLimitReached={customerLimitReached}
           onCreated={(c) => { setSelectedCustomer(c); setCustomerSearch(c.name); setShowAddCustomer(false); }} />
+      )}
+      {showCreateFromScanModal && (
+        <CreateProductFromScanModal
+          scannedCode={pendingScannedCode}
+          onClose={() => setShowCreateFromScanModal(false)}
+          onCreated={(product) => {
+            addOrIncrementProduct(product);
+            setShowCreateFromScanModal(false);
+            setPendingScannedCode('');
+          }}
+        />
       )}
       <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-[#f8f9fc] min-h-screen">
 
