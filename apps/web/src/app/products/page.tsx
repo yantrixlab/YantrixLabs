@@ -79,6 +79,8 @@ export default function ProductsPage() {
   const [scanHint, setScanHint] = useState('Click connect to generate pairing QR for scanner app.');
   const [pendingScannedCode, setPendingScannedCode] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
+  const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastLogAtRef = useRef<string | null>(null);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -95,15 +97,27 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchProducts();
-    return () => eventSourceRef.current?.close();
+    return () => {
+      eventSourceRef.current?.close();
+      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
+    };
   }, [fetchProducts]);
 
   const connectScanner = async () => {
     try {
+      eventSourceRef.current?.close();
+      if (pollTimerRef.current) clearInterval(pollTimerRef.current);
+      lastLogAtRef.current = null;
       const res = await apiFetch<{ data: ScanSessionData }>('/scan/sessions', { method: 'POST', body: JSON.stringify({ invoiceSessionId: `products-${Date.now()}` }) });
       setScanSession(res.data);
       setScanState('qr_ready');
       setScanHint('Scanner QR ready. Scan it in Android app.');
+      const handleScanPayload = (payload: any) => {
+        setScanState('receiving');
+        if (payload?.found && payload?.product) success('Item already exists', payload.product.name);
+        else if (payload?.rawCode) setPendingScannedCode(payload.rawCode);
+        setTimeout(() => setScanState('connected'), 1000);
+      };
       const token = localStorage.getItem('accessToken');
       const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:6000/api/v1';
       const root = apiBase.replace(/\/api\/v1\/?$/, '');
@@ -117,12 +131,35 @@ export default function ProductsPage() {
         }
       });
       es.addEventListener('scan.catalog', (event: MessageEvent) => {
-        const payload = JSON.parse(event.data);
-        setScanState('receiving');
-        if (payload.found && payload.product) success('Item already exists', payload.product.name);
-        else setPendingScannedCode(payload.rawCode || '');
-        setTimeout(() => setScanState('connected'), 1000);
+        handleScanPayload(JSON.parse(event.data));
       });
+      es.onerror = () => {
+        setScanHint('Realtime channel blocked. Using fallback polling...');
+      };
+
+      pollTimerRef.current = setInterval(async () => {
+        try {
+          const sessionRes = await apiFetch<{ data: { status?: string } }>(`/scan/sessions/${res.data.sessionId}`);
+          if (sessionRes?.data?.status === 'PAIRED') {
+            setScanState('connected');
+            setScanHint('Scanner connected. Use Scan & Add Product in Android app.');
+          }
+          const logsPath = lastLogAtRef.current
+            ? `/scan/sessions/${res.data.sessionId}/logs?since=${encodeURIComponent(lastLogAtRef.current)}`
+            : `/scan/sessions/${res.data.sessionId}/logs`;
+          const logsRes = await apiFetch<{ data: Array<{ createdAt: string; rawCode: string; product: Product | null; status: string }> }>(logsPath);
+          for (const log of logsRes.data || []) {
+            lastLogAtRef.current = log.createdAt;
+            handleScanPayload({
+              found: log.status === 'FOUND' && !!log.product,
+              product: log.product,
+              rawCode: log.rawCode,
+            });
+          }
+        } catch {
+          // no-op: keep UI stable while retrying
+        }
+      }, 2500);
     } catch (e: any) {
       toastError('Scanner connect failed', e?.message || 'Failed to connect scanner');
     }
