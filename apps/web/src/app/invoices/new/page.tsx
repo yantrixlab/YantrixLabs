@@ -441,21 +441,21 @@ function InvoiceQuickSettingsModal({
   return (
     <div className="fixed inset-0 z-[10040] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/45" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-4xl rounded-2xl border border-gray-200 bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+      <div className="relative z-10 w-full max-w-4xl rounded-2xl border border-gray-200 bg-white shadow-2xl max-h-[90vh] overflow-y-auto dark:border-slate-700 dark:bg-slate-900">
+        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-slate-700">
           <div>
-            <h3 className="text-base font-semibold text-gray-900">Invoice Quick Settings</h3>
-            <p className="text-xs text-gray-500 mt-1">Update business profile and invoice preferences without leaving this page.</p>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-slate-100">Invoice Quick Settings</h3>
+            <p className="text-xs text-gray-500 mt-1 dark:text-slate-400">Update business profile and invoice preferences without leaving this page.</p>
           </div>
-          <button onClick={onClose} className="rounded-lg p-1 text-gray-500 hover:bg-gray-100"><X className="h-4 w-4" /></button>
+          <button onClick={onClose} className="rounded-lg p-1 text-gray-500 hover:bg-gray-100 dark:text-slate-300 dark:hover:bg-slate-800"><X className="h-4 w-4" /></button>
         </div>
         <div className="p-5">
-          <div className="mb-4 flex gap-2 rounded-xl bg-gray-100 p-1 w-fit">
-            <button onClick={() => setActiveTab('business')} className={`rounded-lg px-4 py-1.5 text-sm font-medium ${activeTab === 'business' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>Business Info</button>
-            <button onClick={() => setActiveTab('invoice')} className={`rounded-lg px-4 py-1.5 text-sm font-medium ${activeTab === 'invoice' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>Invoice Settings</button>
+          <div className="mb-4 flex gap-2 rounded-xl bg-gray-100 p-1 w-fit dark:bg-slate-800">
+            <button onClick={() => setActiveTab('business')} className={`rounded-lg px-4 py-1.5 text-sm font-medium ${activeTab === 'business' ? 'bg-white text-gray-900 shadow-sm dark:bg-slate-700 dark:text-slate-100' : 'text-gray-600 dark:text-slate-300'}`}>Business Info</button>
+            <button onClick={() => setActiveTab('invoice')} className={`rounded-lg px-4 py-1.5 text-sm font-medium ${activeTab === 'invoice' ? 'bg-white text-gray-900 shadow-sm dark:bg-slate-700 dark:text-slate-100' : 'text-gray-600 dark:text-slate-300'}`}>Invoice Settings</button>
           </div>
           {loading || !settings ? (
-            <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-6 text-sm text-gray-500">Loading settings…</div>
+            <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-6 text-sm text-gray-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">Loading settings…</div>
           ) : activeTab === 'business' ? (
             <div className="space-y-4">
               <div className="flex items-center gap-4 rounded-xl border border-gray-200 p-3">
@@ -503,8 +503,8 @@ function InvoiceQuickSettingsModal({
             </div>
           )}
         </div>
-        <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4">
-          <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Close</button>
+        <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4 dark:border-slate-700">
+          <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Close</button>
           <button onClick={onSave} disabled={saving || loading || !settings} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60">{saving ? 'Saving...' : 'Save Settings'}</button>
         </div>
       </div>
@@ -1198,19 +1198,19 @@ export default function NewInvoicePage() {
         onRemoveLogo={() => setBusinessSettings(prev => (prev ? { ...prev, logo: null } : prev))}
         onSave={handleSettingsSave}
       />
-      <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-[#f8f9fc] min-h-screen">
+      <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-[#f8f9fc] min-h-screen dark:bg-slate-950">
 
         {/* Page Header */}
         <div className="flex items-center gap-4 mb-5">
           <button
             onClick={() => router.back()}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-700 transition-all"
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 hover:text-gray-700 transition-all dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
           >
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">New Invoice</h1>
-            <p className="text-sm text-slate-500 mt-0.5">Create a GST-compliant invoice</p>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight dark:text-slate-100">New Invoice</h1>
+            <p className="text-sm text-slate-500 mt-0.5 dark:text-slate-400">Create a GST-compliant invoice</p>
           </div>
           <div className="ml-auto flex flex-col items-end gap-2">
             {invoiceLimitReached && (
@@ -1226,32 +1226,32 @@ export default function NewInvoicePage() {
             <div className="relative flex items-center gap-2">
               <button
                 onClick={() => { setActiveSettingsTab('business'); setShowQuickSettingsModal(true); }}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 hover:text-indigo-600 transition-all"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 hover:text-indigo-600 transition-all dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
                 title="Invoice quick settings"
               >
                 <Settings className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setShowInvoiceInfoPopover(prev => !prev)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 hover:text-indigo-600 transition-all"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 hover:text-indigo-600 transition-all dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
                 title="Invoice setup guidance"
               >
                 <Info className="h-4 w-4" />
               </button>
               {showInvoiceInfoPopover && (
-                <div className="absolute right-0 top-12 z-30 w-80 rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
+                <div className="absolute right-0 top-12 z-30 w-80 rounded-xl border border-gray-200 bg-white p-3 shadow-xl dark:border-slate-700 dark:bg-slate-900">
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="text-sm font-semibold text-gray-900">Invoice Setup Quality</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-slate-100">Invoice Setup Quality</p>
                     <span className="text-xs font-semibold text-indigo-700">{checklistCompleteCount}/7 complete</span>
                   </div>
                   <div className="space-y-2">
                     {setupChecklist.map((item) => (
-                      <div key={item.key} className="flex items-start justify-between gap-2 rounded-lg border border-gray-100 px-2 py-2">
+                      <div key={item.key} className="flex items-start justify-between gap-2 rounded-lg border border-gray-100 px-2 py-2 dark:border-slate-700">
                         <div>
                           <p className={`text-xs font-medium ${item.isComplete ? 'text-green-700' : 'text-amber-700'}`}>
                             {item.isComplete ? 'Done' : 'Missing'} · {item.label}
                           </p>
-                          {!item.isComplete && <p className="text-[11px] text-gray-500 mt-0.5">{item.hint}</p>}
+                          {!item.isComplete && <p className="text-[11px] text-gray-500 mt-0.5 dark:text-slate-400">{item.hint}</p>}
                         </div>
                         {!item.isComplete && (
                           <button
@@ -1260,7 +1260,7 @@ export default function NewInvoicePage() {
                               setShowQuickSettingsModal(true);
                               setShowInvoiceInfoPopover(false);
                             }}
-                            className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-700 hover:bg-indigo-100"
+                            className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-700 hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-300"
                           >
                             Fix now
                           </button>
@@ -1299,14 +1299,14 @@ export default function NewInvoicePage() {
           </div>
         )}
 
-        <div className="mb-4 rounded-xl border border-indigo-200 bg-indigo-50/40 p-3.5">
+        <div className="mb-4 rounded-xl border border-indigo-200 bg-indigo-50/40 p-3.5 dark:border-indigo-900 dark:bg-slate-900/70">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <ScanLine className="h-4 w-4 text-indigo-600" />
               <p className="text-sm font-semibold text-indigo-900">Item Details</p>
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-indigo-500">Scan barcode, SKU, serial no, or item code</p>
+              <p className="text-xs text-indigo-500 dark:text-indigo-300">Scan barcode, SKU, serial no, or item code</p>
               <button
                 type="button"
                 onClick={connectScanner}
@@ -1380,7 +1380,7 @@ export default function NewInvoicePage() {
                 }
               }}
               placeholder="Scan item by barcode, SKU, or name"
-              className="flex-1 rounded-xl border border-indigo-200 bg-white px-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none"
+              className="flex-1 rounded-xl border border-indigo-200 bg-white px-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none dark:border-indigo-900 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
             />
             <button
               type="button"
@@ -1768,12 +1768,12 @@ export default function NewInvoicePage() {
           </div>
         </div>
       </div>
-      <div className="sticky bottom-0 z-30 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85 px-4 py-3">
+      <div className="sticky bottom-0 z-30 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85 px-4 py-3 dark:border-slate-700 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/85">
         <div className="mx-auto flex w-full max-w-[1600px] items-center gap-2">
           <button
             onClick={() => handleSave()}
             disabled={isLoading || (subscriptionEnforced && invoiceLimitReached)}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             Save as Draft
           </button>
@@ -1786,7 +1786,7 @@ export default function NewInvoicePage() {
           </button>
           <button
             onClick={() => router.back()}
-            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
           >
             Cancel
           </button>
