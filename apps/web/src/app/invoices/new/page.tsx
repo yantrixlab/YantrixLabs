@@ -613,6 +613,11 @@ export default function NewInvoicePage() {
     dueDate: '', notes: '', terms: '', placeOfSupply: '',
   });
 
+  const getNotesStorageKey = () => {
+    const bid = getUserData()?.businessId || 'default';
+    return `gst_invoice_last_note_${bid}`;
+  };
+
   // Product suggestion state
   const [productSuggestions, setProductSuggestions] = useState<Record<string, Product[]>>({});
   const [activeSuggestionItem, setActiveSuggestionItem] = useState<string | null>(null);
@@ -771,6 +776,16 @@ export default function NewInvoicePage() {
         setSelectedCustomer(r.data); setCustomerSearch(r.data.name);
       }).catch(() => {});
     }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const savedNote = localStorage.getItem(getNotesStorageKey());
+      if (savedNote && savedNote.trim()) {
+        setFormData(prev => (prev.notes && prev.notes.trim() ? prev : { ...prev, notes: savedNote }));
+      }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -1156,6 +1171,12 @@ export default function NewInvoicePage() {
         success('Invoice saved & sent');
       } else {
         success('Draft saved');
+      }
+      if (typeof window !== 'undefined') {
+        const noteToSave = (formData.notes || '').trim();
+        const key = getNotesStorageKey();
+        if (noteToSave) localStorage.setItem(key, noteToSave);
+        else localStorage.removeItem(key);
       }
       router.push(`/invoices/${res.data.id}`);
     } catch (err: any) {
