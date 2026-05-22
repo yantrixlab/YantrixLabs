@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Plus, Search, Download, FileText, CheckCircle, Clock, AlertCircle, ChevronRight, RefreshCw, TrendingUp, IndianRupee, ReceiptText, XCircle } from 'lucide-react';
+import { Plus, Search, Download, FileText, CheckCircle, Clock, AlertCircle, ChevronRight, RefreshCw, TrendingUp, IndianRupee, ReceiptText, XCircle, Settings } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
 
 interface Invoice {
@@ -140,11 +140,11 @@ export default function InvoicesPage() {
             Export
           </button>
           <Link
-            href="/invoices/new"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all duration-150 active:scale-95"
+            href="/settings"
+            title="Invoice Settings"
+            className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white p-2.5 text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-150 active:scale-95"
           >
-            <Plus className="h-4 w-4" />
-            New Invoice
+            <Settings className="h-4 w-4" />
           </Link>
         </div>
       </div>
@@ -372,4 +372,3 @@ export default function InvoicesPage() {
     </div>
   );
 }
-

@@ -190,7 +190,7 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="mb-8 flex items-center justify-between"
+        className="mb-8"
       >
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -199,13 +199,6 @@ export default function DashboardPage() {
           </div>
           <p className="text-sm text-gray-500">Here&apos;s your business overview for today.</p>
         </div>
-        <Link
-          href="/invoices/new"
-          className="hidden md:inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all duration-150 active:scale-95"
-        >
-          <Plus className="h-4 w-4" />
-          New Invoice
-        </Link>
       </motion.div>
 
       {/* Stats Grid */}
