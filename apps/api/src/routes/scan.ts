@@ -476,6 +476,106 @@ router.post(
 );
 
 router.get(
+  "/device-context",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const deviceToken = String(req.header("x-device-token") || "").trim();
+      if (!deviceToken) {
+        res.status(400).json({
+          success: false,
+          error: "x-device-token header is required",
+        });
+        return;
+      }
+
+      const device = await prisma.scannerDevice.findUnique({
+        where: { deviceToken },
+      });
+      if (!device) {
+        res.status(401).json({ success: false, error: "Invalid device token" });
+        return;
+      }
+      if (!device.isActive) {
+        res.status(403).json({ success: false, error: "Device is disabled" });
+        return;
+      }
+
+      const [business, totalProducts, inStockCount, stockProducts] =
+        await Promise.all([
+          prisma.business.findUnique({
+            where: { id: device.businessId },
+            select: {
+              id: true,
+              name: true,
+              logo: true,
+              email: true,
+              phone: true,
+            },
+          }),
+          prisma.product.count({
+            where: { businessId: device.businessId, isActive: true },
+          }),
+          prisma.product.count({
+            where: {
+              businessId: device.businessId,
+              isActive: true,
+              type: "product",
+              stockCount: { gt: 0 },
+            },
+          }),
+          prisma.product.findMany({
+            where: {
+              businessId: device.businessId,
+              isActive: true,
+              type: "product",
+            },
+            select: {
+              stockCount: true,
+              lowStockAlert: true,
+            },
+          }),
+        ]);
+      const lowStockCount = stockProducts.filter((item) => {
+        const stock = item.stockCount;
+        const alert = item.lowStockAlert;
+        return stock !== null && alert !== null && stock > 0 && stock <= alert;
+      }).length;
+
+      await prisma.scannerDevice.update({
+        where: { id: device.id },
+        data: { lastSeenAt: new Date() },
+      });
+
+      res.json({
+        success: true,
+        data: {
+          business: business || {
+            id: device.businessId,
+            name: "Business",
+            logo: null,
+            email: null,
+            phone: null,
+          },
+          stats: {
+            totalProducts,
+            inStockCount,
+            lowStockCount,
+          },
+          device: {
+            name: device.name,
+            lastSeenAt: device.lastSeenAt,
+            isActive: device.isActive,
+          },
+          serverTime: new Date().toISOString(),
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+router.get(
   "/devices",
   authenticate,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
