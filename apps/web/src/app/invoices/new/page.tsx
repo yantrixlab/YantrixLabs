@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Search, Save, Send, ArrowLeft, Calculator, UserPlus, X, Check, Lock, FileText, AlertTriangle, ScanLine, Layers } from 'lucide-react';
+import { Plus, Trash2, Search, Save, Send, ArrowLeft, Calculator, UserPlus, X, Check, Lock, FileText, AlertTriangle, ScanLine, Layers, Settings, Info } from 'lucide-react';
 import { apiFetch, getUserData } from '@/lib/api';
 import { useToast } from '@/components/ui/Toast';
 
@@ -26,6 +26,35 @@ interface ScanLogData {
   message: string | null;
   createdAt: string;
   product: Product | null;
+}
+interface BusinessSettings {
+  id: string;
+  name: string;
+  legalName: string | null;
+  gstin: string | null;
+  pan: string | null;
+  email: string | null;
+  phone: string | null;
+  website: string | null;
+  address: string | null;
+  city: string | null;
+  state: string | null;
+  pincode: string | null;
+  invoicePrefix: string;
+  termsAndConditions: string | null;
+  logo: string | null;
+  defaultTemplateId: string | null;
+}
+interface InvoiceTemplate {
+  id: string;
+  name: string;
+}
+interface SetupChecklistItem {
+  key: string;
+  label: string;
+  isComplete: boolean;
+  hint: string;
+  tabTarget: 'business' | 'invoice';
 }
 
 interface CreateProductFromScanModalProps {
@@ -373,6 +402,116 @@ function AddCustomerModal({ onClose, onCreated, customerLimitReached }: { onClos
   );
 }
 
+function InvoiceQuickSettingsModal({
+  open,
+  onClose,
+  activeTab,
+  setActiveTab,
+  settings,
+  setSettings,
+  templates,
+  loading,
+  saving,
+  logoUploading,
+  onLogoUpload,
+  onRemoveLogo,
+  onSave,
+}: {
+  open: boolean;
+  onClose: () => void;
+  activeTab: 'business' | 'invoice';
+  setActiveTab: (tab: 'business' | 'invoice') => void;
+  settings: BusinessSettings | null;
+  setSettings: (updater: any) => void;
+  templates: InvoiceTemplate[];
+  loading: boolean;
+  saving: boolean;
+  logoUploading: boolean;
+  onLogoUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveLogo: () => void;
+  onSave: () => void;
+}) {
+  if (!open) return null;
+  const update = (key: keyof BusinessSettings, value: any) => {
+    setSettings(prev => (prev ? { ...prev, [key]: value } : prev));
+  };
+  const input = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none";
+  const label = "block text-xs font-semibold text-gray-600 mb-1";
+
+  return (
+    <div className="fixed inset-0 z-[10040] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/45" onClick={onClose} />
+      <div className="relative z-10 w-full max-w-4xl rounded-2xl border border-gray-200 bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Invoice Quick Settings</h3>
+            <p className="text-xs text-gray-500 mt-1">Update business profile and invoice preferences without leaving this page.</p>
+          </div>
+          <button onClick={onClose} className="rounded-lg p-1 text-gray-500 hover:bg-gray-100"><X className="h-4 w-4" /></button>
+        </div>
+        <div className="p-5">
+          <div className="mb-4 flex gap-2 rounded-xl bg-gray-100 p-1 w-fit">
+            <button onClick={() => setActiveTab('business')} className={`rounded-lg px-4 py-1.5 text-sm font-medium ${activeTab === 'business' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>Business Info</button>
+            <button onClick={() => setActiveTab('invoice')} className={`rounded-lg px-4 py-1.5 text-sm font-medium ${activeTab === 'invoice' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600'}`}>Invoice Settings</button>
+          </div>
+          {loading || !settings ? (
+            <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-6 text-sm text-gray-500">Loading settings…</div>
+          ) : activeTab === 'business' ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 rounded-xl border border-gray-200 p-3">
+                <div className="h-14 w-14 rounded-xl overflow-hidden bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold">
+                  {settings.logo ? <img src={settings.logo} alt="Business logo" className="h-full w-full object-contain" /> : settings.name?.charAt(0)?.toUpperCase() || 'B'}
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer">
+                    {logoUploading ? 'Uploading...' : settings.logo ? 'Change Logo' : 'Upload Logo'}
+                    <input type="file" accept="image/*" className="hidden" onChange={onLogoUpload} disabled={logoUploading} />
+                  </label>
+                  {settings.logo && !logoUploading && (
+                    <button onClick={onRemoveLogo} className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-100">Remove</button>
+                  )}
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div><label className={label}>Business Name</label><input className={input} value={settings.name || ''} onChange={e => update('name', e.target.value)} /></div>
+                <div><label className={label}>Legal Name</label><input className={input} value={settings.legalName || ''} onChange={e => update('legalName', e.target.value)} /></div>
+                <div><label className={label}>GSTIN</label><input className={input} value={settings.gstin || ''} onChange={e => update('gstin', e.target.value)} /></div>
+                <div><label className={label}>PAN</label><input className={input} value={settings.pan || ''} onChange={e => update('pan', e.target.value)} /></div>
+                <div><label className={label}>Email</label><input className={input} value={settings.email || ''} onChange={e => update('email', e.target.value)} /></div>
+                <div><label className={label}>Phone</label><input className={input} value={settings.phone || ''} onChange={e => update('phone', e.target.value)} /></div>
+                <div className="sm:col-span-2"><label className={label}>Website</label><input className={input} value={settings.website || ''} onChange={e => update('website', e.target.value)} /></div>
+                <div className="sm:col-span-2"><label className={label}>Address</label><input className={input} value={settings.address || ''} onChange={e => update('address', e.target.value)} /></div>
+                <div><label className={label}>City</label><input className={input} value={settings.city || ''} onChange={e => update('city', e.target.value)} /></div>
+                <div><label className={label}>State</label><input className={input} value={settings.state || ''} onChange={e => update('state', e.target.value)} /></div>
+                <div><label className={label}>Pincode</label><input className={input} value={settings.pincode || ''} onChange={e => update('pincode', e.target.value)} /></div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 gap-3">
+              <div><label className={label}>Invoice Prefix</label><input className={input} value={settings.invoicePrefix || ''} onChange={e => update('invoicePrefix', e.target.value)} /></div>
+              <div>
+                <label className={label}>Default Template</label>
+                <select className={input} value={settings.defaultTemplateId || ''} onChange={e => update('defaultTemplateId', e.target.value || null)}>
+                  <option value="">Select template</option>
+                  {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+              </div>
+              <div className="sm:col-span-2">
+                <label className={label}>Terms & Conditions</label>
+                <textarea className={`${input} min-h-24 resize-y`} value={settings.termsAndConditions || ''} onChange={e => update('termsAndConditions', e.target.value)} />
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center justify-end gap-2 border-t border-gray-100 px-5 py-4">
+          <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Close</button>
+          <button onClick={onSave} disabled={saving || loading || !settings} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60">{saving ? 'Saving...' : 'Save Settings'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function NewInvoicePage() {
   const router = useRouter();
   const { success, error: toastError, warning } = useToast();
@@ -404,6 +543,14 @@ export default function NewInvoicePage() {
   const [lastScanLogAt, setLastScanLogAt] = useState<string | null>(null);
   const [showCreateFromScanModal, setShowCreateFromScanModal] = useState(false);
   const [pendingScannedCode, setPendingScannedCode] = useState('');
+  const [showQuickSettingsModal, setShowQuickSettingsModal] = useState(false);
+  const [showInvoiceInfoPopover, setShowInvoiceInfoPopover] = useState(false);
+  const [activeSettingsTab, setActiveSettingsTab] = useState<'business' | 'invoice'>('business');
+  const [businessSettings, setBusinessSettings] = useState<BusinessSettings | null>(null);
+  const [invoiceTemplates, setInvoiceTemplates] = useState<InvoiceTemplate[]>([]);
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [settingsSaving, setSettingsSaving] = useState(false);
+  const [logoUploading, setLogoUploading] = useState(false);
 
   const scannerStateUi: Record<
     'disconnected' | 'qr_ready' | 'connected' | 'receiving' | 'offline',
@@ -476,13 +623,22 @@ export default function NewInvoicePage() {
     const tokenData = getUserData();
     const businessId = tokenData?.businessId;
     if (businessId) {
-      apiFetch<{ data: { termsAndConditions?: string | null } }>(`/business/${businessId}`)
-        .then(res => {
-          if (res.data?.termsAndConditions) {
-            setFormData(prev => ({ ...prev, terms: res.data.termsAndConditions! }));
+      setSettingsLoading(true);
+      Promise.all([
+        apiFetch<{ data: BusinessSettings }>(`/business/${businessId}`),
+        apiFetch<{ data: InvoiceTemplate[] }>('/invoices/templates').catch(() => ({ data: [] as InvoiceTemplate[] })),
+      ])
+        .then(([bizRes, tplRes]) => {
+          if (bizRes.data) {
+            setBusinessSettings(bizRes.data);
+            if (bizRes.data.termsAndConditions) {
+              setFormData(prev => ({ ...prev, terms: bizRes.data.termsAndConditions! }));
+            }
           }
+          setInvoiceTemplates(tplRes.data || []);
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => setSettingsLoading(false));
     }
 
     Promise.all([
@@ -518,6 +674,92 @@ export default function NewInvoicePage() {
       }
     }).catch(() => {});
   }, []);
+
+  const handleSettingsSave = async () => {
+    if (!businessSettings?.id) return;
+    setSettingsSaving(true);
+    try {
+      await apiFetch(`/business/${businessSettings.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: businessSettings.name,
+          legalName: businessSettings.legalName,
+          gstin: businessSettings.gstin,
+          pan: businessSettings.pan,
+          email: businessSettings.email,
+          phone: businessSettings.phone,
+          website: businessSettings.website,
+          address: businessSettings.address,
+          city: businessSettings.city,
+          state: businessSettings.state,
+          pincode: businessSettings.pincode,
+          logo: businessSettings.logo,
+          invoicePrefix: businessSettings.invoicePrefix,
+          termsAndConditions: businessSettings.termsAndConditions,
+          defaultTemplateId: businessSettings.defaultTemplateId,
+        }),
+      });
+      if (businessSettings.termsAndConditions) {
+        setFormData(prev => ({ ...prev, terms: businessSettings.termsAndConditions || prev.terms }));
+      }
+      success('Settings updated');
+      setShowQuickSettingsModal(false);
+    } catch (err: any) {
+      toastError('Failed to save settings', err?.message || 'Please try again');
+    } finally {
+      setSettingsSaving(false);
+    }
+  };
+
+  const handleSettingsLogoUpload = async (e: any) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file || !businessSettings) return;
+    if (!file.type.startsWith('image/')) {
+      warning('Invalid file', 'Please select an image file');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      warning('Image too large', 'Logo must be under 2MB');
+      return;
+    }
+    setLogoUploading(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = String(reader.result || '');
+        setBusinessSettings(prev => (prev ? { ...prev, logo: dataUrl } : prev));
+        setLogoUploading(false);
+      };
+      reader.onerror = () => {
+        setLogoUploading(false);
+        toastError('Logo upload failed', 'Could not read selected file');
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      setLogoUploading(false);
+      toastError('Logo upload failed', 'Could not read selected file');
+    }
+  };
+
+  const setupChecklist: SetupChecklistItem[] = [
+    { key: 'logo', label: 'Business logo uploaded', isComplete: !!businessSettings?.logo, hint: 'Improve professional look', tabTarget: 'business' },
+    { key: 'name', label: 'Business name present', isComplete: !!businessSettings?.name?.trim(), hint: 'Show clear brand identity', tabTarget: 'business' },
+    { key: 'gstin', label: 'GSTIN configured', isComplete: !!businessSettings?.gstin?.trim(), hint: 'Improve compliance clarity', tabTarget: 'business' },
+    { key: 'addr', label: 'Address + state configured', isComplete: !!businessSettings?.address?.trim() && !!businessSettings?.state?.trim(), hint: 'Improve compliance clarity', tabTarget: 'business' },
+    { key: 'prefix', label: 'Invoice prefix configured', isComplete: !!businessSettings?.invoicePrefix?.trim(), hint: 'Keep numbering consistent', tabTarget: 'invoice' },
+    { key: 'terms', label: 'Terms & conditions configured', isComplete: !!businessSettings?.termsAndConditions?.trim(), hint: 'Avoid payment disputes', tabTarget: 'invoice' },
+    { key: 'template', label: 'Default template selected', isComplete: !!businessSettings?.defaultTemplateId, hint: 'Keep invoice style consistent', tabTarget: 'invoice' },
+  ];
+  const checklistCompleteCount = setupChecklist.filter(i => i.isComplete).length;
+
+  useEffect(() => {
+    if (showQuickSettingsModal && !invoiceTemplates.length) {
+      apiFetch<{ data: InvoiceTemplate[] }>('/invoices/templates')
+        .then(res => setInvoiceTemplates(res.data || []))
+        .catch(() => {});
+    }
+  }, [showQuickSettingsModal, invoiceTemplates.length]);
 
   useEffect(() => {
     const cid = typeof window !== 'undefined'
@@ -941,6 +1183,21 @@ export default function NewInvoicePage() {
           }}
         />
       )}
+      <InvoiceQuickSettingsModal
+        open={showQuickSettingsModal}
+        onClose={() => setShowQuickSettingsModal(false)}
+        activeTab={activeSettingsTab}
+        setActiveTab={setActiveSettingsTab}
+        settings={businessSettings}
+        setSettings={setBusinessSettings}
+        templates={invoiceTemplates}
+        loading={settingsLoading}
+        saving={settingsSaving}
+        logoUploading={logoUploading}
+        onLogoUpload={handleSettingsLogoUpload}
+        onRemoveLogo={() => setBusinessSettings(prev => (prev ? { ...prev, logo: null } : prev))}
+        onSave={handleSettingsSave}
+      />
       <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-[#f8f9fc] min-h-screen">
 
         {/* Page Header */}
@@ -966,23 +1223,53 @@ export default function NewInvoicePage() {
                 <span className="text-xs font-semibold">Limit reached</span>
               </motion.div>
             )}
-            <div className="flex items-center gap-2">
+            <div className="relative flex items-center gap-2">
               <button
-                onClick={() => handleSave()}
-                disabled={isLoading || invoiceLimitReached}
-                className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 disabled:opacity-50 transition-all"
+                onClick={() => { setActiveSettingsTab('business'); setShowQuickSettingsModal(true); }}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 hover:text-indigo-600 transition-all"
+                title="Invoice quick settings"
               >
-                <Save className="h-4 w-4" />
-                Save Draft
+                <Settings className="h-4 w-4" />
               </button>
               <button
-                onClick={() => handleSave('SENT')}
-                disabled={isLoading || invoiceLimitReached}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:from-indigo-700 hover:to-indigo-800 disabled:opacity-50 transition-all"
+                onClick={() => setShowInvoiceInfoPopover(prev => !prev)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 hover:text-indigo-600 transition-all"
+                title="Invoice setup guidance"
               >
-                <Send className="h-4 w-4" />
-                Save &amp; Send
+                <Info className="h-4 w-4" />
               </button>
+              {showInvoiceInfoPopover && (
+                <div className="absolute right-0 top-12 z-30 w-80 rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
+                  <div className="mb-2 flex items-center justify-between">
+                    <p className="text-sm font-semibold text-gray-900">Invoice Setup Quality</p>
+                    <span className="text-xs font-semibold text-indigo-700">{checklistCompleteCount}/7 complete</span>
+                  </div>
+                  <div className="space-y-2">
+                    {setupChecklist.map((item) => (
+                      <div key={item.key} className="flex items-start justify-between gap-2 rounded-lg border border-gray-100 px-2 py-2">
+                        <div>
+                          <p className={`text-xs font-medium ${item.isComplete ? 'text-green-700' : 'text-amber-700'}`}>
+                            {item.isComplete ? 'Done' : 'Missing'} · {item.label}
+                          </p>
+                          {!item.isComplete && <p className="text-[11px] text-gray-500 mt-0.5">{item.hint}</p>}
+                        </div>
+                        {!item.isComplete && (
+                          <button
+                            onClick={() => {
+                              setActiveSettingsTab(item.tabTarget);
+                              setShowQuickSettingsModal(true);
+                              setShowInvoiceInfoPopover(false);
+                            }}
+                            className="rounded-md border border-indigo-200 bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-700 hover:bg-indigo-100"
+                          >
+                            Fix now
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
