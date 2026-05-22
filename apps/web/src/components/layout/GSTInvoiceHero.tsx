@@ -32,16 +32,16 @@ export default function GSTInvoiceHero() {
               India&apos;s Smart GST Billing Scanner System
             </span>
             <h1 className="mt-6 text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl lg:text-6xl">
-              Scan Products Directly
+              Connect your Android scanner
               <span className="block bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-600 bg-clip-text text-transparent">
-                Into GST Invoices
+                and invoice by QR
               </span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
               Connect any Android phone instantly using QR pairing. No login. No setup. No barcode machine required.
             </p>
             <p className="mt-3 text-sm font-medium text-slate-500">
-              Pair with QR, scan products, and watch invoice rows update in real time.
+              Works with barcode and QR products. Lightweight APK. Real-time invoice sync.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -49,7 +49,7 @@ export default function GSTInvoiceHero() {
                 onClick={handleTryDemo}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-300/50 transition hover:brightness-110"
               >
-                Try Live Demo
+                Try scanner demo
                 <ArrowRight className="h-4 w-4" />
               </button>
               <Link
@@ -59,6 +59,14 @@ export default function GSTInvoiceHero() {
                 Download Scanner APK
                 <Smartphone className="h-4 w-4" />
               </Link>
+            </div>
+
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm">
+              <span>Scan</span>
+              <span className="text-slate-300">·</span>
+              <span>Sync</span>
+              <span className="text-slate-300">·</span>
+              <span>Save</span>
             </div>
           </motion.div>
 
@@ -110,4 +118,3 @@ export default function GSTInvoiceHero() {
     </section>
   );
 }
-

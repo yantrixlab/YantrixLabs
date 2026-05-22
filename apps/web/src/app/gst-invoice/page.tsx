@@ -119,7 +119,7 @@ export default function GSTInvoicePage() {
           <div className="mx-auto mb-12 max-w-3xl text-center">
             <h2 className="text-3xl font-bold text-white sm:text-4xl">Scanner Benefits for Indian SMEs</h2>
             <p className="mt-3 text-slate-300">
-              Built for speed, low hardware cost, and real-time GST billing operations.
+              Built for speed, low hardware cost, and real-time GST invoice scanner workflows.
             </p>
           </div>
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -133,6 +133,23 @@ export default function GSTInvoicePage() {
                 <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.desc}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-rose-300/30 bg-rose-400/10 p-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-rose-200">Before</p>
+              <h3 className="mt-2 text-lg font-semibold text-white">Manual Typing Every Invoice</h3>
+              <p className="mt-2 text-sm text-slate-200">
+                Enter product name, HSN, quantity, price, and GST each time, which slows billing and increases errors.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-emerald-300/30 bg-emerald-400/10 p-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-200">After</p>
+              <h3 className="mt-2 text-lg font-semibold text-white">Scan Once, Auto-Add to Invoice</h3>
+              <p className="mt-2 text-sm text-slate-200">
+                Scan barcode and product details appear in invoice table instantly with faster checkout and fewer mistakes.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -186,7 +203,7 @@ export default function GSTInvoicePage() {
               href="/dashboard?guest=1"
               className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#0b3b5a] hover:bg-slate-100"
             >
-              Try Live Demo
+              Try scanner demo
             </Link>
             <Link
               href="/scanner"
@@ -200,4 +217,3 @@ export default function GSTInvoicePage() {
     </PublicLayout>
   );
 }
-
