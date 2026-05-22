@@ -50,10 +50,10 @@ const NAV_ITEMS = [
   { href: "/invoices", label: "Invoices", icon: FileText },
   { href: "/customers", label: "Customers", icon: Users },
   { href: "/products", label: "Products", icon: Package },
+  { href: "/inventory", label: "Inventory", icon: Boxes },
   { href: "/reports", label: "Reports", icon: BarChart3 },
   { href: "/payments", label: "Payments", icon: IndianRupee },
   { href: "/expenses", label: "Expenses", icon: Receipt },
-  { href: "/inventory", label: "Inventory", icon: Boxes },
   { href: "/hrm", label: "HRM", icon: UserCircle },
   { href: "/crm", label: "CRM", icon: Target },
 ];
