@@ -29,16 +29,59 @@ function StockBadge({ stockCount, lowStockAlert, type }: { stockCount: number | 
 
 function CreateProductFromScanModal({ scannedCode, onClose, onCreated }: { scannedCode: string; onClose: () => void; onCreated: (p: Product) => void }) {
   const { success, error: toastError } = useToast();
-  const [name, setName] = useState('');
+  const [form, setForm] = useState({
+    name: '',
+    description: '',
+    type: 'product',
+    sku: scannedCode,
+    barcode: scannedCode,
+    hsnSac: '',
+    unit: 'PCS',
+    price: '0',
+    costPrice: '',
+    mrp: '',
+    gstRate: '18',
+    cessRate: '',
+    category: '',
+    brand: '',
+    stockCount: '0',
+    lowStockAlert: '',
+    isTaxable: true,
+    isActive: true,
+  });
   const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState('');
 
   const create = async () => {
-    if (!name.trim()) return;
+    setErr('');
+    if (!form.name.trim()) {
+      setErr('Product name is required');
+      return;
+    }
     setLoading(true);
     try {
       const res = await apiFetch<{ data: Product }>('/products', {
         method: 'POST',
-        body: JSON.stringify({ name: name.trim(), type: 'product', unit: 'PCS', price: 0, gstRate: 18, stockCount: 0, sku: scannedCode, barcode: scannedCode }),
+        body: JSON.stringify({
+          name: form.name.trim(),
+          description: form.description || undefined,
+          type: form.type,
+          sku: form.sku || undefined,
+          barcode: form.barcode || undefined,
+          hsnSac: form.hsnSac || undefined,
+          unit: form.unit || 'PCS',
+          price: parseFloat(form.price) || 0,
+          costPrice: form.costPrice ? parseFloat(form.costPrice) : undefined,
+          mrp: form.mrp ? parseFloat(form.mrp) : undefined,
+          gstRate: parseFloat(form.gstRate) || 0,
+          cessRate: form.cessRate ? parseFloat(form.cessRate) : undefined,
+          category: form.category || undefined,
+          brand: form.brand || undefined,
+          stockCount: form.stockCount ? parseFloat(form.stockCount) : 0,
+          lowStockAlert: form.lowStockAlert ? parseFloat(form.lowStockAlert) : undefined,
+          isTaxable: form.isTaxable,
+          isActive: form.isActive,
+        }),
       });
       success('Product created', res.data.name);
       onCreated(res.data);
@@ -52,13 +95,97 @@ function CreateProductFromScanModal({ scannedCode, onClose, onCreated }: { scann
   return (
     <div className="fixed inset-0 z-[10020] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-xl rounded-2xl border border-gray-200 bg-white shadow-2xl p-5">
-        <h3 className="text-base font-semibold text-gray-900">Create Product from Scan</h3>
-        <p className="text-xs text-gray-500 mt-1">Scanned code: <span className="font-mono">{scannedCode}</span></p>
-        <input className="mt-4 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" placeholder="Product name" value={name} onChange={(e) => setName(e.target.value)} />
-        <div className="mt-4 flex justify-end gap-2">
-          <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm">Cancel</button>
-          <button disabled={loading || !name.trim()} onClick={create} className="rounded-lg bg-indigo-600 text-white px-4 py-2 text-sm disabled:opacity-60">{loading ? 'Creating...' : 'Create Product'}</button>
+      <div className="relative z-10 w-full max-w-4xl rounded-3xl border border-gray-200 bg-white shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+          <div>
+            <h3 className="text-3xl font-semibold text-gray-900 tracking-tight">Create Product from Scanned Item</h3>
+            <p className="text-lg text-gray-500 mt-1">Scanned code: <span className="font-mono">{scannedCode}</span></p>
+          </div>
+          <button onClick={onClose} className="text-3xl leading-none text-gray-400 hover:text-gray-700">×</button>
+        </div>
+        <div className="px-6 py-5 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Product Name *</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-2xl focus:border-indigo-500 focus:outline-none" placeholder="Enter product name" value={form.name} onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Type</label>
+            <select className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-2xl focus:border-indigo-500 focus:outline-none" value={form.type} onChange={(e) => setForm(prev => ({ ...prev, type: e.target.value }))}>
+              <option value="product">Product</option>
+              <option value="service">Service</option>
+            </select>
+          </div>
+          <div className="sm:col-span-3">
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Description</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" placeholder="Optional description" value={form.description} onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">SKU</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.sku} onChange={(e) => setForm(prev => ({ ...prev, sku: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Barcode</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.barcode} onChange={(e) => setForm(prev => ({ ...prev, barcode: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">HSN/SAC</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.hsnSac} onChange={(e) => setForm(prev => ({ ...prev, hsnSac: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Unit</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.unit} onChange={(e) => setForm(prev => ({ ...prev, unit: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Price *</label>
+            <input type="number" className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.price} onChange={(e) => setForm(prev => ({ ...prev, price: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Cost Price</label>
+            <input type="number" className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.costPrice} onChange={(e) => setForm(prev => ({ ...prev, costPrice: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">MRP</label>
+            <input type="number" className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.mrp} onChange={(e) => setForm(prev => ({ ...prev, mrp: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">GST Rate (%)</label>
+            <input type="number" className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.gstRate} onChange={(e) => setForm(prev => ({ ...prev, gstRate: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">CESS Rate (%)</label>
+            <input type="number" className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.cessRate} onChange={(e) => setForm(prev => ({ ...prev, cessRate: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Category</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.category} onChange={(e) => setForm(prev => ({ ...prev, category: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Brand</label>
+            <input className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.brand} onChange={(e) => setForm(prev => ({ ...prev, brand: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Stock Count</label>
+            <input type="number" className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.stockCount} onChange={(e) => setForm(prev => ({ ...prev, stockCount: e.target.value }))} />
+          </div>
+          <div>
+            <label className="block text-sm font-semibold text-gray-600 mb-1">Low Stock Alert</label>
+            <input type="number" className="w-full rounded-2xl border border-gray-300 px-4 py-3 text-xl focus:border-indigo-500 focus:outline-none" value={form.lowStockAlert} onChange={(e) => setForm(prev => ({ ...prev, lowStockAlert: e.target.value }))} />
+          </div>
+          <div className="sm:col-span-3 flex items-center gap-6 text-xl">
+            <label className="inline-flex items-center gap-2">
+              <input type="checkbox" checked={form.isTaxable} onChange={(e) => setForm(prev => ({ ...prev, isTaxable: e.target.checked }))} />
+              <span>Taxable</span>
+            </label>
+            <label className="inline-flex items-center gap-2">
+              <input type="checkbox" checked={form.isActive} onChange={(e) => setForm(prev => ({ ...prev, isActive: e.target.checked }))} />
+              <span>Active</span>
+            </label>
+          </div>
+          {err ? <p className="sm:col-span-3 text-sm text-red-600">{err}</p> : null}
+        </div>
+        <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3 bg-gray-50">
+          <button onClick={onClose} className="rounded-2xl border border-gray-300 bg-white px-6 py-3 text-xl font-medium text-gray-700">Cancel</button>
+          <button disabled={loading || !form.name.trim()} onClick={create} className="rounded-2xl bg-indigo-600 text-white px-6 py-3 text-xl font-semibold disabled:opacity-60">{loading ? 'Creating...' : 'Save & Add to Products'}</button>
         </div>
       </div>
     </div>
@@ -185,7 +312,13 @@ export default function ProductsPage() {
   const inStockCount = productItems.filter(p => p.stockCount !== null && p.stockCount > 0).length;
   const lowStockCount = productItems.filter(p => p.stockCount !== null && p.lowStockAlert !== null && p.stockCount <= p.lowStockAlert && p.stockCount > 0).length;
   const outOfStockCount = productItems.filter(p => p.stockCount !== null && p.stockCount === 0).length;
-  const stateColor = scanState === 'receiving' ? 'bg-emerald-500' : scanState === 'connected' ? 'bg-indigo-500' : scanState === 'qr_ready' ? 'bg-amber-500' : 'bg-gray-400';
+  const scannerStateUi = {
+    disconnected: { ring: 'border-gray-300 bg-gray-50 text-gray-700', dot: 'bg-gray-500', wave: 'bg-gray-400/40' },
+    qr_ready: { ring: 'border-amber-300 bg-amber-50 text-amber-800', dot: 'bg-amber-500', wave: 'bg-amber-400/40' },
+    connected: { ring: 'border-emerald-300 bg-emerald-50 text-emerald-800', dot: 'bg-emerald-500', wave: 'bg-emerald-400/40' },
+    receiving: { ring: 'border-indigo-300 bg-indigo-50 text-indigo-800', dot: 'bg-indigo-500', wave: 'bg-indigo-400/40' },
+  } as const;
+  const scannerUi = scannerStateUi[scanState];
 
   return (
     <div className="p-6 lg:p-8">
@@ -202,7 +335,13 @@ export default function ProductsPage() {
       </div>
 
       <div className="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50/40 p-4">
-        <div className="flex items-center gap-3"><span className={`h-3 w-3 rounded-full ${stateColor} animate-pulse`} /><p className="text-sm font-semibold text-indigo-900">Scanner State: {scanState.replace('_', ' ')}</p></div>
+        <div className={`inline-flex items-center gap-3 rounded-full border px-4 py-2 ${scannerUi.ring}`}>
+          <span className="relative flex h-3.5 w-3.5">
+            <span className={`absolute inline-flex h-full w-full rounded-full ${scannerUi.wave} animate-ping`} />
+            <span className={`relative inline-flex h-3.5 w-3.5 rounded-full ${scannerUi.dot}`} />
+          </span>
+          <p className="text-sm font-semibold uppercase tracking-wide">Scanner State: {scanState.replace('_', ' ')}</p>
+        </div>
         <p className="text-xs text-indigo-700 mt-1">{scanHint}</p>
         {scanSession ? <div className="mt-3 rounded-xl border border-indigo-200 bg-white p-3 flex items-start gap-3"><img src={`https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${encodeURIComponent(scanSession.pairingPayloadText)}`} alt="Scanner Pair QR" className="h-24 w-24 rounded" /><p className="text-[11px] text-gray-700 break-all font-mono">{scanSession.pairingPayloadText}</p></div> : null}
       </div>
