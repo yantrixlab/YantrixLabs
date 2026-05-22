@@ -192,6 +192,73 @@ function CreateProductFromScanModal({ scannedCode, onClose, onCreated }: { scann
   );
 }
 
+function ExistingProductScanModal({
+  product,
+  onClose,
+  onUpdated,
+}: {
+  product: Product;
+  onClose: () => void;
+  onUpdated: () => void;
+}) {
+  const { success, error: toastError } = useToast();
+  const [mode, setMode] = useState<'add' | 'set'>('add');
+  const [qty, setQty] = useState('1');
+  const [loading, setLoading] = useState(false);
+
+  const currentStock = product.stockCount ?? 0;
+  const parsedQty = Math.max(0, parseFloat(qty) || 0);
+  const nextStock = mode === 'add' ? currentStock + parsedQty : parsedQty;
+
+  const submit = async () => {
+    setLoading(true);
+    try {
+      await apiFetch(`/products/${product.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ stockCount: nextStock }),
+      });
+      success('Stock updated', `${product.name} stock is now ${nextStock}`);
+      onUpdated();
+      onClose();
+    } catch (e: any) {
+      toastError('Update failed', e?.message || 'Unable to update stock');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[10030] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/35" onClick={onClose} />
+      <div className="relative z-10 w-full max-w-md rounded-2xl border border-gray-200 bg-white shadow-2xl">
+        <div className="px-5 py-4 border-b border-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900">Item already exists</h3>
+          <p className="text-sm text-gray-500 mt-1">{product.name}</p>
+        </div>
+        <div className="p-5 space-y-4">
+          <div className="rounded-xl bg-gray-50 border border-gray-200 p-3 text-sm">
+            <p><span className="text-gray-500">Code:</span> <span className="font-mono">{(product as any).barcode || (product as any).sku || '-'}</span></p>
+            <p className="mt-1"><span className="text-gray-500">Current stock:</span> <span className="font-semibold">{currentStock}</span></p>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={() => setMode('add')} className={`px-3 py-2 rounded-lg text-sm border ${mode === 'add' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>Add Qty</button>
+            <button onClick={() => setMode('set')} className={`px-3 py-2 rounded-lg text-sm border ${mode === 'set' ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300'}`}>Set Qty</button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{mode === 'add' ? 'Quantity to add' : 'Set stock quantity'}</label>
+            <input type="number" min="0" step="1" value={qty} onChange={(e) => setQty(e.target.value)} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" />
+            <p className="text-xs text-gray-500 mt-1">New stock will be <span className="font-semibold">{nextStock}</span></p>
+          </div>
+        </div>
+        <div className="px-5 py-4 border-t border-gray-100 flex justify-end gap-2">
+          <button onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm">Close</button>
+          <button disabled={loading} onClick={submit} className="rounded-lg bg-indigo-600 text-white px-4 py-2 text-sm disabled:opacity-60">{loading ? 'Updating...' : 'Update Quantity'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ProductsPage() {
   const router = useRouter();
   const { success, error: toastError } = useToast();
@@ -205,6 +272,7 @@ export default function ProductsPage() {
   const [scanState, setScanState] = useState<'disconnected' | 'qr_ready' | 'connected' | 'receiving'>('disconnected');
   const [scanHint, setScanHint] = useState('Click connect to generate pairing QR for scanner app.');
   const [pendingScannedCode, setPendingScannedCode] = useState<string | null>(null);
+  const [existingScannedProduct, setExistingScannedProduct] = useState<Product | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastLogAtRef = useRef<string | null>(null);
@@ -241,7 +309,10 @@ export default function ProductsPage() {
       setScanHint('Scanner QR ready. Scan it in Android app.');
       const handleScanPayload = (payload: any) => {
         setScanState('receiving');
-        if (payload?.found && payload?.product) success('Item already exists', payload.product.name);
+        if (payload?.found && payload?.product) {
+          success('Item already exists', payload.product.name);
+          setExistingScannedProduct(payload.product as Product);
+        }
         else if (payload?.rawCode) setPendingScannedCode(payload.rawCode);
         setTimeout(() => setScanState('connected'), 1000);
       };
@@ -323,6 +394,7 @@ export default function ProductsPage() {
   return (
     <div className="p-6 lg:p-8">
       {pendingScannedCode ? <CreateProductFromScanModal scannedCode={pendingScannedCode} onClose={() => setPendingScannedCode(null)} onCreated={() => { setPendingScannedCode(null); fetchProducts(); }} /> : null}
+      {existingScannedProduct ? <ExistingProductScanModal product={existingScannedProduct} onClose={() => setExistingScannedProduct(null)} onUpdated={fetchProducts} /> : null}
       <ConfirmModal open={!!deleteTarget} title="Delete Product" message={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone.`} confirmLabel="Delete" destructive loading={deleting} onConfirm={handleDelete} onCancel={() => setDeleteTarget(null)} />
 
       <div className="flex items-start justify-between mb-4">
