@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 
@@ -225,7 +225,7 @@ export default function PassiveIncomeToolsForBusinessPage() {
             <p className="text-gray-700 mb-4">Build a full growth ecosystem using linked service pages that support your recurring revenue strategy.</p>
             <div className="flex flex-wrap gap-4 text-sm">
               <Link href="/tools" className="font-semibold text-emerald-700">business automation tools</Link>
-              <Link href="/tools/gst-invoice" className="font-semibold text-emerald-700">GST invoice tool</Link>
+              <Link href="/gst-invoice" className="font-semibold text-emerald-700">GST invoice tool</Link>
               <Link href="/tools" className="font-semibold text-emerald-700">automation tool stack</Link>
               <Link href="/tools" className="font-semibold text-emerald-700">AI tools for growth</Link>
             </div>
@@ -289,3 +289,4 @@ export default function PassiveIncomeToolsForBusinessPage() {
     </PublicLayout>
   );
 }
+

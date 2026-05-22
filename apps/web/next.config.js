@@ -28,6 +28,15 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/tools/gst-invoice',
+        destination: '/gst-invoice',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

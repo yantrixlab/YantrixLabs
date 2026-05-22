@@ -237,11 +237,11 @@ const TESTIMONIALS = [
 ];
 
 const PROCESS = [
-  { emoji: "ðŸ’¡", title: "Idea", desc: "Understand your requirements" },
-  { emoji: "ðŸŽ¨", title: "Design", desc: "UI/UX wireframes & prototypes" },
-  { emoji: "âš™ï¸", title: "Develop", desc: "Clean, scalable code" },
-  { emoji: "ðŸš€", title: "Launch", desc: "Deploy and go live" },
-  { emoji: "ðŸ¤", title: "Support", desc: "Ongoing maintenance" },
+  { icon: Zap, title: "Idea", desc: "Understand your requirements" },
+  { icon: LayoutDashboard, title: "Design", desc: "UI/UX wireframes and prototypes" },
+  { icon: Wrench, title: "Develop", desc: "Clean, scalable code" },
+  { icon: Rocket, title: "Launch", desc: "Deploy and go live" },
+  { icon: Headphones, title: "Support", desc: "Ongoing maintenance" },
 ];
 
 const API_URL =
@@ -600,7 +600,7 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="text-4xl md:text-5xl lg:text-[52px] font-bold leading-[1.1] tracking-tight text-white mb-5"
               >
-                GST Invoice Tool â€”{" "}
+                GST Invoice Tool -{" "}
                 <span
                   style={{
                     background:
@@ -796,7 +796,7 @@ export default function HomePage() {
                     {[
                       {
                         label: "Revenue",
-                        value: "â‚¹4,82,500",
+                        value: "Rs 4,82,500",
                         trend: "+12.4%",
                         up: true,
                         bg: "rgba(99,102,241,0.18)",
@@ -823,7 +823,7 @@ export default function HomePage() {
                       },
                       {
                         label: "Pending",
-                        value: "â‚¹38,200",
+                        value: "Rs 38,200",
                         trend: "3 due",
                         up: false,
                         bg: "rgba(245,158,11,0.15)",
@@ -856,7 +856,7 @@ export default function HomePage() {
                           className="text-[10px] font-semibold"
                           style={{ color: s.trendColor }}
                         >
-                          {s.up ? "â†‘" : "â†’"} {s.trend}
+                          {s.up ? "Up" : "Flat"} {s.trend}
                         </span>
                       </motion.div>
                     ))}
@@ -885,7 +885,7 @@ export default function HomePage() {
                         className="text-[10px] font-semibold"
                         style={{ color: "#34d399" }}
                       >
-                        â†‘ Last 7 days
+                        Up Last 7 days
                       </span>
                     </div>
                     <div className="flex items-end gap-1.5 h-14">
@@ -928,7 +928,7 @@ export default function HomePage() {
                       {[
                         {
                           name: "Acme Corp",
-                          amount: "â‚¹25,900",
+                          amount: "Rs 25,900",
                           status: "Paid",
                           statusColor: "#34d399",
                           statusBg: "rgba(52,211,153,0.12)",
@@ -936,7 +936,7 @@ export default function HomePage() {
                         },
                         {
                           name: "Sharma Ent.",
-                          amount: "â‚¹12,400",
+                          amount: "Rs 12,400",
                           status: "Sent",
                           statusColor: "#38bdf8",
                           statusBg: "rgba(56,189,248,0.12)",
@@ -944,7 +944,7 @@ export default function HomePage() {
                         },
                         {
                           name: "Patel Co.",
-                          amount: "â‚¹8,500",
+                          amount: "Rs 8,500",
                           status: "Draft",
                           statusColor: "#94a3b8",
                           statusBg: "rgba(148,163,184,0.10)",
@@ -1091,7 +1091,7 @@ export default function HomePage() {
                                 boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
                               }}
                             >
-                              â˜… Featured
+                              Featured
                             </span>
                           )}
                           <span
@@ -1302,7 +1302,14 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ PROCESS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-24 bg-gray-50">
+      <section className="relative overflow-hidden py-24 bg-gray-50">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-60"
+          style={{
+            background:
+              "radial-gradient(circle at 15% 15%, rgba(99,102,241,0.10), transparent 40%), radial-gradient(circle at 85% 35%, rgba(6,182,212,0.12), transparent 45%)",
+          }}
+        />
         <div className="container-wide">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
@@ -1312,29 +1319,29 @@ export default function HomePage() {
               A simple, transparent process from idea to launch.
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-0 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-5 relative">
             {PROCESS.map((step, idx) => (
               <div
                 key={step.title}
-                className="flex flex-col items-center text-center relative"
+                className="relative"
               >
                 {idx < PROCESS.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-1/2 w-full h-px bg-indigo-100 z-0" />
+                  <div className="hidden lg:block absolute top-11 left-[62%] w-[76%] h-px bg-gradient-to-r from-indigo-200 via-cyan-200 to-transparent z-0" />
                 )}
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
                   viewport={{ once: true }}
-                  className="relative z-10 flex flex-col items-center"
+                  className="group relative z-10 flex h-full flex-col items-center rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                 >
-                  <div className="h-16 w-16 rounded-2xl bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-2xl mb-4">
-                    {step.emoji}
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-cyan-50 text-indigo-600">
+                    <step.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-1">
+                  <h3 className="font-semibold text-gray-900 mb-1 text-lg">
                     {step.title}
                   </h3>
-                  <p className="text-xs text-gray-500 max-w-[100px]">
+                  <p className="text-sm text-gray-500 max-w-[180px] leading-relaxed">
                     {step.desc}
                   </p>
                 </motion.div>
@@ -1449,7 +1456,7 @@ export default function HomePage() {
                 We build smart digital products and business tools for startups,
                 SMEs, and enterprises.
               </p>
-              <p className="text-xs">Made with â¤ï¸ in India ðŸ‡®ðŸ‡³</p>
+              <p className="text-xs">Made with care in India</p>
             </div>
             <div>
               <h5 className="font-semibold text-white mb-4">Products</h5>
@@ -1520,7 +1527,7 @@ export default function HomePage() {
           </div>
           <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm">
-              Â© {new Date().getFullYear()} Yantrix Labs. All rights reserved.
+              Copyright {new Date().getFullYear()} Yantrix Labs. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-sm">
               <Link

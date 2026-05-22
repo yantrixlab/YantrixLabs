@@ -18,7 +18,8 @@ export default function Page() {
     <main className="container-wide py-16 max-w-4xl mx-auto prose prose-gray">
       <div className="mb-6 text-sm text-gray-500"><Link href="/blog">Blog</Link> / How Freelancers and Consultants Should Create GST Invoices in India</div>
       <h1>How Freelancers and Consultants Should Create GST Invoices in India</h1>
-      <p>Freelancers should issue professional invoices and handle GST correctly when applicable.</p><h2>Threshold check (₹20L)</h2><p>In many states, GST registration applies once aggregate turnover crosses ₹20 lakh (special category states may differ).</p><h2>When to charge GST</h2><p>Charge GST once registered and when the supply is taxable. Keep your invoice sequence consistent.</p><p>Use this <a href="/tools/gst-invoice">GST invoice tool</a> to avoid manual errors.</p>
+      <p>Freelancers should issue professional invoices and handle GST correctly when applicable.</p><h2>Threshold check (₹20L)</h2><p>In many states, GST registration applies once aggregate turnover crosses ₹20 lakh (special category states may differ).</p><h2>When to charge GST</h2><p>Charge GST once registered and when the supply is taxable. Keep your invoice sequence consistent.</p><p>Use this <a href="/gst-invoice">GST invoice tool</a> to avoid manual errors.</p>
     </main>
   );
 }
+

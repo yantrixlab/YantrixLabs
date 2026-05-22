@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -166,12 +166,12 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               <p className="text-sm leading-relaxed mb-3">
                 We build smart digital products and business tools for startups, SMEs, and enterprises.
               </p>
-              <p className="text-xs">Made with ❤️ in India 🇮🇳</p>
+              <p className="text-xs">Made with â¤ï¸ in India ðŸ‡®ðŸ‡³</p>
             </div>
             <div>
               <h5 className="font-semibold text-white mb-3">Products</h5>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/tools/gst-invoice" className="hover:text-white transition-colors">GST Invoice Tool</Link></li>
+                <li><Link href="/gst-invoice" className="hover:text-white transition-colors">GST Invoice Tool</Link></li>
                 <li><Link href="/tools" className="hover:text-white transition-colors">All Products</Link></li>
                 <li><Link href="/services" className="hover:text-white transition-colors">Custom Development</Link></li>
                 <li><Link href="/saas-development-services" className="hover:text-white transition-colors">SaaS Development</Link></li>
@@ -191,7 +191,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm">© {new Date().getFullYear()} Yantrix Labs. All rights reserved.</p>
+            <p className="text-sm">Â© {new Date().getFullYear()} Yantrix Labs. All rights reserved.</p>
             <div className="flex items-center gap-4 text-sm">
               <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
@@ -203,3 +203,4 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     </div>
   );
 }
+

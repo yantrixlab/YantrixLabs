@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
@@ -28,7 +28,7 @@ interface CMSTool {
 }
 
 const FALLBACK_PRODUCTS = [
-  { icon: FileText, title: 'GST Invoice Tool', description: 'Professional GST billing, invoicing, and compliance. Auto-calculate CGST, SGST, IGST. Generate GSTR-1 and GSTR-3B reports. Built for Indian businesses.', href: '/tools/gst-invoice', badge: 'Live', color: 'bg-indigo-50 text-indigo-600', badgeColor: 'bg-indigo-100 text-indigo-700' },
+  { icon: FileText, title: 'GST Invoice Tool', description: 'Professional GST billing, invoicing, and compliance. Auto-calculate CGST, SGST, IGST. Generate GSTR-1 and GSTR-3B reports. Built for Indian businesses.', href: '/gst-invoice', badge: 'Live', color: 'bg-indigo-50 text-indigo-600', badgeColor: 'bg-indigo-100 text-indigo-700' },
   { icon: Users, title: 'Attendance System', description: 'Biometric and digital attendance tracking for teams. Real-time reports, leave management, and payroll integration.', href: '/contact', badge: 'Coming Soon', color: 'bg-green-50 text-green-600', badgeColor: 'bg-green-100 text-green-700' },
   { icon: ShoppingCart, title: 'Ecommerce Platform', description: 'Full-featured online store with payments, inventory management, and order tracking. Launch your store in days.', href: '/contact', badge: 'Coming Soon', color: 'bg-amber-50 text-amber-600', badgeColor: 'bg-amber-100 text-amber-700' },
   { icon: Building2, title: 'Hotel Booking System', description: 'Property management and room booking for hospitality businesses. Online reservations, housekeeping, and billing.', href: '/contact', badge: 'Coming Soon', color: 'bg-blue-50 text-blue-600', badgeColor: 'bg-blue-100 text-blue-700' },
@@ -151,7 +151,7 @@ export default function ToolsPage() {
           </h1>
           <p className="text-xl text-gray-600 leading-relaxed mb-8">
             Browse our ready-to-deploy business software solutions.
-            From invoicing to booking platforms — built for India.
+            From invoicing to booking platforms â€” built for India.
           </p>
           {!useFallback && (
             <div className="relative max-w-xl mx-auto">
@@ -203,7 +203,7 @@ export default function ToolsPage() {
                     <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                       {tool.logoUrl ? <img src={tool.logoUrl} alt={tool.title} className="h-full w-full object-cover" /> : <Wrench className="h-6 w-6 text-white" />}
                     </div>
-                    <span className="bg-yellow-400/20 text-yellow-300 border border-yellow-400/30 text-xs font-semibold px-2.5 py-0.5 rounded-full">★ Featured</span>
+                    <span className="bg-yellow-400/20 text-yellow-300 border border-yellow-400/30 text-xs font-semibold px-2.5 py-0.5 rounded-full">â˜… Featured</span>
                   </div>
                   <h3 className="text-base font-semibold text-white mb-2">{tool.title}</h3>
                   <p className="text-indigo-200 text-sm leading-relaxed flex-1 mb-5">{tool.shortDescription || ''}</p>
@@ -260,7 +260,7 @@ export default function ToolsPage() {
                       </div>
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         {tool.featured && (
-                          <span className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200/80 text-amber-600" style={{ background: 'linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>★ Featured</span>
+                          <span className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200/80 text-amber-600" style={{ background: 'linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>â˜… Featured</span>
                         )}
                         <span
                           className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full border ${
@@ -370,10 +370,11 @@ export default function ToolsPage() {
           <p className="text-indigo-200 mb-8 text-lg">We build custom software for any business requirement. Tell us what you need.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/contact" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-lg">Start a Project<ArrowRight className="h-4 w-4" /></Link>
-            <Link href="/tools/gst-invoice" className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-400 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-500/20 transition-all">Try GST Tool</Link>
+            <Link href="/gst-invoice" className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-400 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-500/20 transition-all">Try GST Tool</Link>
           </div>
         </div>
       </section>
     </PublicLayout>
   );
 }
+
