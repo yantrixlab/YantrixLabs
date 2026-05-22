@@ -1299,18 +1299,18 @@ export default function NewInvoicePage() {
           </div>
         )}
 
-        <div className="mb-4 rounded-xl border border-indigo-200 bg-indigo-50/40 p-3.5">
+        <div className="mb-4 rounded-xl border border-gray-200 bg-white p-3.5 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <ScanLine className="h-4 w-4 text-indigo-600" />
-              <p className="text-sm font-semibold text-indigo-900">Item Details</p>
+              <p className="text-sm font-semibold text-gray-800">Item Details</p>
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-indigo-500">Scan barcode, SKU, serial no, or item code</p>
+              <p className="text-xs text-gray-500">Scan barcode, SKU, serial no, or item code</p>
               <button
                 type="button"
                 onClick={connectScanner}
-                className="rounded-lg border border-indigo-300 bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-50"
+                className="rounded-lg border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 hover:bg-gray-50"
               >
                 Connect Scanner
               </button>
@@ -1380,7 +1380,7 @@ export default function NewInvoicePage() {
                 }
               }}
               placeholder="Scan item by barcode, SKU, or name"
-              className="flex-1 rounded-xl border border-indigo-200 bg-white px-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none"
+              className="flex-1 rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm focus:border-indigo-400 focus:outline-none"
             />
             <button
               type="button"
@@ -1457,21 +1457,21 @@ export default function NewInvoicePage() {
               </div>
               <div className="p-5">
                 {selectedCustomer ? (
-                  <div className="flex items-start justify-between rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-100 p-4">
+                  <div className="flex items-start justify-between rounded-xl bg-gray-50 border border-gray-200 p-4">
                     <div className="flex items-start gap-3">
                       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm">
                         {selectedCustomer.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-semibold text-indigo-900 text-sm">{selectedCustomer.name}</p>
-                        {selectedCustomer.email && <p className="text-xs text-indigo-600 mt-0.5">{selectedCustomer.email}</p>}
-                        {selectedCustomer.gstin && <p className="text-xs font-mono text-indigo-500 mt-1 bg-indigo-100 px-2 py-0.5 rounded-md inline-block">{selectedCustomer.gstin}</p>}
+                        <p className="font-semibold text-gray-900 text-sm">{selectedCustomer.name}</p>
+                        {selectedCustomer.email && <p className="text-xs text-gray-600 mt-0.5">{selectedCustomer.email}</p>}
+                        {selectedCustomer.gstin && <p className="text-xs font-mono text-gray-600 mt-1 bg-gray-100 px-2 py-0.5 rounded-md inline-block">{selectedCustomer.gstin}</p>}
                         {selectedCustomer.billingCity && (
-                          <p className="text-xs text-indigo-500 mt-1">{selectedCustomer.billingCity}, {selectedCustomer.billingState}</p>
+                          <p className="text-xs text-gray-500 mt-1">{selectedCustomer.billingCity}, {selectedCustomer.billingState}</p>
                         )}
                       </div>
                     </div>
-                    <button onClick={() => { setSelectedCustomer(null); setCustomerSearch(''); }} className="rounded-lg p-1 text-indigo-300 hover:bg-indigo-100 hover:text-indigo-600 transition-all">
+                    <button onClick={() => { setSelectedCustomer(null); setCustomerSearch(''); }} className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-all">
                       <X className="h-4 w-4" />
                     </button>
                   </div>
@@ -1555,7 +1555,7 @@ export default function NewInvoicePage() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-200 bg-[#f6f7fb]">
+                    <tr className="border-b border-gray-200 bg-gray-50">
                       <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 min-w-[220px]">Item Details</th>
                       <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 w-24">HSN/SAC</th>
                       <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500 w-20">Quantity</th>
@@ -1568,7 +1568,7 @@ export default function NewInvoicePage() {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {items.map((item, idx) => (
-                      <tr key={item.id} className="group hover:bg-indigo-50/20 transition-colors">
+                      <tr key={item.id} className="group hover:bg-gray-50 transition-colors">
                         <td className="px-4 py-2.5" data-product-suggestions>
                           <input type="text" value={item.description}
                             ref={el => { descInputRefs.current[item.id] = el; }}
