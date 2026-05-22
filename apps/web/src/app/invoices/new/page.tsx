@@ -1198,7 +1198,7 @@ export default function NewInvoicePage() {
         onRemoveLogo={() => setBusinessSettings(prev => (prev ? { ...prev, logo: null } : prev))}
         onSave={handleSettingsSave}
       />
-      <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-[#f8f9fc] min-h-screen">
+      <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-gray-50 min-h-screen">
 
         {/* Page Header */}
         <div className="flex items-center gap-4 mb-5">
