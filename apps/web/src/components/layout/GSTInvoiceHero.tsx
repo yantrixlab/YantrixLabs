@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { isAuthenticated } from '@/lib/api';
+import { enableGuestMode } from '@/lib/guestMode';
 import {
   Zap, ArrowRight, Rocket, FileText, IndianRupee,
   Users, Package, BarChart3, TrendingUp, CheckCircle,
@@ -62,7 +63,8 @@ export default function GSTInvoiceHero() {
   const router = useRouter();
 
   const handleLaunchApp = useCallback(() => {
-    router.push(isAuthenticated() ? '/dashboard' : '/auth/register');
+    if (!isAuthenticated()) enableGuestMode();
+    router.push(isAuthenticated() ? '/dashboard' : '/dashboard?guest=1');
   }, [router]);
 
   return (
@@ -204,7 +206,10 @@ export default function GSTInvoiceHero() {
 
               {/* Secondary — View Dashboard */}
               <Link
-                href="/dashboard"
+                href={isAuthenticated() ? "/dashboard" : "/dashboard?guest=1"}
+                onClick={() => {
+                  if (!isAuthenticated()) enableGuestMode();
+                }}
                 className="group relative inline-flex items-center justify-center gap-2.5 rounded-2xl px-8 py-4 text-base font-semibold overflow-hidden"
                 style={{
                   background: 'rgba(255,255,255,0.70)',

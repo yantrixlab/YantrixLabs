@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Plus, Search, Download, FileText, CheckCircle, Clock, AlertCircle, ChevronRight, RefreshCw, TrendingUp, IndianRupee, ReceiptText, XCircle, Settings } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
+import { requireAuthForAction } from '@/lib/authGate';
 
 interface Invoice {
   id: string;
@@ -276,6 +277,9 @@ export default function InvoicesPage() {
                       <p className="text-xs text-gray-400 mt-1 mb-4">Create your first invoice to get started</p>
                       <Link
                         href="/invoices/new"
+                        onClick={(e) => {
+                          if (!requireAuthForAction('invoice:create')) e.preventDefault();
+                        }}
                         className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
                       >
                         <Plus className="h-4 w-4" />

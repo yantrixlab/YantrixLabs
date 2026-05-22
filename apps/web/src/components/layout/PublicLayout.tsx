@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { ArrowRight, LayoutDashboard, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
+import { enableGuestMode } from '@/lib/guestMode';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
@@ -21,6 +22,7 @@ interface PublicLayoutProps {
 
 export function PublicLayout({ children }: PublicLayoutProps) {
   const pathname = usePathname();
+  const isGstLanding = pathname === '/gst-invoice';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [initials, setInitials] = useState('');
@@ -97,7 +99,10 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     Log in
                   </Link>
                   <Link
-                    href="/auth/register"
+                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
+                    onClick={() => {
+                      if (isGstLanding) enableGuestMode();
+                    }}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
                   >
                     Get Started Free
@@ -143,7 +148,15 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               ) : (
                 <>
                   <Link href="/auth/login" className="block py-2 text-sm font-medium text-gray-700">Log in</Link>
-                  <Link href="/auth/register" className="block rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-semibold text-white">Get Started Free</Link>
+                  <Link
+                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
+                    onClick={() => {
+                      if (isGstLanding) enableGuestMode();
+                    }}
+                    className="block rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-semibold text-white"
+                  >
+                    Get Started Free
+                  </Link>
                 </>
               )}
             </div>

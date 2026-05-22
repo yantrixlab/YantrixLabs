@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText, CheckCircle } from 'lucide-react';
 import { API_URL } from '@/lib/api';
+import { disableGuestMode } from '@/lib/guestMode';
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +44,7 @@ export default function RegisterPage() {
       if (data.success) {
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
+        disableGuestMode();
         setSuccess(true);
         setTimeout(() => { window.location.href = '/dashboard'; }, 1500);
       } else {

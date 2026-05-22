@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Plus, Search, Users, Mail, Phone, ChevronRight, RefreshCw } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
+import { requireAuthForAction } from '@/lib/authGate';
 
 interface Customer {
   id: string;
@@ -61,7 +62,13 @@ export default function CustomersPage() {
           <button onClick={fetchCustomers} className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all duration-150 active:scale-95">
             <RefreshCw className="h-4 w-4" />
           </button>
-          <Link href="/customers/new" className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all duration-150 active:scale-95">
+          <Link
+            href="/customers/new"
+            onClick={(e) => {
+              if (!requireAuthForAction('customer:create')) e.preventDefault();
+            }}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all duration-150 active:scale-95"
+          >
             <Plus className="h-4 w-4" /> Add Customer
           </Link>
         </div>
@@ -138,7 +145,13 @@ export default function CustomersPage() {
             <div className="col-span-full text-center py-12">
               <Users className="h-12 w-12 text-gray-300 mx-auto mb-3" />
               <p className="text-gray-500">No customers found</p>
-              <Link href="/customers/new" className="mt-3 inline-flex items-center gap-1 text-sm text-indigo-600 hover:underline">
+              <Link
+                href="/customers/new"
+                onClick={(e) => {
+                  if (!requireAuthForAction('customer:create')) e.preventDefault();
+                }}
+                className="mt-3 inline-flex items-center gap-1 text-sm text-indigo-600 hover:underline"
+              >
                 <Plus className="h-4 w-4" /> Add your first customer
               </Link>
             </div>
@@ -148,4 +161,3 @@ export default function CustomersPage() {
     </div>
   );
 }
-

@@ -36,6 +36,8 @@ import {
   apiFetch,
   isSafeImageUrl,
 } from "@/lib/api";
+import { AuthRequiredModal } from "@/components/ui/AuthRequiredModal";
+import { enableGuestMode, isGuestMode } from "@/lib/guestMode";
 import {
   BusinessProfileSetupModal,
   type BusinessSettings as BizSettings,
@@ -126,6 +128,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       : "light";
   });
   const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
+  const [guest, setGuest] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState<"signin" | "signup">("signin");
 
   useEffect(() => {
     localStorage.setItem("gst_invoice_theme", theme);
@@ -134,8 +139,29 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, [theme]);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("guest") === "1") {
+        enableGuestMode();
+      }
+      setGuest(isGuestMode() && !isAuthenticated());
+    }
+  }, []);
+
+  useEffect(() => {
+    const handler = () => {
+      setAuthModalTab("signin");
+      setAuthModalOpen(true);
+    };
+    window.addEventListener("auth-required", handler as EventListener);
+    return () => window.removeEventListener("auth-required", handler as EventListener);
+  }, []);
+
+  useEffect(() => {
     if (!isAuthenticated()) {
-      router.replace("/auth/login");
+      if (!guest) {
+        router.replace("/auth/login");
+      }
       return;
     }
     const tokenData = getUserData();
@@ -365,7 +391,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         }
       })
       .catch(() => {});
-  }, [router, pathname]);
+  }, [router, pathname, guest]);
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
@@ -915,6 +941,20 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
 
             {(() => {
+              if (guest) {
+                return (
+                  <button
+                    onClick={() => {
+                      setAuthModalTab("signup");
+                      setAuthModalOpen(true);
+                    }}
+                    className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all duration-150 active:scale-95"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    New Invoice
+                  </button>
+                );
+              }
               const invoiceBlocked =
                 (subscriptionEnforced && planInfo?.isExpired) ||
                 (planInfo?.invoiceLimit != null &&
@@ -976,6 +1016,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           onComplete={handleSetupComplete}
         />
       )}
+      <AuthRequiredModal
+        open={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        defaultTab={authModalTab}
+      />
     </div>
   );
 }

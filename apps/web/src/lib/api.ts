@@ -1,3 +1,6 @@
+import { emitAuthRequired, isGuestMode, disableGuestMode } from './guestMode';
+import { getGuestDemoResponse } from './guestDemoData';
+
 const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
 
 function normalizeApiUrl(url?: string): string {
@@ -44,7 +47,9 @@ export function isAuthenticated(): boolean {
   if (!token) return false;
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.exp * 1000 > Date.now();
+    const ok = payload.exp * 1000 > Date.now();
+    if (ok) disableGuestMode();
+    return ok;
   } catch {
     return false;
   }
@@ -54,6 +59,19 @@ export async function apiFetch<T = any>(
   path: string,
   options?: RequestInit
 ): Promise<T> {
+  const method = (options?.method || 'GET').toUpperCase();
+  const guest = isGuestMode() && !isAuthenticated();
+
+  if (guest && method !== 'GET' && method !== 'HEAD') {
+    emitAuthRequired(path);
+    throw new Error('AUTH_REQUIRED');
+  }
+
+  if (guest && method === 'GET') {
+    const demo = getGuestDemoResponse(path);
+    if (demo) return demo as T;
+  }
+
   const token = getAccessToken();
   const res = await fetch(`${API_URL}${path}`, {
     ...options,

@@ -659,6 +659,13 @@ export default function HomePage() {
                     iconBg: "rgba(103,232,249,0.10)",
                     iconBorder: "rgba(103,232,249,0.22)",
                   },
+                  {
+                    icon: Smartphone,
+                    label: "QR Scanner for Android",
+                    iconColor: "#38bdf8",
+                    iconBg: "rgba(56,189,248,0.10)",
+                    iconBorder: "rgba(56,189,248,0.22)",
+                  },
                 ].map((f, i) => (
                   <motion.li
                     key={f.label}
@@ -702,7 +709,7 @@ export default function HomePage() {
                 viewport={{ once: true }}
               >
                 <Link
-                  href="/services"
+                  href="/gst-invoice"
                   className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-xl px-8 py-4 text-base font-bold text-white transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
                   style={{
                     background:

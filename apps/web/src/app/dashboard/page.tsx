@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { FileText, Users, IndianRupee, TrendingUp, ArrowUpRight, ArrowDownRight, Plus, ChevronRight, Clock, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { apiFetch, getUserData } from '@/lib/api';
+import { requireAuthForAction } from '@/lib/authGate';
 
 const STATUS_CONFIG = {
   PAID: { label: 'Paid', class: 'badge badge-success', icon: CheckCircle },
@@ -379,6 +380,9 @@ export default function DashboardPage() {
               <Link
                 key={action.href}
                 href={action.href}
+                onClick={(e) => {
+                  if (!requireAuthForAction(`quick:${action.href}`)) e.preventDefault();
+                }}
                 className={`flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition-all duration-150 ${action.hoverBg} ${action.hoverBorder} hover:shadow-sm group`}
               >
                 <div className={`h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0 ${action.iconBg} transition-transform duration-150 group-hover:scale-110`}>
@@ -425,6 +429,9 @@ export default function DashboardPage() {
               <p className="text-xs text-gray-400 mb-4">Create your first invoice to get started</p>
               <Link
                 href="/invoices/new"
+                onClick={(e) => {
+                  if (!requireAuthForAction('invoice:create')) e.preventDefault();
+                }}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
               >
                 <Plus className="h-4 w-4" /> Create Invoice

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText } from 'lucide-react';
 import { API_URL } from '@/lib/api';
+import { disableGuestMode } from '@/lib/guestMode';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +29,7 @@ export default function LoginPage() {
       if (data.success) {
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
+        disableGuestMode();
         window.location.href = '/dashboard';
       } else {
         setError(data.error || 'Invalid credentials');
@@ -75,6 +77,7 @@ export default function LoginPage() {
       if (data.success) {
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
+        disableGuestMode();
         window.location.href = '/dashboard';
       } else {
         setError(data.error || 'Invalid OTP');
