@@ -140,8 +140,9 @@ export default function InvoicesPage() {
             Export
           </button>
           <Link
-            href="/settings"
+            href="/settings?tab=invoice"
             title="Invoice Settings"
+            aria-label="Open invoice settings"
             className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white p-2.5 text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-150 active:scale-95"
           >
             <Settings className="h-4 w-4" />
