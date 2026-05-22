@@ -53,6 +53,125 @@ async function authenticateFromQuery(
 
 const router = Router();
 
+async function handleScanSubmission(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  eventName: "scan.item" | "scan.catalog",
+) {
+  try {
+    const sessionId = String(req.body?.sessionId || "").trim();
+    const deviceToken = String(req.body?.deviceToken || "").trim();
+    const rawCode = String(req.body?.rawCode || "").trim();
+    const symbology =
+      typeof req.body?.symbology === "string" ? req.body.symbology : null;
+
+    if (!sessionId || !deviceToken || !rawCode) {
+      res.status(400).json({
+        success: false,
+        error: "sessionId, deviceToken, and rawCode are required",
+      });
+      return;
+    }
+
+    const session = await prisma.scannerSession.findUnique({
+      where: { id: sessionId },
+    });
+    if (!session) {
+      res.status(404).json({ success: false, error: "Invalid session" });
+      return;
+    }
+    if (session.expiresAt < new Date()) {
+      res.status(410).json({ success: false, error: "Session expired" });
+      return;
+    }
+
+    const device = await prisma.scannerDevice.findUnique({
+      where: { deviceToken },
+    });
+    if (!device || !device.isActive || device.businessId !== session.businessId) {
+      res.status(403).json({ success: false, error: "Device not allowed" });
+      return;
+    }
+
+    const exactCode = rawCode.toLowerCase();
+    const product =
+      (await prisma.product.findFirst({
+        where: {
+          businessId: session.businessId,
+          isActive: true,
+          barcode: { equals: rawCode },
+        },
+      })) ||
+      (await prisma.product.findFirst({
+        where: {
+          businessId: session.businessId,
+          isActive: true,
+          sku: { equals: rawCode },
+        },
+      })) ||
+      (await prisma.product.findFirst({
+        where: {
+          businessId: session.businessId,
+          isActive: true,
+          name: { equals: rawCode, mode: "insensitive" as const },
+        },
+      })) ||
+      (await prisma.product.findFirst({
+        where: {
+          businessId: session.businessId,
+          isActive: true,
+          OR: [
+            { barcode: { contains: exactCode, mode: "insensitive" as const } },
+            { sku: { contains: exactCode, mode: "insensitive" as const } },
+          ],
+        },
+      }));
+
+    await prisma.scannerDevice.update({
+      where: { id: device.id },
+      data: { lastSeenAt: new Date() },
+    });
+
+    await prisma.scannerScanLog.create({
+      data: {
+        businessId: session.businessId,
+        deviceId: device.id,
+        sessionId: session.id,
+        rawCode,
+        symbology,
+        foundProductId: product?.id ?? null,
+        status: product ? "FOUND" : "NOT_FOUND",
+        message: product ? "Matched product" : "No matching product",
+      },
+    });
+
+    const payload = {
+      found: !!product,
+      rawCode,
+      product: product
+        ? {
+            id: product.id,
+            name: product.name,
+            hsnSac: product.hsnSac,
+            price: product.price,
+            gstRate: product.gstRate,
+            unit: product.unit,
+            barcode: product.barcode,
+            sku: product.sku,
+          }
+        : null,
+      message: product ? "Matched product" : "No matching product found",
+      scannedAt: new Date().toISOString(),
+    };
+
+    broadcast(session.id, eventName, payload);
+    res.json({ success: true, data: payload });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // Web: create scan pairing session (authenticated user)
 router.post(
   "/sessions",
@@ -346,118 +465,15 @@ router.post("/pair", async (req: Request, res: Response, next: NextFunction) => 
 
 // App: submit a scanned code
 router.post("/items", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const sessionId = String(req.body?.sessionId || "").trim();
-    const deviceToken = String(req.body?.deviceToken || "").trim();
-    const rawCode = String(req.body?.rawCode || "").trim();
-    const symbology =
-      typeof req.body?.symbology === "string" ? req.body.symbology : null;
-
-    if (!sessionId || !deviceToken || !rawCode) {
-      res.status(400).json({
-        success: false,
-        error: "sessionId, deviceToken, and rawCode are required",
-      });
-      return;
-    }
-
-    const session = await prisma.scannerSession.findUnique({
-      where: { id: sessionId },
-    });
-    if (!session) {
-      res.status(404).json({ success: false, error: "Invalid session" });
-      return;
-    }
-    if (session.expiresAt < new Date()) {
-      res.status(410).json({ success: false, error: "Session expired" });
-      return;
-    }
-
-    const device = await prisma.scannerDevice.findUnique({
-      where: { deviceToken },
-    });
-    if (!device || !device.isActive || device.businessId !== session.businessId) {
-      res.status(403).json({ success: false, error: "Device not allowed" });
-      return;
-    }
-
-    const exactCode = rawCode.toLowerCase();
-    const product =
-      (await prisma.product.findFirst({
-        where: {
-          businessId: session.businessId,
-          isActive: true,
-          barcode: { equals: rawCode },
-        },
-      })) ||
-      (await prisma.product.findFirst({
-        where: {
-          businessId: session.businessId,
-          isActive: true,
-          sku: { equals: rawCode },
-        },
-      })) ||
-      (await prisma.product.findFirst({
-        where: {
-          businessId: session.businessId,
-          isActive: true,
-          name: { equals: rawCode, mode: "insensitive" as const },
-        },
-      })) ||
-      (await prisma.product.findFirst({
-        where: {
-          businessId: session.businessId,
-          isActive: true,
-          OR: [
-            { barcode: { contains: exactCode, mode: "insensitive" as const } },
-            { sku: { contains: exactCode, mode: "insensitive" as const } },
-          ],
-        },
-      }));
-
-    await prisma.scannerDevice.update({
-      where: { id: device.id },
-      data: { lastSeenAt: new Date() },
-    });
-
-    await prisma.scannerScanLog.create({
-      data: {
-        businessId: session.businessId,
-        deviceId: device.id,
-        sessionId: session.id,
-        rawCode,
-        symbology,
-        foundProductId: product?.id ?? null,
-        status: product ? "FOUND" : "NOT_FOUND",
-        message: product ? "Matched product" : "No matching product",
-      },
-    });
-
-    const payload = {
-      found: !!product,
-      rawCode,
-      product: product
-        ? {
-            id: product.id,
-            name: product.name,
-            hsnSac: product.hsnSac,
-            price: product.price,
-            gstRate: product.gstRate,
-            unit: product.unit,
-            barcode: product.barcode,
-            sku: product.sku,
-          }
-        : null,
-      message: product ? "Matched product" : "No matching product found",
-      scannedAt: new Date().toISOString(),
-    };
-
-    broadcast(session.id, "scan.item", payload);
-    res.json({ success: true, data: payload });
-  } catch (error) {
-    next(error);
-  }
+  await handleScanSubmission(req, res, next, "scan.item");
 });
+
+router.post(
+  "/catalog-items",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await handleScanSubmission(req, res, next, "scan.catalog");
+  },
+);
 
 router.get(
   "/devices",
