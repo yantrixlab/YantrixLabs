@@ -363,6 +363,8 @@ export default function HomePage() {
   const [toolsLoading, setToolsLoading] = useState(true);
   const [homeHeader, setHomeHeader] = useState(HOME_HEADER_DEFAULTS);
   const [homeHeaderLoading, setHomeHeaderLoading] = useState(true);
+  const [homeAnimatedLogos, setHomeAnimatedLogos] =
+    useState<string[]>(HOME_ANIMATED_LOGOS);
   const businessCount = Number.parseInt(homeHeader.stat2Value || "", 10);
   const trustedText =
     businessCount && businessCount > 0
@@ -407,6 +409,17 @@ export default function HomePage() {
       })
       .catch(() => {})
       .finally(() => setHomeHeaderLoading(false));
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/home-logos", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.success && Array.isArray(d.data) && d.data.length > 0) {
+          setHomeAnimatedLogos(d.data);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -462,14 +475,14 @@ export default function HomePage() {
       />
 
       {/* â”€â”€â”€ TRUST STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-16 bg-[#f8fafc] border-y border-gray-100 overflow-hidden">
+      <section className="py-16 bg-[#eef2f7] border-y border-gray-200 overflow-hidden">
         <div className="container-wide text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-8">
             We use these technologies to build our products and power our
             clients' businesses
           </p>
           <div className="mx-auto grid max-w-5xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {HOME_ANIMATED_LOGOS.map((logo, idx) => {
+            {homeAnimatedLogos.map((logo, idx) => {
               const baseFloat = 10 + (idx % 3) * 4;
               const duration = 3.4 + (idx % 4) * 0.45;
               const brand = logo
