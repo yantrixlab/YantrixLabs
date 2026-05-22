@@ -66,7 +66,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`text-sm font-medium transition-colors ${isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}
+                    className={`text-sm font-medium transition-colors ${isActive ? 'text-brand-600 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}
                   >
                     {link.label}
                   </Link>

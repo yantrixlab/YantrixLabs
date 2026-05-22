@@ -43,7 +43,7 @@ export function RelatedPosts({ posts }: Props) {
                   <div className="absolute top-2 left-2">
                     <span
                       className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
-                      style={{ background: post.category.color || '#6366f1' }}
+                      style={{ background: post.category.color || '#0066FF' }}
                     >
                       {post.category.name}
                     </span>

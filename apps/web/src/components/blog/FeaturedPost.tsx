@@ -75,7 +75,7 @@ export function FeaturedPost({ post }: Props) {
                 className="self-start text-xs font-bold px-3 py-1 rounded-full mb-4"
                 style={{
                   background: post.category.color ? `${post.category.color}18` : '#eef2ff',
-                  color: post.category.color || '#6366f1',
+                  color: post.category.color || '#0066FF',
                 }}
               >
                 {post.category.name}

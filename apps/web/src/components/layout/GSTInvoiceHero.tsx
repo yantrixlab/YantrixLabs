@@ -33,7 +33,7 @@ const STAT_CARDS = [
 
 const INVOICE_ROWS = [
   { name: 'Acme Corp',          amount: '₹25,900', status: 'Paid',    statusColor: '#10b981', statusBg: 'rgba(16,185,129,0.12)' },
-  { name: 'Sharma Enterprises', amount: '₹12,400', status: 'Sent',    statusColor: '#6366f1', statusBg: 'rgba(99,102,241,0.12)' },
+  { name: 'Sharma Enterprises', amount: '₹12,400', status: 'Sent',    statusColor: '#0066FF', statusBg: 'rgba(0,102,255,0.12)' },
   { name: 'Patel Industries',   amount: '₹8,500',  status: 'Draft',   statusColor: '#94a3b8', statusBg: 'rgba(148,163,184,0.10)' },
   { name: 'Gupta Retail',       amount: '₹31,000', status: 'Overdue', statusColor: '#f43f5e', statusBg: 'rgba(244,63,94,0.12)'  },
 ];
@@ -183,7 +183,7 @@ export default function GSTInvoiceHero() {
                 onClick={handleLaunchApp}
                 className="gst-launch-btn group relative inline-flex items-center justify-center gap-2.5 rounded-2xl px-8 py-4 text-base font-bold text-white overflow-hidden"
                 style={{
-                  background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #9333ea 100%)',
+                  background: 'linear-gradient(135deg, #0066FF 0%, #0052CC 55%, #003D99 100%)',
                   boxShadow: '0 0 0 1px rgba(99,102,241,0.5), 0 8px 32px rgba(79,70,229,0.40), 0 2px 8px rgba(79,70,229,0.25)',
                   transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
                 }}

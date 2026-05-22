@@ -148,7 +148,7 @@ export default function BillingPage() {
           }
         },
         prefill: prefill || {},
-        theme: { color: '#6366f1' },
+        theme: { color: '#0066FF' },
         modal: { ondismiss: () => setUpgrading(null) },
       });
       rzp.open();

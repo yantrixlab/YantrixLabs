@@ -39,7 +39,7 @@ export function CategoryFilter({ categories, active, onChange }: Props) {
                 ? 'text-white shadow-sm'
                 : 'text-gray-500 hover:bg-gray-100 hover:text-gray-800'
             }`}
-            style={active === cat.slug ? { background: cat.color || '#6366f1' } : {}}
+            style={active === cat.slug ? { background: cat.color || '#0066FF' } : {}}
           >
             {cat.name}
             <span className="ml-1.5 text-xs opacity-60">({cat._count.posts})</span>

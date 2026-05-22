@@ -523,7 +523,7 @@ export default function HomePage() {
           <div
             className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full opacity-25 blur-[120px]"
             style={{
-              background: "radial-gradient(circle, #6366f1, transparent 70%)",
+              background: "radial-gradient(circle, #0066FF, transparent 70%)",
             }}
           />
           <div
@@ -693,7 +693,7 @@ export default function HomePage() {
                   className="group relative inline-flex items-center gap-2.5 overflow-hidden rounded-xl px-8 py-4 text-base font-bold text-white transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
                   style={{
                     background:
-                      "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #7c3aed 100%)",
+                      "linear-gradient(135deg, #0066FF 0%, #0052CC 50%, #003D99 100%)",
                     boxShadow:
                       "0 0 0 1px rgba(139,92,246,0.35), 0 0 36px rgba(99,102,241,0.50), 0 8px 24px rgba(99,102,241,0.28)",
                   }}
@@ -737,7 +737,7 @@ export default function HomePage() {
                   className="absolute -inset-4 rounded-3xl opacity-30 blur-2xl pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%)",
+                      "linear-gradient(135deg, #0066FF 0%, #3385FF 50%, #0052CC 100%)",
                   }}
                 />
 
@@ -884,7 +884,7 @@ export default function HomePage() {
                             height: `${h}%`,
                             background:
                               i === 5
-                                ? "linear-gradient(180deg, #818cf8 0%, #6366f1 100%)"
+                                ? "linear-gradient(180deg, #66A3FF 0%, #0066FF 100%)"
                                 : "rgba(99,102,241,0.28)",
                             animationDelay: `${i * 0.18}s`,
                           }}

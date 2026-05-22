@@ -150,7 +150,7 @@ export default function PricingPage() {
           }
         },
         prefill: {},
-        theme: { color: '#6366f1' },
+        theme: { color: '#0066FF' },
         modal: {
           ondismiss: () => { setPaymentLoading(false); },
         },

@@ -27,7 +27,7 @@ export function ArticleHeader({ post }: Props) {
             className="inline-block text-xs font-bold px-3 py-1 rounded-full"
             style={{
               background: post.category.color ? `${post.category.color}18` : '#eef2ff',
-              color: post.category.color || '#6366f1',
+              color: post.category.color || '#0066FF',
             }}
           >
             {post.category.name}

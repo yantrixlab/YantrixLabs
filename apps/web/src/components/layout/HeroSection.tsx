@@ -282,9 +282,9 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
           >
             <defs>
               <linearGradient id="sg1" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%"   stopColor="#6366f1" stopOpacity="0" />
-                <stop offset="45%"  stopColor="#6366f1" stopOpacity="0.55" />
-                <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
+                <stop offset="0%"   stopColor="#0066FF" stopOpacity="0" />
+                <stop offset="45%"  stopColor="#0066FF" stopOpacity="0.55" />
+                <stop offset="100%" stopColor="#0066FF" stopOpacity="0" />
               </linearGradient>
               <linearGradient id="sg2" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%"   stopColor="#8b5cf6" stopOpacity="0" />

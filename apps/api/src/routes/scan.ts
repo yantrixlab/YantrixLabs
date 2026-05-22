@@ -52,6 +52,28 @@ async function authenticateFromQuery(
 }
 
 const router = Router();
+const ALLOWED_SCAN_CODE_REGEX = /^[A-Za-z0-9._/-]{3,64}$/;
+
+function isInvalidScanCode(raw: string): boolean {
+  const value = raw.trim();
+  if (!value) return true;
+  const lower = value.toLowerCase();
+  const blockedPrefixes = [
+    "http://",
+    "https://",
+    "www.",
+    "mailto:",
+    "tel:",
+    "upi:",
+    "ftp://",
+    "file://",
+    "sms:",
+    "geo:",
+  ];
+  if (blockedPrefixes.some((prefix) => lower.startsWith(prefix))) return true;
+  if (/\s/.test(value)) return true;
+  return !ALLOWED_SCAN_CODE_REGEX.test(value);
+}
 
 async function handleScanSubmission(
   req: Request,
@@ -70,6 +92,13 @@ async function handleScanSubmission(
       res.status(400).json({
         success: false,
         error: "sessionId, deviceToken, and rawCode are required",
+      });
+      return;
+    }
+    if (isInvalidScanCode(rawCode)) {
+      res.status(400).json({
+        success: false,
+        error: "Invalid code format. Only product code formats are allowed.",
       });
       return;
     }

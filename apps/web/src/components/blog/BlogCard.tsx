@@ -48,7 +48,7 @@ export function BlogCard({ post, index = 0 }: Props) {
                 <span
                   className="text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm"
                   style={{
-                    background: post.category.color ? `${post.category.color}e0` : '#6366f1e0',
+                    background: post.category.color ? `${post.category.color}e0` : '#0066FFe0',
                     color: '#fff',
                   }}
                 >
