@@ -1,0 +1,129 @@
+.pageShell {
+  --inv-bg: #f3f6fb;
+  --inv-surface: #ffffff;
+  --inv-surface-2: #f8fafc;
+  --inv-border: #dbe3ef;
+  --inv-border-strong: #c8d5e8;
+  --inv-text: #0f172a;
+  --inv-text-2: #475569;
+  --inv-text-3: #64748b;
+  --inv-accent: #1d4ed8;
+  --inv-accent-2: #1e40af;
+  --inv-ring: rgba(59, 130, 246, 0.35);
+  --inv-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --inv-summary: linear-gradient(140deg, #4f46e5 0%, #4338ca 55%, #3730a3 100%);
+
+  background: var(--inv-bg);
+  color: var(--inv-text);
+}
+
+:global(html[data-gst-theme="dark"]) .pageShell {
+  --inv-bg: #0a1221;
+  --inv-surface: #0f1a30;
+  --inv-surface-2: #13203a;
+  --inv-border: #243654;
+  --inv-border-strong: #2e456b;
+  --inv-text: #e5edff;
+  --inv-text-2: #c0d0ea;
+  --inv-text-3: #8fa5c8;
+  --inv-accent: #7aa2ff;
+  --inv-accent-2: #5e84dc;
+  --inv-ring: rgba(122, 162, 255, 0.35);
+  --inv-shadow: 0 14px 32px rgba(2, 8, 23, 0.42);
+  --inv-summary: linear-gradient(140deg, #465dd3 0%, #3c4db4 55%, #2f3f90 100%);
+}
+
+.pageTitle {
+  color: var(--inv-text);
+}
+
+.pageSubTitle {
+  color: var(--inv-text-3);
+}
+
+.surfaceCard {
+  background: var(--inv-surface);
+  border: 1px solid var(--inv-border);
+  box-shadow: var(--inv-shadow);
+}
+
+.surfaceHeader {
+  background: var(--inv-surface-2);
+  border-bottom: 1px solid var(--inv-border);
+}
+
+.summaryPanel {
+  background: var(--inv-surface);
+  border: 1px solid var(--inv-border);
+  box-shadow: var(--inv-shadow);
+}
+
+.summaryTotal {
+  background: var(--inv-summary);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 30px rgba(67, 56, 202, 0.35);
+}
+
+.softPanel {
+  background: var(--inv-surface);
+  border: 1px solid var(--inv-border);
+}
+
+.stickyActions {
+  background: color-mix(in oklab, var(--inv-surface) 92%, transparent);
+  border-top: 1px solid var(--inv-border-strong);
+  backdrop-filter: blur(8px);
+}
+
+.pageShell :global(input),
+.pageShell :global(select),
+.pageShell :global(textarea) {
+  border-color: var(--inv-border) !important;
+  color: var(--inv-text) !important;
+  background-color: var(--inv-surface) !important;
+}
+
+.pageShell :global(input::placeholder),
+.pageShell :global(textarea::placeholder) {
+  color: var(--inv-text-3) !important;
+}
+
+.pageShell :global(input:focus),
+.pageShell :global(select:focus),
+.pageShell :global(textarea:focus) {
+  border-color: var(--inv-accent) !important;
+  box-shadow: 0 0 0 3px var(--inv-ring) !important;
+}
+
+.sectionLabel {
+  color: var(--inv-text-3) !important;
+}
+
+.sectionTitle {
+  color: var(--inv-text) !important;
+}
+
+.mutedText {
+  color: var(--inv-text-2) !important;
+}
+
+.accentBtn {
+  background: linear-gradient(90deg, var(--inv-accent) 0%, var(--inv-accent-2) 100%);
+  color: #fff !important;
+  border: 1px solid transparent;
+}
+
+.accentBtn:hover {
+  filter: brightness(1.05);
+}
+
+.outlineBtn {
+  background: var(--inv-surface);
+  color: var(--inv-text-2) !important;
+  border: 1px solid var(--inv-border);
+}
+
+.outlineBtn:hover {
+  background: var(--inv-surface-2);
+  border-color: var(--inv-border-strong);
+}

@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Search, Save, Send, ArrowLeft, Calculator, UserPlus, X, Check, Lock, FileText, AlertTriangle, ScanLine, Layers, Settings, Info } from 'lucide-react';
 import { apiFetch, getUserData } from '@/lib/api';
 import { useToast } from '@/components/ui/Toast';
+import theme from './InvoiceNewTheme.module.css';
 
 interface Customer { id: string; name: string; email: string | null; phone: string | null; gstin: string | null; billingCity: string | null; billingState: string | null; }
 interface InvoiceItem { id: string; description: string; productId: string | null; hsnSac: string; quantity: number; unit: string; price: number; discount: number; gstRate: number; taxableAmount: number; cgst: number; sgst: number; igst: number; total: number; }
@@ -1198,7 +1199,7 @@ export default function NewInvoicePage() {
         onRemoveLogo={() => setBusinessSettings(prev => (prev ? { ...prev, logo: null } : prev))}
         onSave={handleSettingsSave}
       />
-      <div className="p-4 lg:p-6 xl:p-7 w-full max-w-full bg-gray-50 min-h-screen">
+      <div className={`${theme.pageShell} p-4 lg:p-6 xl:p-7 w-full max-w-full min-h-screen`}>
 
         {/* Page Header */}
         <div className="flex items-center gap-4 mb-5">
@@ -1209,8 +1210,8 @@ export default function NewInvoicePage() {
             <ArrowLeft className="h-4 w-4" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">New Invoice</h1>
-            <p className="text-sm text-slate-500 mt-0.5">Create a GST-compliant invoice</p>
+            <h1 className={`${theme.pageTitle} text-2xl font-bold tracking-tight`}>New Invoice</h1>
+            <p className={`${theme.pageSubTitle} text-sm mt-0.5`}>Create a GST-compliant invoice</p>
           </div>
           <div className="ml-auto flex flex-col items-end gap-2">
             {invoiceLimitReached && (
@@ -1299,18 +1300,18 @@ export default function NewInvoicePage() {
           </div>
         )}
 
-        <div className="mb-4 rounded-xl border border-gray-200 bg-white p-3.5 shadow-sm">
+        <div className={`${theme.softPanel} mb-4 rounded-xl p-3.5`}>
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <ScanLine className="h-4 w-4 text-indigo-600" />
-              <p className="text-sm font-semibold text-gray-800">Item Details</p>
+              <p className={`${theme.sectionTitle} text-sm font-semibold`}>Item Details</p>
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-xs text-gray-500">Scan barcode, SKU, serial no, or item code</p>
+              <p className={`${theme.mutedText} text-xs`}>Scan barcode, SKU, serial no, or item code</p>
               <button
                 type="button"
                 onClick={connectScanner}
-                className="rounded-lg border border-gray-300 bg-white px-2.5 py-1 text-xs font-semibold text-indigo-700 hover:bg-gray-50"
+                className={`${theme.outlineBtn} rounded-lg px-2.5 py-1 text-xs font-semibold text-indigo-700`}
               >
                 Connect Scanner
               </button>
@@ -1320,7 +1321,7 @@ export default function NewInvoicePage() {
             <button
               type="button"
               onClick={connectScanner}
-              className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700"
+              className={`${theme.accentBtn} rounded-lg px-3 py-1.5 text-xs font-semibold`}
             >
               Connect Android Scanner
             </button>
@@ -1331,7 +1332,7 @@ export default function NewInvoicePage() {
             )}
           </div>
           {scanSession && (
-            <div className="mt-2 rounded-xl border border-indigo-100 bg-white p-3">
+            <div className={`${theme.softPanel} mt-2 rounded-xl p-3`}>
               <div className="grid gap-3 md:grid-cols-[auto,1fr]">
                 <div className="w-fit">
                   {pairingQrUrl && <img src={pairingQrUrl} alt="Scanner Pairing QR" className="h-24 w-24 rounded-lg border border-gray-200 shadow-sm" />}
@@ -1386,7 +1387,7 @@ export default function NewInvoicePage() {
               type="button"
               onClick={handleScanSubmit}
               disabled={scanLoading}
-              className="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+              className={`${theme.accentBtn} rounded-xl px-4 py-2.5 text-sm font-semibold disabled:opacity-60`}
             >
               {scanLoading ? 'Scanning...' : 'Scan'}
             </button>
@@ -1403,12 +1404,12 @@ export default function NewInvoicePage() {
           <div className="lg:col-span-2 space-y-4">
 
             {/* Invoice Details */}
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center gap-3 bg-gray-50">
+            <div className={`${theme.surfaceCard} rounded-xl overflow-hidden`}>
+              <div className={`${theme.surfaceHeader} px-5 py-3.5 flex items-center gap-3`}>
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-50">
                   <FileText className="h-3.5 w-3.5 text-indigo-600" />
                 </span>
-                <h2 className="text-sm font-semibold text-gray-800">Invoice Details</h2>
+                <h2 className={`${theme.sectionTitle} text-sm font-semibold`}>Invoice Details</h2>
               </div>
               <div className="p-5">
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -1448,12 +1449,12 @@ export default function NewInvoicePage() {
             </div>
 
             {/* Bill To */}
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center gap-3 bg-gray-50">
+            <div className={`${theme.surfaceCard} rounded-xl`}>
+              <div className={`${theme.surfaceHeader} px-5 py-3.5 flex items-center gap-3`}>
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-50">
                   <UserPlus className="h-3.5 w-3.5 text-violet-600" />
                 </span>
-                <h2 className="text-sm font-semibold text-gray-800">Bill To</h2>
+                <h2 className={`${theme.sectionTitle} text-sm font-semibold`}>Bill To</h2>
               </div>
               <div className="p-5">
                 {selectedCustomer ? (
@@ -1535,13 +1536,13 @@ export default function NewInvoicePage() {
             </div>
 
             {/* Items & Services */}
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-5 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+            <div className={`${theme.surfaceCard} rounded-xl overflow-hidden`}>
+              <div className={`${theme.surfaceHeader} px-5 py-3 flex items-center justify-between`}>
                 <div className="flex items-center gap-3">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50">
                   <Calculator className="h-3.5 w-3.5 text-emerald-600" />
                 </span>
-                  <h2 className="text-sm font-semibold text-gray-800">Item Table</h2>
+                  <h2 className={`${theme.sectionTitle} text-sm font-semibold`}>Item Table</h2>
                 </div>
                 <button
                   type="button"
@@ -1620,12 +1621,12 @@ export default function NewInvoicePage() {
                   </tbody>
                 </table>
               </div>
-              <div className="px-5 py-3 border-t border-gray-200 bg-gray-50/70 flex flex-wrap items-center gap-2">
-                <button onClick={addItem} className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-white px-3.5 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
+              <div className={`${theme.surfaceHeader} px-5 py-3 border-t flex flex-wrap items-center gap-2`}>
+                <button onClick={addItem} className={`${theme.outlineBtn} inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold text-indigo-600 transition-all shadow-sm`}>
                   <Plus className="h-4 w-4" />
                   Add New Row
                 </button>
-                <button onClick={openBulkAdd} className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-white px-3.5 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm">
+                <button onClick={openBulkAdd} className={`${theme.outlineBtn} inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-semibold text-indigo-600 transition-all shadow-sm`}>
                   <Layers className="h-4 w-4" />
                   Add Items in Bulk
                 </button>
@@ -1633,12 +1634,12 @@ export default function NewInvoicePage() {
             </div>
 
             {/* Notes & Terms */}
-            <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden">
-              <div className="px-5 py-3.5 border-b border-gray-200 flex items-center gap-3 bg-gray-50">
+            <div className={`${theme.surfaceCard} rounded-xl overflow-hidden`}>
+              <div className={`${theme.surfaceHeader} px-5 py-3.5 flex items-center gap-3`}>
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-50">
                   <FileText className="h-3.5 w-3.5 text-amber-600" />
                 </span>
-                <h2 className="text-sm font-semibold text-gray-800">Notes &amp; Terms</h2>
+                <h2 className={`${theme.sectionTitle} text-sm font-semibold`}>Notes &amp; Terms</h2>
               </div>
               <div className="p-5 grid sm:grid-cols-2 gap-4">
                 <div>
@@ -1667,7 +1668,7 @@ export default function NewInvoicePage() {
 
           {/* Sidebar */}
           <div>
-            <div className="rounded-xl border border-gray-200 bg-white shadow-[0_4px_20px_-4px_rgba(0,0,0,0.08),0_2px_8px_-2px_rgba(0,0,0,0.05)] sticky top-6 overflow-hidden">
+            <div className={`${theme.summaryPanel} rounded-xl sticky top-6 overflow-hidden`}>
 
               {/* Header */}
               <div className="px-5 pt-5 pb-4">
@@ -1723,7 +1724,7 @@ export default function NewInvoicePage() {
               </div>
 
               {/* Total hero block */}
-              <div className="mx-4 mb-4 rounded-xl bg-gradient-to-br from-[#5B4BFF] via-indigo-600 to-[#4338ca] px-5 py-4 text-white shadow-[0_8px_24px_-4px_rgba(91,75,255,0.40),0_4px_12px_-4px_rgba(91,75,255,0.25)] ring-1 ring-white/10">
+              <div className={`${theme.summaryTotal} mx-4 mb-4 rounded-xl px-5 py-4 text-white`}>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-indigo-200 mb-2">Invoice Total</p>
                 <p className="text-[2.25rem] font-bold tracking-tight leading-none tabular-nums">&#8377;{totals.total.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</p>
                 <p className="text-[11px] text-indigo-300/90 mt-2.5 font-medium">Includes all applicable taxes</p>
@@ -1751,7 +1752,7 @@ export default function NewInvoicePage() {
                 <button
                   onClick={() => handleSave('SENT')}
                   disabled={isLoading || invoiceLimitReached}
-                  className="group w-full rounded-xl bg-gradient-to-r from-[#5B4BFF] to-indigo-600 py-3 text-sm font-semibold text-white shadow-[0_4px_14px_0_rgba(91,75,255,0.35)] hover:shadow-[0_6px_20px_0_rgba(91,75,255,0.45)] hover:-translate-y-0.5 hover:from-[#4e40f0] hover:to-indigo-700 active:translate-y-0 active:shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:ring-offset-1"
+                  className={`${theme.accentBtn} group w-full rounded-xl py-3 text-sm font-semibold shadow-[0_4px_14px_0_rgba(91,75,255,0.35)] hover:shadow-[0_6px_20px_0_rgba(91,75,255,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:ring-offset-1`}
                 >
                   {isLoading ? (
                     <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
@@ -1768,7 +1769,7 @@ export default function NewInvoicePage() {
           </div>
         </div>
       </div>
-      <div className="sticky bottom-0 z-30 border-t border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85 px-4 py-3">
+      <div className={`${theme.stickyActions} sticky bottom-0 z-30 px-4 py-3`}>
         <div className="mx-auto flex w-full max-w-[1600px] items-center gap-2">
           <button
             onClick={() => handleSave()}
