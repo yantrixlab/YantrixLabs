@@ -406,7 +406,7 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50/40 p-4">
+      <div className="products-scanner-card mb-6 rounded-2xl border border-indigo-100 bg-indigo-50/40 p-4">
         <div className={`inline-flex items-center gap-3 rounded-full border px-4 py-2 ${scannerUi.ring}`}>
           <span className="relative flex h-3.5 w-3.5">
             <span className={`absolute inline-flex h-full w-full rounded-full ${scannerUi.wave} animate-ping`} />

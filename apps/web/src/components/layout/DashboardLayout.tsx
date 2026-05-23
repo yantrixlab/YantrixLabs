@@ -453,7 +453,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    window.location.href = "/auth/login";
+    enableGuestMode();
+    setGuest(true);
+    setAuthModalTab("signin");
+    setAuthModalOpen(true);
+    setSidebarOpen(false);
   };
 
   const handleSetupComplete = (updated: BizSettings) => {

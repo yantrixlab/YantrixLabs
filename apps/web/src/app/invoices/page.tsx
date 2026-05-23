@@ -247,7 +247,7 @@ export default function InvoicesPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50/70">
+              <tr className="table-header border-b border-gray-100 bg-gray-50/70">
                 <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Invoice</th>
                 <th className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Customer</th>
                 <th className="hidden md:table-cell px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-gray-400">Issue Date</th>
