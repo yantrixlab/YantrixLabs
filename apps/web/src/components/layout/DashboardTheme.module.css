@@ -247,51 +247,51 @@
 .dark :global(.hover\:text-gray-700:hover) { color: #bfd2ff !important; }
 
 /* Auth required modal: professional contrast in both light and dark modes */
-:global(.auth-required-modal) {
+.gstModuleTheme :global(.auth-required-modal) {
   background: #ffffff !important;
   border-color: #d9e2f0 !important;
   box-shadow: 0 18px 42px rgba(14, 32, 64, 0.18) !important;
 }
 
-:global(.auth-required-modal .auth-modal-tabs) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-tabs) {
   background: #edf2f8 !important;
   border: 1px solid #d7e0ee !important;
 }
 
-:global(.auth-required-modal .auth-modal-tab) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-tab) {
   color: #5a6d87 !important;
 }
 
-:global(.auth-required-modal .auth-modal-tab.bg-white) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-tab.bg-white) {
   background: #ffffff !important;
   color: #1d2b40 !important;
 }
 
-:global(.auth-required-modal .auth-modal-label) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-label) {
   color: #41556f !important;
 }
 
-:global(.auth-required-modal .auth-modal-input),
-:global(.auth-required-modal .auth-modal-country) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-input),
+.gstModuleTheme :global(.auth-required-modal .auth-modal-country) {
   background: #ffffff !important;
   border-color: #c7d4e8 !important;
   color: #1f2f44 !important;
 }
 
-:global(.auth-required-modal .auth-modal-input::placeholder) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-input::placeholder) {
   color: #8093ad !important;
 }
 
-:global(.auth-required-modal .auth-modal-primary) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-primary) {
   background: linear-gradient(135deg, #3868bf, #4f79c7) !important;
   color: #f8fbff !important;
 }
 
-:global(.auth-required-modal .auth-modal-primary:hover) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-primary:hover) {
   background: linear-gradient(135deg, #3059a6, #466eb7) !important;
 }
 
-:global(.auth-required-modal .auth-modal-google) {
+.gstModuleTheme :global(.auth-required-modal .auth-modal-google) {
   background: #f8fbff !important;
   border-color: #d5dfed !important;
   color: #516784 !important;
