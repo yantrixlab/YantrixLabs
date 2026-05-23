@@ -143,10 +143,10 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
     <div className="fixed inset-0 z-[10060] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-950/55 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+      <div className="auth-required-modal relative z-10 w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
         <button
           onClick={onClose}
-          className="absolute right-3 top-3 rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+          className="auth-modal-close absolute right-3 top-3 rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
@@ -163,14 +163,14 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
           </div>
         </div>
 
-        <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1 text-sm">
+        <div className="auth-modal-tabs mb-4 grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1 text-sm">
           <button
             type="button"
             onClick={() => {
               setActiveTab('signin');
               setError('');
             }}
-            className={`rounded-lg px-3 py-2 text-center font-medium transition ${activeTab === 'signin' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
+            className={`auth-modal-tab rounded-lg px-3 py-2 text-center font-medium transition ${activeTab === 'signin' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
           >
             Sign in
           </button>
@@ -180,7 +180,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
               setActiveTab('signup');
               setError('');
             }}
-            className={`rounded-lg px-3 py-2 text-center font-medium transition ${activeTab === 'signup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
+            className={`auth-modal-tab rounded-lg px-3 py-2 text-center font-medium transition ${activeTab === 'signup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
           >
             Create Account
           </button>
@@ -195,20 +195,20 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
         {activeTab === 'signin' ? (
           <form onSubmit={handleSignIn} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Email address</label>
+              <label className="auth-modal-label mb-1.5 block text-sm font-medium text-slate-700">Email address</label>
               <input
                 type="email"
                 required
                 value={signInForm.email}
                 onChange={(e) => setSignInForm((prev) => ({ ...prev, email: e.target.value }))}
                 placeholder="you@business.com"
-                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="auth-modal-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               />
             </div>
 
             <div>
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-sm font-medium text-slate-700">Password</label>
+                <label className="auth-modal-label text-sm font-medium text-slate-700">Password</label>
                 <Link href="/auth/forgot-password" className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
                   Forgot password?
                 </Link>
@@ -220,12 +220,12 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
                   value={signInForm.password}
                   onChange={(e) => setSignInForm((prev) => ({ ...prev, password: e.target.value }))}
                   placeholder="Enter password"
-                  className="w-full rounded-xl border border-slate-300 px-3 py-2.5 pr-10 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="auth-modal-input w-full rounded-xl border border-slate-300 px-3 py-2.5 pr-10 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+                  className="auth-modal-icon-btn absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -236,7 +236,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="auth-modal-primary inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitLabel}
               {!isLoading && <ArrowRight className="h-4 w-4" />}
@@ -245,44 +245,44 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
         ) : (
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Full Name <span className="text-red-500">*</span></label>
+              <label className="auth-modal-label mb-1.5 block text-sm font-medium text-slate-700">Full Name <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 required
                 value={signUpForm.name}
                 onChange={(e) => setSignUpForm((prev) => ({ ...prev, name: e.target.value }))}
                 placeholder="Rajesh Sharma"
-                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="auth-modal-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Business Name <span className="text-red-500">*</span></label>
+              <label className="auth-modal-label mb-1.5 block text-sm font-medium text-slate-700">Business Name <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 required
                 value={signUpForm.businessName}
                 onChange={(e) => setSignUpForm((prev) => ({ ...prev, businessName: e.target.value }))}
                 placeholder="Sharma Electronics Pvt Ltd"
-                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="auth-modal-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Email Address</label>
+              <label className="auth-modal-label mb-1.5 block text-sm font-medium text-slate-700">Email Address</label>
               <input
                 type="email"
                 value={signUpForm.email}
                 onChange={(e) => setSignUpForm((prev) => ({ ...prev, email: e.target.value }))}
                 placeholder="you@business.com"
-                className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="auth-modal-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
               />
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Mobile Number</label>
+              <label className="auth-modal-label mb-1.5 block text-sm font-medium text-slate-700">Mobile Number</label>
               <div className="flex gap-2">
-                <span className="inline-flex items-center rounded-xl border border-slate-300 bg-slate-50 px-3 text-sm text-slate-600">
+                <span className="auth-modal-country inline-flex items-center rounded-xl border border-slate-300 bg-slate-50 px-3 text-sm text-slate-600">
                   +91
                 </span>
                 <input
@@ -298,13 +298,13 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
                     }))
                   }
                   placeholder="9876543210"
-                  className="flex-1 rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="auth-modal-input flex-1 rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 />
               </div>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">Password <span className="text-red-500">*</span></label>
+              <label className="auth-modal-label mb-1.5 block text-sm font-medium text-slate-700">Password <span className="text-red-500">*</span></label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -313,12 +313,12 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
                   value={signUpForm.password}
                   onChange={(e) => setSignUpForm((prev) => ({ ...prev, password: e.target.value }))}
                   placeholder="Min. 8 characters"
-                  className="w-full rounded-xl border border-slate-300 px-3 py-2.5 pr-10 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="auth-modal-input w-full rounded-xl border border-slate-300 px-3 py-2.5 pr-10 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+                  className="auth-modal-icon-btn absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -329,7 +329,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
             <button
               type="submit"
               disabled={isLoading}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="auth-modal-primary inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {submitLabel}
               {!isLoading && <ArrowRight className="h-4 w-4" />}
@@ -340,7 +340,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
         <button
           type="button"
           disabled={!googleEnabled}
-          className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="auth-modal-google mt-3 inline-flex w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
           title={googleEnabled ? 'Continue with Google' : 'Google sign-in coming soon'}
         >
           Continue with Google {googleEnabled ? '' : '(Coming soon)'}
