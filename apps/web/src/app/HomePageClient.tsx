@@ -246,8 +246,10 @@ const PROCESS = [
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
-const PROCESS_STEP_DURATION_MS = 1000;
-const PROCESS_RESET_DELAY_MS = 650;
+const PROCESS_ACTIVE_ANIMATION_MS = 550;
+const PROCESS_WAIT_AFTER_ANIMATION_MS = 1000;
+const PROCESS_STEP_DURATION_MS =
+  PROCESS_ACTIVE_ANIMATION_MS + PROCESS_WAIT_AFTER_ANIMATION_MS;
 
 const CATEGORY_COLORS = [
   "bg-indigo-50 text-indigo-600",
@@ -483,35 +485,17 @@ export default function HomePage() {
     let stopped = false;
     setActiveProcessStep(0);
 
-    const runStep = () => {
+    const scheduleNext = () => {
       if (stopped) return;
       timer = window.setTimeout(() => {
         if (stopped) return;
         current = (current + 1) % PROCESS.length;
         setActiveProcessStep(current);
-        const nextDelay =
-          current === PROCESS.length - 1
-            ? PROCESS_STEP_DURATION_MS + PROCESS_RESET_DELAY_MS
-            : PROCESS_STEP_DURATION_MS;
-        runStepWithDelay(nextDelay);
+        scheduleNext();
       }, PROCESS_STEP_DURATION_MS);
     };
 
-    const runStepWithDelay = (delay: number) => {
-      if (stopped) return;
-      timer = window.setTimeout(() => {
-        if (stopped) return;
-        current = (current + 1) % PROCESS.length;
-        setActiveProcessStep(current);
-        const nextDelay =
-          current === PROCESS.length - 1
-            ? PROCESS_STEP_DURATION_MS + PROCESS_RESET_DELAY_MS
-            : PROCESS_STEP_DURATION_MS;
-        runStepWithDelay(nextDelay);
-      }, delay);
-    };
-
-    runStep();
+    scheduleNext();
 
     return () => {
       stopped = true;
@@ -1462,7 +1446,10 @@ export default function HomePage() {
                   }
                   transition={{
                     delay: idx * 0.1,
-                    duration: idx === activeProcessStep ? 0.55 : 0.25,
+                    duration:
+                      idx === activeProcessStep
+                        ? PROCESS_ACTIVE_ANIMATION_MS / 1000
+                        : 0.25,
                     ease: "easeOut",
                   }}
                   viewport={{ once: true }}
