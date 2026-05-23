@@ -246,8 +246,8 @@ const PROCESS = [
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
-const PROCESS_STEP_DURATION_MS = 1200;
-const PROCESS_RESET_DELAY_MS = 450;
+const PROCESS_STEP_DURATION_MS = 1000;
+const PROCESS_RESET_DELAY_MS = 650;
 
 const CATEGORY_COLORS = [
   "bg-indigo-50 text-indigo-600",
@@ -479,22 +479,44 @@ export default function HomePage() {
     if (!processInView) return;
 
     let current = 0;
+    let timer: number | null = null;
+    let stopped = false;
     setActiveProcessStep(0);
 
-    const stepInterval = window.setInterval(() => {
-      current += 1;
-      if (current >= PROCESS.length) {
-        window.clearInterval(stepInterval);
-        window.setTimeout(() => {
-          current = 0;
-          setActiveProcessStep(0);
-        }, PROCESS_RESET_DELAY_MS);
-        return;
-      }
-      setActiveProcessStep(current);
-    }, PROCESS_STEP_DURATION_MS);
+    const runStep = () => {
+      if (stopped) return;
+      timer = window.setTimeout(() => {
+        if (stopped) return;
+        current = (current + 1) % PROCESS.length;
+        setActiveProcessStep(current);
+        const nextDelay =
+          current === PROCESS.length - 1
+            ? PROCESS_STEP_DURATION_MS + PROCESS_RESET_DELAY_MS
+            : PROCESS_STEP_DURATION_MS;
+        runStepWithDelay(nextDelay);
+      }, PROCESS_STEP_DURATION_MS);
+    };
 
-    return () => window.clearInterval(stepInterval);
+    const runStepWithDelay = (delay: number) => {
+      if (stopped) return;
+      timer = window.setTimeout(() => {
+        if (stopped) return;
+        current = (current + 1) % PROCESS.length;
+        setActiveProcessStep(current);
+        const nextDelay =
+          current === PROCESS.length - 1
+            ? PROCESS_STEP_DURATION_MS + PROCESS_RESET_DELAY_MS
+            : PROCESS_STEP_DURATION_MS;
+        runStepWithDelay(nextDelay);
+      }, delay);
+    };
+
+    runStep();
+
+    return () => {
+      stopped = true;
+      if (timer) window.clearTimeout(timer);
+    };
   }, [processInView, prefersReducedMotion]);
 
   return (
@@ -1373,24 +1395,49 @@ export default function HomePage() {
                 {idx < PROCESS.length - 1 && (
                   <>
                     <div
-                      className="hidden lg:block absolute top-11 left-[62%] w-[76%] h-[2px] z-0"
+                      className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-[62%] w-[76%] h-[2px] z-0"
                       style={{
                         backgroundImage:
-                          "repeating-linear-gradient(to right, rgba(51,133,255,0.36) 0 7px, transparent 7px 14px)",
+                          "repeating-linear-gradient(to right, rgba(51,133,255,0.35) 0 6px, transparent 6px 12px)",
                       }}
                     />
                     {!prefersReducedMotion && idx === activeProcessStep && (
-                      <motion.div
-                        className="hidden lg:block absolute top-[41px] left-[62%] h-[22px] w-[22px] rounded-full z-[1]"
+                      <>
+                        <motion.div
+                          className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-[62%] w-[76%] h-[3px] z-[1]"
+                          style={{
+                            backgroundImage:
+                              "repeating-linear-gradient(to right, rgba(0,102,255,0.95) 0 7px, transparent 7px 13px)",
+                            backgroundSize: "20px 3px",
+                          }}
+                          animate={{ backgroundPositionX: ["0px", "20px"] }}
+                          transition={{
+                            duration: 0.45,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                        />
+                        <motion.div
+                          className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-[62%] h-[20px] w-[20px] rounded-full z-[2]"
+                          style={{
+                            background:
+                              "radial-gradient(circle, rgba(0,102,255,0.95) 0%, rgba(51,133,255,0.22) 55%, rgba(51,133,255,0) 78%)",
+                          }}
+                          initial={{ x: "0%", opacity: 0.75 }}
+                          animate={{ x: "320%", opacity: [0.75, 1, 0.8] }}
+                          transition={{
+                            duration: 0.92,
+                            ease: "easeInOut",
+                          }}
+                        />
+                      </>
+                    )}
+                    {prefersReducedMotion && idx === activeProcessStep && (
+                      <div
+                        className="hidden lg:block absolute top-1/2 -translate-y-1/2 left-[62%] w-[76%] h-[3px] z-[1]"
                         style={{
-                          background:
-                            "radial-gradient(circle, rgba(0,102,255,0.95) 0%, rgba(51,133,255,0.2) 58%, rgba(51,133,255,0) 75%)",
-                        }}
-                        initial={{ x: "0%", opacity: 0.75 }}
-                        animate={{ x: "320%", opacity: [0.75, 1, 0.8] }}
-                        transition={{
-                          duration: 0.95,
-                          ease: "easeInOut",
+                          backgroundImage:
+                            "repeating-linear-gradient(to right, rgba(0,102,255,0.75) 0 7px, transparent 7px 13px)",
                         }}
                       />
                     )}
@@ -1408,7 +1455,16 @@ export default function HomePage() {
                 <motion.div
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
+                  animate={
+                    idx === activeProcessStep && !prefersReducedMotion
+                      ? { y: [-2, -8, -2], scale: [1, 1.015, 1] }
+                      : { y: 0, scale: 1 }
+                  }
+                  transition={{
+                    delay: idx * 0.1,
+                    duration: idx === activeProcessStep ? 0.55 : 0.25,
+                    ease: "easeOut",
+                  }}
                   viewport={{ once: true }}
                   className={`group relative z-10 flex h-full flex-col items-center rounded-2xl border bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 ${
                     idx === activeProcessStep
