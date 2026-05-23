@@ -128,7 +128,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       : "light";
   });
   const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
-  const [guest, setGuest] = useState(false);
+  const [guest, setGuest] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    return isGuestMode() && !isAuthenticated();
+  });
+  const [authInitDone, setAuthInitDone] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<"signin" | "signup">("signin");
 
@@ -141,10 +145,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      if (params.get("guest") === "1") {
+      const wantsGuest = params.get("guest") === "1";
+      if (wantsGuest) {
         enableGuestMode();
       }
-      setGuest(isGuestMode() && !isAuthenticated());
+      setGuest((wantsGuest || isGuestMode()) && !isAuthenticated());
+      setAuthInitDone(true);
     }
   }, []);
 
@@ -158,12 +164,19 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, []);
 
   useEffect(() => {
+    if (!authInitDone) return;
+
     if (!isAuthenticated()) {
       if (!guest) {
         router.replace("/auth/login");
       }
       return;
     }
+
+    if (guest) {
+      setGuest(false);
+    }
+
     const tokenData = getUserData();
     setUserData(tokenData);
 
@@ -391,7 +404,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         }
       })
       .catch(() => {});
-  }, [router, pathname, guest]);
+  }, [router, pathname, guest, authInitDone]);
 
   const isActive = (href: string) =>
     pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
