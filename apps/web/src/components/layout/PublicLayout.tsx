@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, LayoutDashboard, Menu, X } from 'lucide-react';
+import { ArrowRight, LayoutDashboard, Menu, Moon, Sun, Monitor, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
 import { enableGuestMode } from '@/lib/guestMode';
@@ -23,11 +23,53 @@ interface PublicLayoutProps {
 export function PublicLayout({ children }: PublicLayoutProps) {
   const pathname = usePathname();
   const isGstLanding = pathname === '/gst-invoice';
+  const isPublicMarketingPage =
+    pathname === '/' ||
+    pathname === '/tools' ||
+    pathname.startsWith('/tools/') ||
+    pathname === '/services' ||
+    pathname === '/about' ||
+    pathname === '/blog' ||
+    pathname.startsWith('/blog/') ||
+    pathname === '/contact';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [initials, setInitials] = useState('');
   const [businessLogo, setBusinessLogo] = useState<string | null>(null);
   const [businessName, setBusinessName] = useState<string | null>(null);
+  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'system'>('system');
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+
+  const applyPublicTheme = (mode: 'light' | 'dark' | 'system') => {
+    if (typeof window === 'undefined') return;
+    const isDark = mode === 'system'
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+      : mode === 'dark';
+    const resolved: 'light' | 'dark' = isDark ? 'dark' : 'light';
+
+    document.documentElement.setAttribute('data-public-theme-mode', mode);
+    document.documentElement.setAttribute('data-public-theme', resolved);
+    document.documentElement.style.colorScheme = resolved;
+
+    setThemeMode(mode);
+    setResolvedTheme(resolved);
+  };
+
+  useEffect(() => {
+    if (!isPublicMarketingPage) return;
+    const stored = (localStorage.getItem('public_theme_mode') || 'system') as 'light' | 'dark' | 'system';
+    const initialMode = stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system';
+    applyPublicTheme(initialMode);
+
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const onSystemThemeChange = () => {
+      if ((localStorage.getItem('public_theme_mode') || 'system') === 'system') {
+        applyPublicTheme('system');
+      }
+    };
+    mq.addEventListener('change', onSystemThemeChange);
+    return () => mq.removeEventListener('change', onSystemThemeChange);
+  }, [isPublicMarketingPage]);
 
   useEffect(() => {
     if (!isAuthenticated()) return;
@@ -51,8 +93,20 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       .catch(() => {});
   }, []);
 
+  const onThemeModeChange = (mode: 'light' | 'dark' | 'system') => {
+    localStorage.setItem('public_theme_mode', mode);
+    applyPublicTheme(mode);
+  };
+
+  const themeButtonClass = (mode: 'light' | 'dark' | 'system') =>
+    `inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 ${
+      themeMode === mode
+        ? 'bg-brand-600 text-white shadow-sm'
+        : 'bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
+    }`;
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="public-site min-h-screen bg-white">
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
         <div className="container-wide">
           <div className="flex h-16 items-center justify-between">
@@ -77,6 +131,40 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div className="hidden md:flex items-center gap-3">
+              {isPublicMarketingPage && (
+                <div className="inline-flex items-center gap-1 rounded-xl border border-gray-200 p-1">
+                  <button
+                    type="button"
+                    aria-label="Use light theme"
+                    aria-pressed={themeMode === 'light'}
+                    onClick={() => onThemeModeChange('light')}
+                    className={themeButtonClass('light')}
+                  >
+                    <Sun className="h-3.5 w-3.5" />
+                    Light
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Use dark theme"
+                    aria-pressed={themeMode === 'dark'}
+                    onClick={() => onThemeModeChange('dark')}
+                    className={themeButtonClass('dark')}
+                  >
+                    <Moon className="h-3.5 w-3.5" />
+                    Dark
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={`Use system theme, currently ${resolvedTheme}`}
+                    aria-pressed={themeMode === 'system'}
+                    onClick={() => onThemeModeChange('system')}
+                    className={themeButtonClass('system')}
+                  >
+                    <Monitor className="h-3.5 w-3.5" />
+                    Auto
+                  </button>
+                </div>
+              )}
               {loggedIn ? (
                 <>
                   <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 px-4 py-2">
@@ -84,7 +172,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     Dashboard
                   </Link>
                   <Link href="/dashboard" className="flex-shrink-0">
-                    <div className="h-9 w-9 rounded-full overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-indigo-200 hover:ring-indigo-400 transition-all">
+                    <div className="h-9 w-9 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center ring-2 ring-indigo-200 hover:ring-indigo-400 transition-all">
                       {businessLogo ? (
                         <img src={businessLogo} alt={businessName || 'Business Logo'} className="h-full w-full object-contain" />
                       ) : (
@@ -133,10 +221,29 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   </Link>
                 );
               })}
+            {isPublicMarketingPage && (
+              <div className="pt-2">
+                <p className="px-0.5 pb-2 text-[11px] font-semibold uppercase tracking-widest text-gray-400">Theme</p>
+                <div className="inline-flex w-full items-center gap-1 rounded-xl border border-gray-200 p-1">
+                  <button type="button" onClick={() => onThemeModeChange('light')} className={`${themeButtonClass('light')} flex-1 justify-center`}>
+                    <Sun className="h-3.5 w-3.5" />
+                    Light
+                  </button>
+                  <button type="button" onClick={() => onThemeModeChange('dark')} className={`${themeButtonClass('dark')} flex-1 justify-center`}>
+                    <Moon className="h-3.5 w-3.5" />
+                    Dark
+                  </button>
+                  <button type="button" onClick={() => onThemeModeChange('system')} className={`${themeButtonClass('system')} flex-1 justify-center`}>
+                    <Monitor className="h-3.5 w-3.5" />
+                    Auto
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="pt-2 space-y-2">
               {loggedIn ? (
                 <Link href="/dashboard" className="flex items-center gap-2 py-2 text-sm font-medium text-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                  <div className="h-7 w-7 rounded-full overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                  <div className="h-7 w-7 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center flex-shrink-0">
                     {businessLogo ? (
                       <img src={businessLogo} alt={businessName || 'Business'} className="h-full w-full object-contain" />
                     ) : (

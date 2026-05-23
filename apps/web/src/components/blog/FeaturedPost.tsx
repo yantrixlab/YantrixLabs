@@ -46,7 +46,7 @@ export function FeaturedPost({ post }: Props) {
       <Link href={`/blog/${post.slug}`} className="group block">
         <div className="grid md:grid-cols-5 gap-0 bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
           {/* Image — 3/5 width */}
-          <div className="md:col-span-3 relative overflow-hidden bg-gradient-to-br from-indigo-50 to-purple-50">
+          <div className="md:col-span-3 relative overflow-hidden bg-gradient-to-br from-brand-50 to-brand-200">
             {post.coverImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -99,7 +99,7 @@ export function FeaturedPost({ post }: Props) {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={post.authorAvatar} alt="" className="h-5 w-5 rounded-full object-cover" />
                 ) : (
-                  <div className="h-5 w-5 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center">
+                  <div className="h-5 w-5 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center">
                     <span className="text-white text-[9px] font-bold">{post.authorName.charAt(0)}</span>
                   </div>
                 )}

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText, CheckCircle } from 'lucide-react';
 import { API_URL } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
+import { track } from '@/lib/analytics/client';
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -22,6 +23,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    void track('auth_signup_started', { stage: 'attempt' });
     setIsLoading(true);
     setError('');
 
@@ -42,6 +44,7 @@ export default function RegisterPage() {
       const data = responseText ? JSON.parse(responseText) : {};
 
       if (data.success) {
+        void track('auth_signup_completed', { stage: 'success' });
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
         disableGuestMode();

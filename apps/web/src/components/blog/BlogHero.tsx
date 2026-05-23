@@ -10,9 +10,9 @@ interface Props {
 
 export function BlogHero({ search, onSearchChange }: Props) {
   return (
-    <section className="relative bg-gradient-to-br from-indigo-950 via-indigo-900 to-purple-900 text-white py-28 px-4 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-brand-950 via-brand-900 to-brand-700 text-white py-28 px-4 overflow-hidden">
       {/* Floating background glows */}
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl animate-float pointer-events-none" />
+      <div className="absolute -top-20 -left-20 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl animate-float pointer-events-none" />
       <div
         className="absolute -bottom-24 -right-16 w-[30rem] h-[30rem] bg-indigo-500/15 rounded-full blur-3xl pointer-events-none"
         style={{ animation: 'float 8s ease-in-out 3s infinite' }}
@@ -47,7 +47,7 @@ export function BlogHero({ search, onSearchChange }: Props) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.1 }}
-          className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight bg-gradient-to-r from-white via-indigo-100 to-purple-200 bg-clip-text text-transparent"
+          className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight bg-gradient-to-r from-white via-brand-100 to-brand-300 bg-clip-text text-transparent"
         >
           Insights &amp; Ideas
         </motion.h1>

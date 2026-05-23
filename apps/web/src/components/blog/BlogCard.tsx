@@ -29,7 +29,7 @@ export function BlogCard({ post, index = 0 }: Props) {
       <Link href={`/blog/${post.slug}`} className="group block h-full">
         <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 h-full flex flex-col">
           {/* 16:9 thumbnail */}
-          <div className="relative overflow-hidden aspect-video bg-gradient-to-br from-indigo-50 to-purple-50">
+          <div className="relative overflow-hidden aspect-video bg-gradient-to-br from-brand-50 to-brand-200">
             {post.coverImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -80,7 +80,7 @@ export function BlogCard({ post, index = 0 }: Props) {
                     className="h-6 w-6 rounded-full object-cover flex-shrink-0"
                   />
                 ) : (
-                  <div className="h-6 w-6 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center flex-shrink-0">
+                  <div className="h-6 w-6 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center flex-shrink-0">
                     <span className="text-white text-[9px] font-bold">
                       {post.authorName.charAt(0)}
                     </span>

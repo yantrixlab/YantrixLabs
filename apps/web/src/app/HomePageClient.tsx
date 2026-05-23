@@ -1531,7 +1531,7 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ FINAL CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-24 bg-gradient-to-br from-indigo-600 to-purple-700">
+      <section className="py-24 bg-gradient-to-br from-brand-600 to-brand-900">
         <div className="container-wide text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

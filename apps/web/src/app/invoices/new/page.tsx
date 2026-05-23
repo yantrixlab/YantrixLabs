@@ -10,6 +10,7 @@ import { Plus, Trash2, Search, Save, Send, ArrowLeft, Calculator, UserPlus, X, C
 import { apiFetch, getUserData } from '@/lib/api';
 import { useToast } from '@/components/ui/Toast';
 import theme from './InvoiceNewTheme.module.css';
+import { track } from '@/lib/analytics/client';
 
 interface Customer { id: string; name: string; email: string | null; phone: string | null; gstin: string | null; billingCity: string | null; billingState: string | null; }
 interface InvoiceItem { id: string; description: string; productId: string | null; hsnSac: string; quantity: number; unit: string; price: number; discount: number; gstRate: number; taxableAmount: number; cgst: number; sgst: number; igst: number; total: number; }
@@ -1169,8 +1170,10 @@ export default function NewInvoicePage() {
       if (statusOverride === 'SENT') {
         try { await apiFetch(`/invoices/${res.data.id}/send`, { method: 'POST' }); } catch {}
         success('Invoice saved & sent');
+        void track('invoice_created', { status: 'SENT' });
       } else {
         success('Draft saved');
+        void track('invoice_created', { status: 'DRAFT' });
       }
       if (typeof window !== 'undefined') {
         const noteToSave = (formData.notes || '').trim();

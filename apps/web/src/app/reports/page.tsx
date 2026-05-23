@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { BarChart3, Download, Calendar, TrendingUp, IndianRupee, Users, AlertCircle, RefreshCw } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
+import { track } from '@/lib/analytics/client';
 
 type TabKey = 'sales' | 'gst' | 'pending' | 'customers' | 'top';
 
@@ -76,30 +77,35 @@ export default function ReportsPage() {
     if (!data) return;
     const exporter = format === 'excel' ? exportExcel : exportCSV;
     const ext = format === 'excel' ? 'xls' : 'csv';
+    let exported = false;
     if (tab === 'sales' && data.invoices) {
       exporter(
         ['Invoice No', 'Customer', 'Date', 'Total', 'Paid', 'Due', 'Status'],
         data.invoices.map((i: any) => [i.invoiceNumber, i.customer?.name, i.issueDate?.split('T')[0], i.total, i.amountPaid, i.amountDue, i.status]),
         `sales-report.${ext}`
       );
+      exported = true;
     } else if (tab === 'pending' && data.invoices) {
       exporter(
         ['Invoice No', 'Customer', 'Due Date', 'Amount Due', 'Days Overdue'],
         data.invoices.map((i: any) => [i.invoiceNumber, i.customer?.name, i.dueDate?.split('T')[0] || 'N/A', i.amountDue, i.daysOverdue]),
         `pending-payments.${ext}`
       );
+      exported = true;
     } else if (tab === 'customers' && Array.isArray(data)) {
       exporter(
         ['Customer', 'Total Sales', 'Paid', 'Due', 'Invoices'],
         data.map((d: any) => [d.customer?.name, d.totalSales, d.totalPaid, d.totalDue, d.invoiceCount]),
         `customer-sales.${ext}`
       );
+      exported = true;
     } else if (tab === 'top' && Array.isArray(data)) {
       exporter(
         ['Rank', 'Customer', 'Revenue', 'Invoices'],
         data.map((d: any) => [d.rank, d.customer?.name, d.totalRevenue, d.invoiceCount]),
         `top-customers.${ext}`
       );
+      exported = true;
     } else if (tab === 'gst') {
       const gstData = Array.isArray(data) ? data : (data?.items || []);
       exporter(
@@ -107,6 +113,13 @@ export default function ReportsPage() {
         gstData.map((d: any) => [d.hsnSac || '', d.description || '', d.taxableAmount, d.cgst, d.sgst, d.igst, (d.cgst || 0) + (d.sgst || 0) + (d.igst || 0)]),
         `gst-summary.${ext}`
       );
+      exported = true;
+    }
+    if (exported) {
+      void track(format === 'excel' ? 'report_excel_exported' : 'report_generated', {
+        tab,
+        format,
+      });
     }
   };
 

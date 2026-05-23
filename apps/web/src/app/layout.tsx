@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { ToastProvider } from '@/components/ui/Toast';
 
@@ -35,6 +36,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
 };
 
 export default function RootLayout({
@@ -42,6 +46,34 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const publicThemeBootstrap = `
+    (function () {
+      try {
+        var mode = localStorage.getItem('public_theme_mode') || 'system';
+        var p = window.location.pathname || '';
+        var isPublicMarketingPage =
+          p === '/' ||
+          p === '/tools' ||
+          p.indexOf('/tools/') === 0 ||
+          p === '/services' ||
+          p === '/about' ||
+          p === '/blog' ||
+          p.indexOf('/blog/') === 0 ||
+          p === '/contact';
+
+        if (!isPublicMarketingPage) return;
+
+        var resolved = mode === 'system'
+          ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : mode;
+
+        document.documentElement.setAttribute('data-public-theme-mode', mode);
+        document.documentElement.setAttribute('data-public-theme', resolved);
+        document.documentElement.style.colorScheme = resolved;
+      } catch (e) {}
+    })();
+  `;
+
   const themeBootstrap = `
     (function () {
       try {
@@ -80,6 +112,63 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        {process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script
+              id="ga4-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  window.gtag = gtag;
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID}', { anonymize_ip: true });
+                `,
+              }}
+            />
+          </>
+        ) : null}
+        {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ? (
+          <Script
+            id="clarity-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");
+              `,
+            }}
+          />
+        ) : null}
+        {process.env.NEXT_PUBLIC_SENTRY_DSN_BROWSER ? (
+          <>
+            <Script src="https://browser.sentry-cdn.com/8.33.0/bundle.tracing.min.js" strategy="afterInteractive" />
+            <Script
+              id="sentry-browser-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  if (window.Sentry) {
+                    window.Sentry.init({
+                      dsn: "${process.env.NEXT_PUBLIC_SENTRY_DSN_BROWSER}",
+                      tracesSampleRate: 0.1,
+                      environment: "${process.env.NEXT_PUBLIC_APP_ENV || "production"}",
+                    });
+                  }
+                `,
+              }}
+            />
+          </>
+        ) : null}
+        <script dangerouslySetInnerHTML={{ __html: publicThemeBootstrap }} />
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <ToastProvider>{children}</ToastProvider>
       </body>

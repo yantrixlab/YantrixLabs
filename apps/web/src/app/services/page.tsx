@@ -83,7 +83,7 @@ export default function ServicesPage() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <section className="py-20 bg-gradient-to-br from-brand-50 via-white to-brand-200/40">
         <div className="container-wide text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-sm font-medium text-indigo-700 mb-6">
             <Zap className="h-3.5 w-3.5" />
@@ -194,7 +194,7 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700 text-center">
+      <section className="py-20 bg-gradient-to-br from-brand-600 to-brand-900 text-center">
         <div className="container-wide max-w-2xl mx-auto">
           <div className="mb-8 text-indigo-100 text-sm leading-relaxed">
             <Link href="/saas-development-services" className="font-semibold text-white hover:underline">SaaS development services</Link>

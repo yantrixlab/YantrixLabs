@@ -36,10 +36,10 @@ export function NewsletterCTA({ onSubscribe }: Props) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="relative bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700 rounded-3xl overflow-hidden px-8 md:px-16 py-14 text-white text-center shadow-2xl shadow-indigo-300/30"
+        className="relative bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 rounded-3xl overflow-hidden px-8 md:px-16 py-14 text-white text-center shadow-2xl shadow-brand-300/30"
       >
         {/* Background glows */}
-        <div className="absolute -top-10 -left-10 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-10 -left-10 w-64 h-64 bg-brand-400/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-10 -right-10 w-80 h-80 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none" />
         {/* Grid overlay */}
         <div

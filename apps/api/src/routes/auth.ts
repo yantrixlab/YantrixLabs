@@ -6,6 +6,7 @@ import { authenticate, AuthenticatedRequest } from '../middleware/auth';
 import { hashPassword, comparePassword, generateAccessToken, generateRefreshToken, generateOtp, getOtpExpiry } from '@yantrix/auth';
 import { UserRole } from '@yantrix/shared-types';
 import prisma from '../utils/prisma';
+import { trackAnalyticsEvent } from '../utils/analytics';
 
 const router = Router();
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
@@ -211,6 +212,12 @@ router.post(
           expiresIn: 7 * 24 * 60 * 60,
         },
       });
+      void trackAnalyticsEvent({
+        eventName: 'auth_signup_completed',
+        businessId: result.business.id,
+        userId: result.user.id,
+        source: 'api',
+      });
     } catch (error) {
       next(error);
     }
@@ -304,6 +311,12 @@ router.post(
           refreshToken,
           expiresIn: 7 * 24 * 60 * 60,
         },
+      });
+      void trackAnalyticsEvent({
+        eventName: 'auth_login',
+        businessId,
+        userId: user.id,
+        source: 'api',
       });
     } catch (error) {
       next(error);
@@ -590,6 +603,12 @@ router.post(
       });
 
       res.json({ success: true, message: 'Password reset successful' });
+      void trackAnalyticsEvent({
+        eventName: 'auth_forgot_password',
+        businessId: null,
+        userId: user.id,
+        source: 'api',
+      });
     } catch (error) {
       next(error);
     }
@@ -695,6 +714,11 @@ router.post('/logout', authenticate, async (req: AuthenticatedRequest, res: Resp
       });
     }
 
+    void trackAnalyticsEvent({
+      eventName: 'auth_logout',
+      req,
+      source: 'api',
+    });
     res.json({ success: true, message: 'Logged out successfully' });
   } catch (error) {
     next(error);

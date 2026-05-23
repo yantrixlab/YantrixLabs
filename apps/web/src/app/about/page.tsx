@@ -100,7 +100,7 @@ export default function AboutPage() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <section className="py-20 bg-gradient-to-br from-brand-50 via-white to-brand-200/40">
         <div className="container-wide text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-sm font-medium text-indigo-700 mb-6">
             <Globe className="h-3.5 w-3.5" />
@@ -213,7 +213,7 @@ export default function AboutPage() {
                 Today, Yantrix Labs builds <strong className="text-gray-900">practical, secure, and scalable</strong> digital products for startups, SMEs, and growing businesses — with a focus on performance, automation, and real business outcomes.
               </p>
             </div>
-            <div className="relative rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 p-6 overflow-hidden text-white">
+            <div className="relative rounded-2xl bg-gradient-to-br from-brand-600 to-brand-900 p-6 overflow-hidden text-white">
               <div className="absolute -bottom-6 -right-6 h-28 w-28 rounded-full bg-white opacity-10" />
               <p className="text-xs font-bold uppercase tracking-widest text-indigo-200 mb-2">Our Mission</p>
               <p className="text-white font-semibold text-base leading-relaxed">
@@ -310,7 +310,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-indigo-600 to-purple-700 text-center">
+      <section className="py-20 bg-gradient-to-br from-brand-600 to-brand-900 text-center">
         <div className="container-wide max-w-2xl mx-auto">
           <TrendingUp className="h-12 w-12 text-indigo-300 mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-white mb-4">Let&apos;s build something together</h2>

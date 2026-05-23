@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/BusinessProfileSetupModal";
 import { GlobalSearch } from "@/components/ui/GlobalSearch";
 import themeStyles from "./DashboardTheme.module.css";
+import { track } from "@/lib/analytics/client";
 
 const INVOICE_USAGE_WARNING_RATIO = 0.8;
 
@@ -128,6 +129,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       : "light";
   });
   const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
+  const [subscriptionControlLoaded, setSubscriptionControlLoaded] = useState(false);
   const [guest, setGuest] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     return isGuestMode() && !isAuthenticated();
@@ -252,9 +254,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     apiFetch("/settings/subscription-control")
       .then((res: any) => {
         setSubscriptionEnforced(res?.data?.isSubscriptionEnforced !== false);
+        setSubscriptionControlLoaded(true);
       })
       .catch(() => {
         setSubscriptionEnforced(true);
+        setSubscriptionControlLoaded(true);
       });
 
     apiFetch("/subscriptions")
@@ -450,7 +454,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     return [...noSlug, ...withSlug];
   }, [moduleOrder]);
 
+  const settingsItems = useMemo(
+    () =>
+      SETTINGS_ITEMS.filter((item) => {
+        if (item.href !== "/settings/billing") return true;
+        return subscriptionControlLoaded && subscriptionEnforced;
+      }),
+    [subscriptionControlLoaded, subscriptionEnforced],
+  );
+
   const handleLogout = () => {
+    void track("auth_logout", { source: "sidebar" });
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     enableGuestMode();
@@ -622,9 +636,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         transition={{ duration: 0.2 }}
                         className="overflow-hidden pl-3 space-y-0.5"
                       >
-                        {SETTINGS_ITEMS.filter((item) => (
-                          subscriptionEnforced || item.href !== "/settings/billing"
-                        )).map((item) => (
+                        {settingsItems.map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
