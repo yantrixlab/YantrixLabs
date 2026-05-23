@@ -17,4 +17,4 @@ cmds = [
 ]
 
 [start]
-cmd = "cd apps/web && pnpm start"
+cmd = "cd apps/web && PORT=${PORT:-3000} pnpm start"
