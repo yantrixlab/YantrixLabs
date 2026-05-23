@@ -4,7 +4,13 @@ import { getGuestDemoResponse } from './guestDemoData';
 const rawApiUrl = process.env.NEXT_PUBLIC_API_URL?.trim();
 
 function normalizeApiUrl(url?: string): string {
-  if (!url) return 'http://localhost:4000/api/v1';
+  if (!url) {
+    // Production-safe fallback: prefer same-origin API route if env is missing.
+    if (typeof window !== 'undefined' && window.location?.origin) {
+      return `${window.location.origin}/api/v1`;
+    }
+    return 'http://localhost:4000/api/v1';
+  }
 
   const cleaned = url.replace(/\/+$/, '');
   // Backward-compatible guard: if env points to ".../api", append "/v1"
