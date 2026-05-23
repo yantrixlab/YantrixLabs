@@ -9,7 +9,7 @@ import prisma from '../utils/prisma';
 
 const router = Router();
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'Yantrix <onboarding@resend.dev>';
+const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'YantrixLabs <onboarding@resend.dev>';
 
 function getResendErrorHint(rawError: unknown): string {
   const text = String(rawError || '').toLowerCase();
@@ -33,7 +33,7 @@ function sendOtpEmailWithResend(to: string, code: string, purpose: 'login' | 've
     const purposeLabel = purpose === 'reset' ? 'Password Reset' : purpose === 'verify' ? 'Account Verification' : 'Login';
     const html = `
       <div style="font-family:Inter,Segoe UI,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#0f172a">
-        <h2 style="margin:0 0 8px 0;color:#0f172a">Yantrix OTP Code</h2>
+        <h2 style="margin:0 0 8px 0;color:#0f172a">YantrixLabs OTP Code</h2>
         <p style="margin:0 0 16px 0;color:#475569">Use this OTP for ${purposeLabel}.</p>
         <div style="font-size:32px;letter-spacing:8px;font-weight:700;padding:14px 18px;border:1px solid #cbd5e1;border-radius:10px;display:inline-block;color:#1d4ed8;background:#eff6ff">${code}</div>
         <p style="margin:16px 0 0 0;color:#64748b">This code expires in 10 minutes. Do not share it with anyone.</p>
@@ -43,7 +43,7 @@ function sendOtpEmailWithResend(to: string, code: string, purpose: 'login' | 've
     const payload = JSON.stringify({
       from: RESEND_FROM_EMAIL,
       to: [to],
-      subject: `Yantrix OTP for ${purposeLabel}`,
+      subject: `YantrixLabs OTP for ${purposeLabel}`,
       html,
     });
 
