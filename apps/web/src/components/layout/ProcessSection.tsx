@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
-import type { LucideIcon } from 'lucide-react';
+import { Zap, LayoutDashboard, Wrench, Rocket, Headphones } from 'lucide-react';
 
 interface ProcessStep {
-  icon: LucideIcon;
+  iconKey: 'idea' | 'design' | 'develop' | 'launch' | 'support';
   title: string;
   desc: string;
 }
@@ -20,6 +20,14 @@ const PROCESS_ACTIVE_ANIMATION_MS = 550;
 const PROCESS_WAIT_AFTER_ANIMATION_MS = 1000;
 const PROCESS_STEP_DURATION_MS =
   PROCESS_ACTIVE_ANIMATION_MS + PROCESS_WAIT_AFTER_ANIMATION_MS;
+
+const PROCESS_ICON_MAP = {
+  idea: Zap,
+  design: LayoutDashboard,
+  develop: Wrench,
+  launch: Rocket,
+  support: Headphones,
+} as const;
 
 export default function ProcessSection({
   title = 'How We Work',
@@ -91,6 +99,10 @@ export default function ProcessSection({
               key={step.title}
               className="relative"
             >
+              {(() => {
+                const Icon = PROCESS_ICON_MAP[step.iconKey];
+                return (
+                  <>
               {idx < steps.length - 1 && (
                 <>
                   <div
@@ -181,7 +193,7 @@ export default function ProcessSection({
                       : 'border-blue-100 bg-gradient-to-br from-blue-50 to-cyan-50 text-blue-600'
                   }`}
                 >
-                  <step.icon className="h-6 w-6" />
+                  <Icon className="h-6 w-6" />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-1 text-lg">
                   {step.title}
@@ -190,6 +202,9 @@ export default function ProcessSection({
                   {step.desc}
                 </p>
               </motion.div>
+                  </>
+                );
+              })()}
             </div>
           ))}
         </div>

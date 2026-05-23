@@ -3,7 +3,7 @@ import ProcessSection from '@/components/layout/ProcessSection';
 import Link from 'next/link';
 import {
   Zap, Shield, Star, ArrowRight, TrendingUp,
-  IndianRupee, Headphones, CheckCircle, LayoutDashboard, Wrench, Rocket,
+  IndianRupee, Headphones, CheckCircle,
 } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -73,11 +73,11 @@ const WHY_US = [
 ];
 
 const PROCESS = [
-  { icon: Zap, title: 'Idea', desc: 'Understand your requirements' },
-  { icon: LayoutDashboard, title: 'Design', desc: 'UI/UX wireframes and prototypes' },
-  { icon: Wrench, title: 'Develop', desc: 'Clean, scalable code' },
-  { icon: Rocket, title: 'Launch', desc: 'Deploy and go live' },
-  { icon: Headphones, title: 'Support', desc: 'Ongoing maintenance' },
+  { iconKey: 'idea', title: 'Idea', desc: 'Understand your requirements' },
+  { iconKey: 'design', title: 'Design', desc: 'UI/UX wireframes and prototypes' },
+  { iconKey: 'develop', title: 'Develop', desc: 'Clean, scalable code' },
+  { iconKey: 'launch', title: 'Launch', desc: 'Deploy and go live' },
+  { iconKey: 'support', title: 'Support', desc: 'Ongoing maintenance' },
 ];
 
 export default function ServicesPage() {
