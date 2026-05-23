@@ -13,9 +13,7 @@ export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  const [identifierType, setIdentifierType] = useState<'email' | 'phone'>('email');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -28,29 +26,17 @@ export default function ForgotPasswordPage() {
     return () => window.clearTimeout(timer);
   }, [step]);
 
-  const identifierPayload = useMemo(() => {
-    if (identifierType === 'email') return { email: email.trim() };
-    return { phone: `+91${phone}` };
-  }, [identifierType, email, phone]);
+  const identifierPayload = useMemo(() => ({ email: email.trim() }), [email]);
 
   const maskedIdentifier = useMemo(() => {
-    if (identifierType === 'email') {
-      const value = email.trim();
-      if (!value.includes('@')) return value;
-      return value.replace(/(.{2}).*(@.*)/, '$1***$2');
-    }
-    if (phone.length < 4) return `+91 ${phone}`;
-    return `+91 ******${phone.slice(-4)}`;
-  }, [identifierType, email, phone]);
+    const value = email.trim();
+    if (!value.includes('@')) return value;
+    return value.replace(/(.{2}).*(@.*)/, '$1***$2');
+  }, [email]);
 
   const validateIdentifier = (): boolean => {
-    if (identifierType === 'email') {
-      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-      if (!ok) setError('Enter a valid email address.');
-      return ok;
-    }
-    const ok = /^\d{10}$/.test(phone);
-    if (!ok) setError('Enter a valid 10-digit mobile number.');
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    if (!ok) setError('Enter a valid email address.');
     return ok;
   };
 
@@ -175,10 +161,10 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 p-4">
+    <div className="forgot-auth-page min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 p-4">
       <div className="mx-auto flex min-h-screen w-full max-w-lg items-center justify-center">
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="w-full">
-          <div className="mb-8 text-center">
+          <div className="forgot-auth-header mb-8 text-center">
             <Link href="/" className="inline-flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600">
                 <FileText className="h-5 w-5 text-white" />
@@ -194,7 +180,7 @@ export default function ForgotPasswordPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-100 bg-white p-6 shadow-xl">
+          <div className="forgot-auth-card rounded-2xl border border-slate-100 bg-white p-6 shadow-xl">
             <div className="mb-6 grid grid-cols-4 gap-2">
               {[1, 2, 3, 4].map((i) => (
                 <div
@@ -209,57 +195,22 @@ export default function ForgotPasswordPage() {
 
             {step === 1 && (
               <form onSubmit={handleSendOtp} className="space-y-4">
-                <div className="rounded-xl bg-slate-100 p-1">
-                  <button
-                    type="button"
-                    onClick={() => setIdentifierType('email')}
-                    className={`w-1/2 rounded-lg px-3 py-2 text-sm font-medium ${identifierType === 'email' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}`}
-                  >
-                    Email
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIdentifierType('phone')}
-                    className={`w-1/2 rounded-lg px-3 py-2 text-sm font-medium ${identifierType === 'phone' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}`}
-                  >
-                    Mobile
-                  </button>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-slate-700">Email address</label>
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@business.com"
+                    className="forgot-auth-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  />
                 </div>
-
-                {identifierType === 'email' ? (
-                  <div>
-                    <label className="mb-1.5 block text-sm font-medium text-slate-700">Email address</label>
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@business.com"
-                      className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <label className="mb-1.5 block text-sm font-medium text-slate-700">Mobile number</label>
-                    <div className="flex gap-2">
-                      <span className="inline-flex items-center rounded-xl border border-slate-300 bg-slate-50 px-3 text-sm text-slate-600">+91</span>
-                      <input
-                        type="tel"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                        placeholder="9876543210"
-                        maxLength={10}
-                        className="flex-1 rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-                      />
-                    </div>
-                  </div>
-                )}
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+                  className="forgot-auth-primary inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
                 >
                   {isLoading ? 'Sending OTP...' : 'Send OTP'}
                   {!isLoading && <ArrowRight className="h-4 w-4" />}
@@ -278,7 +229,7 @@ export default function ForgotPasswordPage() {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                     placeholder="123456"
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-center text-2xl tracking-widest focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="forgot-auth-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-center text-2xl tracking-widest focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                   />
                   <p className="mt-1 text-xs text-slate-500">OTP sent to {maskedIdentifier}</p>
                 </div>
@@ -286,7 +237,7 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+                  className="forgot-auth-primary inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
                 >
                   {isLoading ? 'Verifying...' : 'Verify OTP'}
                   {!isLoading && <ArrowRight className="h-4 w-4" />}
@@ -314,7 +265,7 @@ export default function ForgotPasswordPage() {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Min. 8 characters"
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="forgot-auth-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                   />
                 </div>
                 <div>
@@ -326,14 +277,14 @@ export default function ForgotPasswordPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Re-enter new password"
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                    className="forgot-auth-input w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+                  className="forgot-auth-primary inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
                 >
                   {isLoading ? 'Resetting password...' : 'Reset Password'}
                   {!isLoading && <ArrowRight className="h-4 w-4" />}

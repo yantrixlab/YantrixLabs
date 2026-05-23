@@ -127,6 +127,67 @@ html[data-gst-theme="dark"] .text-gray-700 { color: #c6d4f2 !important; }
 html[data-gst-theme="dark"] .text-gray-800,
 html[data-gst-theme="dark"] .text-gray-900 { color: #eef4ff !important; }
 
+/* Forgot-password auth page: balanced professional contrast */
+.forgot-auth-page .forgot-auth-card {
+  background: #ffffff;
+  border-color: #d8e2ef;
+  box-shadow: 0 20px 40px rgba(12, 25, 48, 0.12);
+}
+
+.forgot-auth-page .forgot-auth-input {
+  background: #ffffff;
+  border-color: #c7d4e8;
+  color: #1f2f44;
+}
+
+.forgot-auth-page .forgot-auth-input::placeholder {
+  color: #8395ae;
+}
+
+.forgot-auth-page .forgot-auth-primary {
+  background: linear-gradient(135deg, #3c6cc2, #527fcb);
+}
+
+.forgot-auth-page .forgot-auth-primary:hover {
+  background: linear-gradient(135deg, #335ea9, #486fb2);
+}
+
+html[data-gst-theme="dark"] .forgot-auth-page {
+  background:
+    radial-gradient(900px 340px at 50% -10%, rgba(64, 103, 178, 0.22), transparent 56%),
+    #060b16 !important;
+}
+
+html[data-gst-theme="dark"] .forgot-auth-header h1,
+html[data-gst-theme="dark"] .forgot-auth-header p,
+html[data-gst-theme="dark"] .forgot-auth-header span {
+  color: #dce8ff !important;
+}
+
+html[data-gst-theme="dark"] .forgot-auth-card {
+  background: linear-gradient(160deg, #0e1930, #0a1326) !important;
+  border-color: #2b3f61 !important;
+  box-shadow: 0 24px 52px rgba(2, 8, 22, 0.62) !important;
+}
+
+html[data-gst-theme="dark"] .forgot-auth-input {
+  background: #122341 !important;
+  border-color: #2a4267 !important;
+  color: #e8f1ff !important;
+}
+
+html[data-gst-theme="dark"] .forgot-auth-input::placeholder {
+  color: #87a0c3 !important;
+}
+
+html[data-gst-theme="dark"] .forgot-auth-primary {
+  background: linear-gradient(135deg, #4a72ba, #5f86ce) !important;
+}
+
+html[data-gst-theme="dark"] .forgot-auth-primary:hover {
+  background: linear-gradient(135deg, #5a82ca, #6f96dd) !important;
+}
+
 @layer components {
   /* Layout */
   .container-wide {
