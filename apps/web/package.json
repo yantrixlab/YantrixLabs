@@ -10,7 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@yantrix/shared-types": "file:../../packages/shared-types",
+    "@yantrix/shared-types": "workspace:*",
     "@yantrix/ui": "file:../../packages/ui",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-avatar": "^1.0.4",
