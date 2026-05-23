@@ -10,7 +10,7 @@ interface Props {
 
 export function BlogHero({ search, onSearchChange }: Props) {
   return (
-    <section className="relative bg-gradient-to-br from-brand-950 via-brand-900 to-brand-700 text-white py-28 px-4 overflow-hidden">
+    <section className="public-hero public-hero-dark relative bg-gradient-to-br from-brand-950 via-brand-900 to-brand-700 text-white py-28 px-4 overflow-hidden">
       {/* Floating background glows */}
       <div className="absolute -top-20 -left-20 w-96 h-96 bg-brand-500/20 rounded-full blur-3xl animate-float pointer-events-none" />
       <div

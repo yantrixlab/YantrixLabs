@@ -1,8 +1,9 @@
-﻿import { PublicLayout } from '@/components/layout/PublicLayout';
+import { PublicLayout } from '@/components/layout/PublicLayout';
+import ProcessSection from '@/components/layout/ProcessSection';
 import Link from 'next/link';
 import {
   Zap, Shield, Star, ArrowRight, TrendingUp,
-  IndianRupee, Headphones, CheckCircle,
+  IndianRupee, Headphones, CheckCircle, LayoutDashboard, Wrench, Rocket,
 } from 'lucide-react';
 import type { Metadata } from 'next';
 
@@ -72,18 +73,18 @@ const WHY_US = [
 ];
 
 const PROCESS = [
-  { emoji: 'IDEA', title: 'Idea', desc: 'We understand your requirements through discovery sessions.' },
-  { emoji: 'DESIGN', title: 'Design', desc: 'UI/UX wireframes, prototypes, and design system creation.' },
-  { emoji: 'BUILD', title: 'Develop', desc: 'Clean, tested, scalable code using modern tech stacks.' },
-  { emoji: 'LAUNCH', title: 'Launch', desc: 'Deploy, configure, and go live with confidence.' },
-  { emoji: 'SUPPORT', title: 'Support', desc: 'Ongoing maintenance, updates, and growth support.' },
+  { icon: Zap, title: 'Idea', desc: 'Understand your requirements' },
+  { icon: LayoutDashboard, title: 'Design', desc: 'UI/UX wireframes and prototypes' },
+  { icon: Wrench, title: 'Develop', desc: 'Clean, scalable code' },
+  { icon: Rocket, title: 'Launch', desc: 'Deploy and go live' },
+  { icon: Headphones, title: 'Support', desc: 'Ongoing maintenance' },
 ];
 
 export default function ServicesPage() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-brand-50 via-white to-brand-200/40">
+      <section className="public-hero py-20 bg-gradient-to-br from-brand-50 via-white to-brand-200/40">
         <div className="container-wide text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-sm font-medium text-indigo-700 mb-6">
             <Zap className="h-3.5 w-3.5" />
@@ -146,28 +147,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Process */}
-      <section className="py-24 bg-gray-50">
-        <div className="container-wide">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">How We Work</h2>
-            <p className="text-xl text-gray-600">A simple, transparent process from idea to launch.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-            {PROCESS.map((step, idx) => (
-              <div key={step.title} className="flex flex-col items-center text-center">
-                <div className="h-16 w-16 rounded-2xl bg-white border border-indigo-100 shadow-sm flex items-center justify-center text-2xl mb-4">
-                  {step.emoji}
-                </div>
-                <div className="h-5 w-5 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold mb-3">
-                  {idx + 1}
-                </div>
-                <h3 className="font-semibold text-gray-900 mb-1">{step.title}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ProcessSection steps={PROCESS} />
 
       {/* Why Us */}
       <section className="py-24">

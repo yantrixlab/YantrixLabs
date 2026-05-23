@@ -829,6 +829,83 @@ html[data-public-theme='dark'] .public-site .shadow-md {
   box-shadow: var(--public-shadow) !important;
 }
 
+.public-site .public-hero {
+  background:
+    radial-gradient(1200px 420px at 50% -15%, rgb(var(--brand-100) / 0.75), transparent 64%),
+    linear-gradient(135deg, rgb(var(--brand-50)) 0%, rgb(var(--neutral-0)) 54%, rgb(var(--brand-100) / 0.55) 100%) !important;
+}
+
+.public-site .public-hero .text-gray-900 {
+  color: rgb(var(--brand-900)) !important;
+}
+
+.public-site .public-hero .text-gray-600,
+.public-site .public-hero .text-gray-500 {
+  color: rgb(var(--brand-700)) !important;
+}
+
+.public-site .public-hero .border-indigo-200,
+.public-site .public-hero .bg-indigo-50 {
+  border-color: rgb(var(--brand-200)) !important;
+  background-color: rgb(var(--brand-50) / 0.92) !important;
+}
+
+html[data-public-theme='dark'] .public-site .public-hero {
+  background:
+    radial-gradient(1000px 360px at 50% -18%, rgb(var(--brand-500) / 0.24), transparent 66%),
+    linear-gradient(140deg, rgb(var(--brand-950)) 0%, rgb(var(--brand-900)) 52%, rgb(var(--brand-800)) 100%) !important;
+  border-bottom: 1px solid rgb(var(--brand-700) / 0.35);
+}
+
+html[data-public-theme='dark'] .public-site .public-hero .text-gray-900,
+html[data-public-theme='dark'] .public-site .public-hero .text-gray-600,
+html[data-public-theme='dark'] .public-site .public-hero .text-gray-500,
+html[data-public-theme='dark'] .public-site .public-hero .text-indigo-200,
+html[data-public-theme='dark'] .public-site .public-hero .text-indigo-300 {
+  color: rgb(var(--brand-100)) !important;
+}
+
+html[data-public-theme='dark'] .public-site .public-hero .gradient-text {
+  background-image: linear-gradient(90deg, rgb(var(--brand-100)), rgb(var(--brand-300))) !important;
+}
+
+html[data-public-theme='dark'] .public-site .public-hero .bg-white {
+  background-color: rgb(var(--brand-900)) !important;
+}
+
+html[data-public-theme='dark'] .public-site .public-hero .border-gray-200,
+html[data-public-theme='dark'] .public-site .public-hero .border-indigo-200 {
+  border-color: rgb(var(--brand-700) / 0.6) !important;
+}
+
+html[data-public-theme='dark'] .public-site .public-hero input,
+html[data-public-theme='dark'] .public-site .public-hero select,
+html[data-public-theme='dark'] .public-site .public-hero textarea {
+  background: rgb(var(--brand-900) / 0.7) !important;
+  border-color: rgb(var(--brand-700) / 0.7) !important;
+  color: rgb(var(--brand-50)) !important;
+}
+
+html[data-public-theme='dark'] .public-site .public-hero input::placeholder,
+html[data-public-theme='dark'] .public-site .public-hero textarea::placeholder {
+  color: rgb(var(--brand-200)) !important;
+}
+
+html[data-public-theme='dark'] .public-site .public-hero.public-hero-dark {
+  background:
+    radial-gradient(1000px 320px at 50% -20%, rgb(var(--brand-400) / 0.22), transparent 68%),
+    linear-gradient(140deg, rgb(var(--brand-950)) 0%, rgb(var(--brand-900)) 48%, rgb(var(--brand-800)) 100%) !important;
+}
+
+html[data-public-theme='dark'] .public-site .contact-help-card {
+  background: linear-gradient(145deg, rgb(var(--brand-900)), rgb(var(--brand-800))) !important;
+  border-color: rgb(var(--brand-700) / 0.62) !important;
+}
+
+html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
+  background-color: rgb(var(--brand-700) / 0.35) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .public-site * {
     animation-duration: 1ms !important;
@@ -836,4 +913,38 @@ html[data-public-theme='dark'] .public-site .shadow-md {
     transition-duration: 0ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+@keyframes enquiryRipple {
+  0% {
+    box-shadow:
+      0 0 0 0 rgb(var(--brand-400) / 0.48),
+      0 10px 24px rgb(var(--brand-900) / 0.24);
+  }
+  70% {
+    box-shadow:
+      0 0 0 14px rgb(var(--brand-400) / 0),
+      0 14px 28px rgb(var(--brand-900) / 0.30);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(var(--brand-400) / 0),
+      0 10px 24px rgb(var(--brand-900) / 0.24);
+  }
+}
+
+.public-site .enquiry-btn {
+  background: linear-gradient(135deg, rgb(var(--brand-500)), rgb(var(--brand-700)));
+  border: 1px solid rgb(var(--brand-400) / 0.7);
+  animation: enquiryRipple 2s infinite;
+  transition: transform var(--ease-default), box-shadow var(--ease-default), filter var(--ease-default);
+}
+
+.public-site .enquiry-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.public-site .enquiry-btn:active {
+  transform: translateY(0);
 }

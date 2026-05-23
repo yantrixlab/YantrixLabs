@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, LayoutDashboard, Menu, Moon, Sun, Monitor, X } from 'lucide-react';
+import { ArrowRight, LayoutDashboard, Menu, Moon, Sun, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
 import { enableGuestMode } from '@/lib/guestMode';
@@ -98,12 +98,10 @@ export function PublicLayout({ children }: PublicLayoutProps) {
     applyPublicTheme(mode);
   };
 
-  const themeButtonClass = (mode: 'light' | 'dark' | 'system') =>
-    `inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 ${
-      themeMode === mode
-        ? 'bg-brand-600 text-white shadow-sm'
-        : 'bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
-    }`;
+  const onThemeToggle = () => {
+    const nextMode = resolvedTheme === 'dark' ? 'light' : 'dark';
+    onThemeModeChange(nextMode);
+  };
 
   return (
     <div className="public-site min-h-screen bg-white">
@@ -132,41 +130,24 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
             <div className="hidden md:flex items-center gap-3">
               {isPublicMarketingPage && (
-                <div className="inline-flex items-center gap-1 rounded-xl border border-gray-200 p-1">
-                  <button
-                    type="button"
-                    aria-label="Use light theme"
-                    aria-pressed={themeMode === 'light'}
-                    onClick={() => onThemeModeChange('light')}
-                    className={themeButtonClass('light')}
-                  >
-                    <Sun className="h-3.5 w-3.5" />
-                    Light
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Use dark theme"
-                    aria-pressed={themeMode === 'dark'}
-                    onClick={() => onThemeModeChange('dark')}
-                    className={themeButtonClass('dark')}
-                  >
-                    <Moon className="h-3.5 w-3.5" />
-                    Dark
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={`Use system theme, currently ${resolvedTheme}`}
-                    aria-pressed={themeMode === 'system'}
-                    onClick={() => onThemeModeChange('system')}
-                    className={themeButtonClass('system')}
-                  >
-                    <Monitor className="h-3.5 w-3.5" />
-                    Auto
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  aria-label={`Toggle theme. Current ${resolvedTheme}`}
+                  onClick={onThemeToggle}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] transition-all hover:text-[rgb(var(--public-text))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
+                >
+                  {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </button>
               )}
               {loggedIn ? (
                 <>
+                  <button
+                    type="button"
+                    className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
+                  >
+                    Enquiry
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
                   <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 px-4 py-2">
                     <LayoutDashboard className="h-4 w-4" />
                     Dashboard
@@ -183,17 +164,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 </>
               ) : (
                 <>
-                  <Link href="/auth/login" className="text-sm font-medium text-gray-700 hover:text-gray-900 px-4 py-2">
-                    Log in
-                  </Link>
                   <Link
-                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
+                    href="/contact"
                     onClick={() => {
                       if (isGstLanding) enableGuestMode();
                     }}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition-colors"
+                    className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
                   >
-                    Get Started Free
+                    Enquiry
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </>
@@ -224,20 +202,15 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             {isPublicMarketingPage && (
               <div className="pt-2">
                 <p className="px-0.5 pb-2 text-[11px] font-semibold uppercase tracking-widest text-gray-400">Theme</p>
-                <div className="inline-flex w-full items-center gap-1 rounded-xl border border-gray-200 p-1">
-                  <button type="button" onClick={() => onThemeModeChange('light')} className={`${themeButtonClass('light')} flex-1 justify-center`}>
-                    <Sun className="h-3.5 w-3.5" />
-                    Light
-                  </button>
-                  <button type="button" onClick={() => onThemeModeChange('dark')} className={`${themeButtonClass('dark')} flex-1 justify-center`}>
-                    <Moon className="h-3.5 w-3.5" />
-                    Dark
-                  </button>
-                  <button type="button" onClick={() => onThemeModeChange('system')} className={`${themeButtonClass('system')} flex-1 justify-center`}>
-                    <Monitor className="h-3.5 w-3.5" />
-                    Auto
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  aria-label={`Toggle theme. Current ${resolvedTheme}`}
+                  onClick={onThemeToggle}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-[rgb(var(--public-surface-muted))] px-3 py-2 text-sm font-semibold text-[rgb(var(--public-text-muted))] transition-all hover:text-[rgb(var(--public-text))]"
+                >
+                  {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                  {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                </button>
               </div>
             )}
             <div className="pt-2 space-y-2">
@@ -254,15 +227,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 </Link>
               ) : (
                 <>
-                  <Link href="/auth/login" className="block py-2 text-sm font-medium text-gray-700">Log in</Link>
                   <Link
-                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
+                    href="/contact"
                     onClick={() => {
                       if (isGstLanding) enableGuestMode();
                     }}
-                    className="block rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-semibold text-white"
+                    className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white"
                   >
-                    Get Started Free
+                    Enquiry
                   </Link>
                 </>
               )}
@@ -286,7 +258,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               <p className="text-sm leading-relaxed mb-3">
                 We build smart digital products and business tools for startups, SMEs, and enterprises.
               </p>
-              <p className="text-xs">Made with â¤ï¸ in India ðŸ‡®ðŸ‡³</p>
+              <p className="text-xs">Made with care in India</p>
             </div>
             <div>
               <h5 className="font-semibold text-white mb-3">Products</h5>
@@ -311,7 +283,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm">Â© {new Date().getFullYear()} Yantrix Labs. All rights reserved.</p>
+            <p className="text-sm">&copy; {new Date().getFullYear()} Yantrix Labs. All rights reserved.</p>
             <div className="flex items-center gap-4 text-sm">
               <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
               <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>

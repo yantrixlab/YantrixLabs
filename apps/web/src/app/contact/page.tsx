@@ -86,7 +86,7 @@ export default function ContactPage() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-brand-50 via-white to-brand-200/40">
+      <section className="public-hero py-20 bg-gradient-to-br from-brand-50 via-white to-brand-200/40">
         <div className="container-wide text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-sm font-medium text-indigo-700 mb-6">
             <Headphones className="h-3.5 w-3.5" />
@@ -293,7 +293,7 @@ export default function ContactPage() {
               </div>
 
               {/* Help Docs */}
-              <div className="bg-indigo-50 rounded-3xl border border-indigo-100 p-7">
+              <div className="contact-help-card bg-indigo-50 rounded-3xl border border-indigo-100 p-7">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-10 w-10 rounded-xl bg-indigo-100 flex items-center justify-center">
                     <FileText className="h-5 w-5 text-indigo-600" />
