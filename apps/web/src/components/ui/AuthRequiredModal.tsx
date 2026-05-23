@@ -58,7 +58,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
   const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === 'true';
   const submitLabel = useMemo(() => {
     if (activeTab === 'signin') return isLoading ? 'Signing in...' : 'Sign in';
-    return isLoading ? 'Creating account...' : 'Create Free Account';
+    return isLoading ? 'Creating account...' : 'Create Account';
   }, [activeTab, isLoading]);
 
   if (!open) return null;
@@ -157,6 +157,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
             <ShieldCheck className="h-5 w-5" />
           </span>
           <div>
+            <p className="text-xs font-medium uppercase tracking-[0.2em] text-indigo-600">YantrixLabs GST Invoice</p>
             <p className="text-sm font-semibold text-slate-900">Sign in required</p>
             <p className="text-xs text-slate-500">Please continue to save data to your account.</p>
           </div>
@@ -181,7 +182,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
             }}
             className={`rounded-lg px-3 py-2 text-center font-medium transition ${activeTab === 'signup' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-800'}`}
           >
-            Sign up
+            Create Account
           </button>
         </div>
 

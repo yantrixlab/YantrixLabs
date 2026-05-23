@@ -183,7 +183,10 @@ export default function ForgotPasswordPage() {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600">
                 <FileText className="h-5 w-5 text-white" />
               </div>
-              <span className="text-2xl font-bold text-slate-900">Yantrix</span>
+              <div className="text-left">
+                <span className="block text-2xl font-bold leading-none text-slate-900">YantrixLabs</span>
+                <span className="text-xs font-medium uppercase tracking-[0.2em] text-indigo-600">GST Invoice</span>
+              </div>
             </Link>
             <h1 className="mt-6 text-2xl font-bold text-slate-900">Forgot password?</h1>
             <p className="mt-1 text-sm text-slate-600">
