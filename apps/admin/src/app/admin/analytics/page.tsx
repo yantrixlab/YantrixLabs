@@ -29,18 +29,52 @@ export default function AdminAnalyticsPage() {
   useEffect(() => {
     setLoading(true);
     setError('');
-    Promise.all([
+    Promise.allSettled([
       adminFetch<{ data: Overview }>(`/admin/analytics/overview?days=${days}`),
       adminFetch<{ data: { activationFunnel: FunnelStep[]; scannerFunnel: FunnelStep[] } }>(`/admin/analytics/funnels?days=${days}`),
       adminFetch<{ data: { cohortSize: number; day1: number; day7: number; day30: number } }>(`/admin/analytics/retention?days=${days}`),
       adminFetch<{ data: { totalScans: number; failedScans: number; successRate: number } }>(`/admin/analytics/scanner-quality?days=${days}`),
     ])
       .then(([o, f, r, s]) => {
-        setOverview(o.data);
-        setActivationFunnel(f.data.activationFunnel || []);
-        setScannerFunnel(f.data.scannerFunnel || []);
-        setRetention(r.data);
-        setScannerQuality(s.data);
+        const overviewData =
+          o.status === 'fulfilled'
+            ? o.value.data
+            : {
+                totalEvents: 0,
+                signups: 0,
+                logins: 0,
+                invoicesCreated: 0,
+                exportsDone: 0,
+                scannerConnections: 0,
+                activeUsers: 0,
+                conversionRate: 0,
+              };
+        setOverview(overviewData);
+        setActivationFunnel(
+          f.status === 'fulfilled' ? f.value.data.activationFunnel || [] : []
+        );
+        setScannerFunnel(
+          f.status === 'fulfilled' ? f.value.data.scannerFunnel || [] : []
+        );
+        setRetention(
+          r.status === 'fulfilled'
+            ? r.value.data
+            : { cohortSize: 0, day1: 0, day7: 0, day30: 0 }
+        );
+        setScannerQuality(
+          s.status === 'fulfilled'
+            ? s.value.data
+            : { totalScans: 0, failedScans: 0, successRate: 0 }
+        );
+
+        if (
+          o.status === 'rejected' &&
+          f.status === 'rejected' &&
+          r.status === 'rejected' &&
+          s.status === 'rejected'
+        ) {
+          setError('Analytics data source is not ready yet. Showing fallback values.');
+        }
       })
       .catch((e: any) => setError(e.message || 'Failed to load analytics'))
       .finally(() => setLoading(false));

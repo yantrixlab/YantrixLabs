@@ -6,6 +6,32 @@ const router = Router();
 router.use(authenticate);
 router.use(requireSuperAdmin);
 
+function isAnalyticsStorageUnavailable(error: unknown): boolean {
+  const err = error as any;
+  if (!err) return false;
+
+  // Prisma: table/model not found (migration not applied yet)
+  if (err.code === "P2021" || err.code === "P2022") return true;
+
+  const message = String(err.message || "").toLowerCase();
+  return (
+    message.includes("analyticsevent") &&
+    (message.includes("does not exist") ||
+      message.includes("doesn't exist") ||
+      message.includes("not found") ||
+      message.includes("unknown table") ||
+      message.includes("relation"))
+  );
+}
+
+function analyticsFallback<T>(res: Response, data: T) {
+  res.json({
+    success: true,
+    data,
+    degraded: true,
+  });
+}
+
 function getDateRange(req: AuthenticatedRequest): { from: Date; to: Date } {
   const days = Number.parseInt((req.query.days as string) || "30", 10);
   const safeDays = Number.isFinite(days) && days > 0 ? Math.min(days, 365) : 30;
@@ -62,6 +88,20 @@ router.get(
         },
       });
     } catch (error) {
+      if (isAnalyticsStorageUnavailable(error)) {
+        analyticsFallback(res, {
+          totalEvents: 0,
+          signups: 0,
+          logins: 0,
+          invoicesCreated: 0,
+          exportsDone: 0,
+          scannerConnections: 0,
+          activeUsers: 0,
+          conversionRate: 0,
+          range: getDateRange(req),
+        });
+        return;
+      }
       next(error);
     }
   },
@@ -110,6 +150,22 @@ router.get(
         },
       });
     } catch (error) {
+      if (isAnalyticsStorageUnavailable(error)) {
+        analyticsFallback(res, {
+          activationFunnel: [
+            { step: "auth_signup_completed", count: 0 },
+            { step: "invoice_created", count: 0 },
+            { step: "invoice_pdf_downloaded", count: 0 },
+          ],
+          scannerFunnel: [
+            { step: "scanner_apk_downloaded", count: 0 },
+            { step: "scanner_qr_paired", count: 0 },
+            { step: "scanner_barcode_scanned", count: 0 },
+          ],
+          range: getDateRange(req),
+        });
+        return;
+      }
       next(error);
     }
   },
@@ -171,6 +227,10 @@ router.get(
         },
       });
     } catch (error) {
+      if (isAnalyticsStorageUnavailable(error)) {
+        analyticsFallback(res, { cohortSize: 0, day1: 0, day7: 0, day30: 0 });
+        return;
+      }
       next(error);
     }
   },
@@ -189,6 +249,10 @@ router.get(
       });
       res.json({ success: true, data: byEvent });
     } catch (error) {
+      if (isAnalyticsStorageUnavailable(error)) {
+        analyticsFallback(res, []);
+        return;
+      }
       next(error);
     }
   },
@@ -219,6 +283,15 @@ router.get(
         data: { totalScans, failedScans, successRate, range: { from, to } },
       });
     } catch (error) {
+      if (isAnalyticsStorageUnavailable(error)) {
+        analyticsFallback(res, {
+          totalScans: 0,
+          failedScans: 0,
+          successRate: 0,
+          range: getDateRange(req),
+        });
+        return;
+      }
       next(error);
     }
   },

@@ -22,6 +22,7 @@ interface PublicLayoutProps {
 
 export function PublicLayout({ children }: PublicLayoutProps) {
   const pathname = usePathname();
+  const isHomePage = pathname === '/';
   const isGstLanding = pathname === '/gst-invoice';
   const isPublicMarketingPage =
     pathname === '/' ||
@@ -105,12 +106,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
   return (
     <div className="public-site min-h-screen bg-white">
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
+      <nav className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl ${
+        isHomePage
+          ? 'border-brand-700 bg-brand-950/95'
+          : 'border-gray-100 bg-white/80'
+      }`}>
         <div className="container-wide">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-              <span className="text-xl font-bold text-gray-900">Yantrix Labs</span>
+              <span className={`text-xl font-bold ${isHomePage ? 'text-white' : 'text-gray-900'}`}>Yantrix Labs</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
@@ -120,7 +125,15 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`text-sm font-medium transition-colors ${isActive ? 'text-brand-600 font-semibold' : 'text-gray-600 hover:text-gray-900'}`}
+                    className={`text-sm font-medium transition-colors ${
+                      isHomePage
+                        ? isActive
+                          ? 'text-brand-400 font-semibold'
+                          : 'text-brand-50 hover:text-white'
+                        : isActive
+                          ? 'text-brand-600 font-semibold'
+                          : 'text-gray-600 hover:text-gray-900'
+                    }`}
                   >
                     {link.label}
                   </Link>
@@ -134,7 +147,11 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   type="button"
                   aria-label={`Toggle theme. Current ${resolvedTheme}`}
                   onClick={onThemeToggle}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] transition-all hover:text-[rgb(var(--public-text))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400"
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 ${
+                    isHomePage
+                      ? 'border-brand-700 bg-brand-900/70 text-brand-100 hover:text-white'
+                      : 'border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
+                  }`}
                 >
                   {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 </button>
@@ -185,14 +202,20 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-2">
+          <div className={`md:hidden border-t px-4 py-4 space-y-2 ${
+            isHomePage ? 'border-brand-800 bg-brand-950' : 'border-gray-100 bg-white'
+          }`}>
             {NAV_LINKS.map(link => {
                 const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`block py-2 text-sm font-medium ${isActive ? 'text-indigo-600 font-semibold' : 'text-gray-700'}`}
+                    className={`block py-2 text-sm font-medium ${
+                      isHomePage
+                        ? isActive ? 'text-brand-300 font-semibold' : 'text-brand-100'
+                        : isActive ? 'text-indigo-600 font-semibold' : 'text-gray-700'
+                    }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.label}
@@ -201,12 +224,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               })}
             {isPublicMarketingPage && (
               <div className="pt-2">
-                <p className="px-0.5 pb-2 text-[11px] font-semibold uppercase tracking-widest text-gray-400">Theme</p>
+                <p className={`px-0.5 pb-2 text-[11px] font-semibold uppercase tracking-widest ${isHomePage ? 'text-brand-300' : 'text-gray-400'}`}>Theme</p>
                 <button
                   type="button"
                   aria-label={`Toggle theme. Current ${resolvedTheme}`}
                   onClick={onThemeToggle}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-[rgb(var(--public-surface-muted))] px-3 py-2 text-sm font-semibold text-[rgb(var(--public-text-muted))] transition-all hover:text-[rgb(var(--public-text))]"
+                  className={`inline-flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
+                    isHomePage
+                      ? 'border-brand-700 bg-brand-900/70 text-brand-100 hover:text-white'
+                      : 'border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
+                  }`}
                 >
                   {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                   {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
@@ -215,7 +242,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             )}
             <div className="pt-2 space-y-2">
               {loggedIn ? (
-                <Link href="/dashboard" className="flex items-center gap-2 py-2 text-sm font-medium text-gray-700" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/dashboard" className={`flex items-center gap-2 py-2 text-sm font-medium ${isHomePage ? 'text-brand-100' : 'text-gray-700'}`} onClick={() => setMobileMenuOpen(false)}>
                   <div className="h-7 w-7 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center flex-shrink-0">
                     {businessLogo ? (
                       <img src={businessLogo} alt={businessName || 'Business'} className="h-full w-full object-contain" />
