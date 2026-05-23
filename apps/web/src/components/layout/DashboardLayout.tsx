@@ -462,7 +462,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     if (updated?.name) setBusinessName(updated.name);
   };
 
-  const displayName = userData.name || "User";
+  const displayName = guest ? "Guest" : userData.name || "User";
   const initials = displayName
     .split(" ")
     .map((n: string) => n[0])
@@ -808,7 +808,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             className={`flex items-center gap-2.5 ${collapsed ? "justify-center" : "px-1 mb-2"}`}
           >
             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ring-white">
-              {businessLogo ? (
+              {guest ? (
+                <UserCircle className="h-5 w-5 text-white" />
+              ) : businessLogo ? (
                 <img
                   src={businessLogo}
                   alt={businessName || "Business"}
@@ -1005,7 +1007,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
 
             <div className="h-8 w-8 rounded-full overflow-hidden bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center flex-shrink-0 ring-2 ring-gray-100 cursor-pointer hover:ring-indigo-200 transition-all">
-              {businessLogo ? (
+              {guest ? (
+                <UserCircle className="h-5 w-5 text-white" />
+              ) : businessLogo ? (
                 <img
                   src={businessLogo}
                   alt={businessName || "Business Logo"}

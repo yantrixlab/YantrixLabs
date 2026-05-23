@@ -368,6 +368,11 @@ router.post(
         return;
       }
 
+      if (purpose === 'reset') {
+        res.json({ success: true, message: 'OTP verified' });
+        return;
+      }
+
       await prisma.otpCode.update({
         where: { id: otpRecord.id },
         data: { isUsed: true },
@@ -419,6 +424,86 @@ router.post(
           expiresIn: 7 * 24 * 60 * 60,
         },
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Reset password with verified OTP
+ */
+router.post(
+  '/reset-password',
+  [
+    body('code').isLength({ min: 6, max: 6 }).withMessage('OTP must be 6 digits'),
+    body('newPassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters'),
+  ],
+  validate,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { phone, email, code, newPassword } = req.body;
+
+      if (!phone && !email) {
+        res.status(422).json({ success: false, error: 'Phone or email required' });
+        return;
+      }
+
+      const user = await prisma.user.findFirst({
+        where: email ? { email } : { phone },
+      });
+
+      if (!user) {
+        res.status(404).json({ success: false, error: 'User not found' });
+        return;
+      }
+
+      const otpRecord = await prisma.otpCode.findFirst({
+        where: {
+          userId: user.id,
+          code,
+          purpose: 'reset',
+          isUsed: false,
+          expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: 'desc' },
+      });
+
+      if (!otpRecord) {
+        await prisma.otpCode.updateMany({
+          where: { userId: user.id, purpose: 'reset', isUsed: false },
+          data: { attempts: { increment: 1 } },
+        });
+        res.status(400).json({ success: false, error: 'Invalid or expired OTP' });
+        return;
+      }
+
+      const newHash = await hashPassword(newPassword);
+
+      await prisma.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { id: user.id },
+          data: { passwordHash: newHash },
+        });
+        await tx.otpCode.update({
+          where: { id: otpRecord.id },
+          data: { isUsed: true },
+        });
+        await tx.otpCode.updateMany({
+          where: {
+            userId: user.id,
+            purpose: 'reset',
+            isUsed: false,
+          },
+          data: { isUsed: true },
+        });
+      });
+
+      res.json({ success: true, message: 'Password reset successful' });
     } catch (error) {
       next(error);
     }
