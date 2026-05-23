@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { body } from 'express-validator';
+import https from 'https';
 import { validate } from '../middleware/validation';
 import { authenticate, AuthenticatedRequest } from '../middleware/auth';
 import { hashPassword, comparePassword, generateAccessToken, generateRefreshToken, generateOtp, getOtpExpiry } from '@yantrix/auth';
@@ -7,6 +8,64 @@ import { UserRole } from '@yantrix/shared-types';
 import prisma from '../utils/prisma';
 
 const router = Router();
+const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'Yantrix <onboarding@resend.dev>';
+
+function sendOtpEmailWithResend(to: string, code: string, purpose: 'login' | 'verify' | 'reset'): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!RESEND_API_KEY) {
+      reject(new Error('RESEND_API_KEY is not configured'));
+      return;
+    }
+
+    const purposeLabel = purpose === 'reset' ? 'Password Reset' : purpose === 'verify' ? 'Account Verification' : 'Login';
+    const html = `
+      <div style="font-family:Inter,Segoe UI,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#0f172a">
+        <h2 style="margin:0 0 8px 0;color:#0f172a">Yantrix OTP Code</h2>
+        <p style="margin:0 0 16px 0;color:#475569">Use this OTP for ${purposeLabel}.</p>
+        <div style="font-size:32px;letter-spacing:8px;font-weight:700;padding:14px 18px;border:1px solid #cbd5e1;border-radius:10px;display:inline-block;color:#1d4ed8;background:#eff6ff">${code}</div>
+        <p style="margin:16px 0 0 0;color:#64748b">This code expires in 10 minutes. Do not share it with anyone.</p>
+      </div>
+    `;
+
+    const payload = JSON.stringify({
+      from: RESEND_FROM_EMAIL,
+      to: [to],
+      subject: `Yantrix OTP for ${purposeLabel}`,
+      html,
+    });
+
+    const req = https.request(
+      {
+        hostname: 'api.resend.com',
+        path: '/emails',
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload),
+        },
+      },
+      (res) => {
+        let body = '';
+        res.on('data', (chunk) => {
+          body += chunk.toString();
+        });
+        res.on('end', () => {
+          if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+            resolve();
+            return;
+          }
+          reject(new Error(`Resend API error: ${res.statusCode} ${body}`));
+        });
+      }
+    );
+
+    req.on('error', (err) => reject(err));
+    req.write(payload);
+    req.end();
+  });
+}
 
 /**
  * @swagger
@@ -306,8 +365,18 @@ router.post(
         },
       });
 
-      // TODO: Send actual OTP via SMS/email
-      console.log(`📱 OTP for ${phone || email}: ${code}`);
+      if (email) {
+        try {
+          await sendOtpEmailWithResend(email, code, purpose);
+        } catch (mailError) {
+          console.error('Failed to send OTP email via Resend:', mailError);
+          res.status(503).json({ success: false, error: 'Unable to send OTP email right now. Please try again.' });
+          return;
+        }
+      } else {
+        // SMS provider wiring remains pending; keep non-email OTP visible in logs for now.
+        console.log(`OTP for ${phone}: ${code}`);
+      }
 
       res.json({
         success: true,
@@ -649,3 +718,4 @@ router.post('/change-password', authenticate, async (req: AuthenticatedRequest, 
 });
 
 export default router;
+
