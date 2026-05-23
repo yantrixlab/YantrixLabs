@@ -22,6 +22,8 @@ function getServerApiCandidates(): string[] {
   const seen = new Set<string>();
   for (const value of raw) {
     const normalized = normalizeBase(value);
+    // Prevent accidental self-proxy loops (web origin pointing back to itself).
+    if (normalized.includes("yantrixlab.com/api/proxy")) continue;
     if (!seen.has(normalized)) {
       seen.add(normalized);
       candidates.push(normalized);
@@ -61,6 +63,14 @@ async function proxy(req: NextRequest, path: string[]) {
         body,
         cache: "no-store",
       });
+
+      const contentType = upstream.headers.get("content-type") || "";
+      // If upstream sends HTML, this is usually a wrong host/path (not API).
+      // Try next candidate instead of returning HTML to JSON clients.
+      if (contentType.includes("text/html")) {
+        lastError = new Error(`Upstream returned HTML for ${base}/${urlPath}`);
+        continue;
+      }
 
       const responseHeaders = new Headers(upstream.headers);
       responseHeaders.set("cache-control", "no-store");
@@ -102,4 +112,3 @@ export async function PATCH(req: NextRequest, { params }: { params: { path: stri
 export async function DELETE(req: NextRequest, { params }: { params: { path: string[] } }) {
   return proxy(req, params.path);
 }
-

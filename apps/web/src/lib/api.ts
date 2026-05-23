@@ -124,7 +124,19 @@ export async function apiFetch<T = any>(
         },
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") || "";
+      const rawText = await res.text();
+      const data = contentType.includes("application/json")
+        ? JSON.parse(rawText || "{}")
+        : null;
+
+      if (!data && !res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      if (!data && res.ok) {
+        throw new Error("API returned non-JSON response");
+      }
+
       if (!res.ok) {
         throw new Error(data.error || `HTTP ${res.status}`);
       }
@@ -153,7 +165,19 @@ export async function publicApiFetch<T = any>(
         },
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") || "";
+      const rawText = await res.text();
+      const data = contentType.includes("application/json")
+        ? JSON.parse(rawText || "{}")
+        : null;
+
+      if (!data && !res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      if (!data && res.ok) {
+        throw new Error("API returned non-JSON response");
+      }
+
       if (!res.ok) {
         throw new Error(data.error || `HTTP ${res.status}`);
       }
