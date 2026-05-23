@@ -11,6 +11,18 @@ const router = Router();
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM || 'Yantrix <onboarding@resend.dev>';
 
+function getResendErrorHint(rawError: unknown): string {
+  const text = String(rawError || '').toLowerCase();
+  if (text.includes('not configured')) return 'RESEND_API_KEY is missing on the API server.';
+  if (text.includes('401') || text.includes('invalid api key')) return 'Invalid Resend API key.';
+  if (text.includes('403')) return 'Resend rejected request (account permission or domain policy).';
+  if (text.includes('domain') && text.includes('verify')) return 'Sender domain is not verified in Resend.';
+  if (text.includes('from') && text.includes('verify')) return 'RESEND_FROM_EMAIL is not allowed for this verified domain.';
+  if (text.includes('429')) return 'Resend rate limit reached, retry shortly.';
+  if (text.includes('timeout') || text.includes('econn') || text.includes('network')) return 'Network issue while contacting Resend.';
+  return 'Resend rejected the email request.';
+}
+
 function sendOtpEmailWithResend(to: string, code: string, purpose: 'login' | 'verify' | 'reset'): Promise<void> {
   return new Promise((resolve, reject) => {
     if (!RESEND_API_KEY) {
@@ -370,7 +382,12 @@ router.post(
           await sendOtpEmailWithResend(email, code, purpose);
         } catch (mailError) {
           console.error('Failed to send OTP email via Resend:', mailError);
-          res.status(503).json({ success: false, error: 'Unable to send OTP email right now. Please try again.' });
+          const hint = getResendErrorHint(mailError);
+          res.status(503).json({
+            success: false,
+            error: 'Unable to send OTP email right now. Please try again.',
+            ...(process.env.NODE_ENV !== 'production' ? { debug: hint } : {}),
+          });
           return;
         }
       } else {
