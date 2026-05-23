@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, ShieldCheck, X } from 'lucide-react';
-import { API_URL } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 
 interface AuthRequiredModalProps {
@@ -77,15 +77,13 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
     setError('');
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const data = await apiFetch<any>('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: signInForm.email.trim(),
           password: signInForm.password,
         }),
       });
-      const data = await res.json();
       if (!data?.success) {
         setError(data?.error || 'Invalid credentials. Please try again.');
         return;
@@ -121,12 +119,10 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
         password: signUpForm.password,
       };
 
-      const res = await fetch(`${API_URL}/auth/register`, {
+      const data = await apiFetch<any>('/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
       if (!data?.success) {
         setError(data?.error || 'Registration failed. Please try again.');
         return;

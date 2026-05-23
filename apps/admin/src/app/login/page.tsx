@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Shield, ArrowRight } from 'lucide-react';
-import { API_URL } from '@/lib/api';
+import { adminFetch, getApiCandidates } from '@/lib/api';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -18,13 +18,10 @@ export default function AdminLoginPage() {
     setError('');
 
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const data = await adminFetch<any>('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
-      const data = await res.json();
 
       if (data.success) {
         if (data.data.user.role !== 'SUPER_ADMIN') {
@@ -37,9 +34,10 @@ export default function AdminLoginPage() {
       } else {
         setError(data.error || 'Invalid credentials');
       }
-    } catch {
+    } catch (err: any) {
       setError(
-        `Cannot reach API at ${API_URL}. Check CORS (allow https://admin.yantrixlab.com), SSL certificate, and API uptime.`
+        err?.message ||
+        `Cannot reach API. Tried: ${getApiCandidates().join(', ')}. Check CORS (allow https://admin.yantrixlab.com), SSL certificate, and API uptime.`
       );
     } finally {
       setIsLoading(false);

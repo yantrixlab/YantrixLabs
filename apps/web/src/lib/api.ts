@@ -20,7 +20,39 @@ function normalizeApiUrl(url?: string): string {
   return cleaned;
 }
 
-export const API_URL = normalizeApiUrl(rawApiUrl);
+function withV1(url: string): string {
+  const cleaned = url.replace(/\/+$/, "");
+  if (cleaned.endsWith("/api/v1")) return cleaned;
+  if (cleaned.endsWith("/api")) return `${cleaned}/v1`;
+  return `${cleaned}/api/v1`;
+}
+
+export function getApiCandidates(): string[] {
+  const candidates: string[] = [];
+  const seen = new Set<string>();
+  const add = (value?: string) => {
+    if (!value) return;
+    const normalized = normalizeApiUrl(value);
+    if (seen.has(normalized)) return;
+    seen.add(normalized);
+    candidates.push(normalized);
+  };
+
+  add(rawApiUrl);
+
+  if (typeof window !== "undefined" && window.location?.origin) {
+    // Always try same-origin proxy first in browsers to avoid CORS/mixed-content issues.
+    add(`${window.location.origin}/api/proxy`);
+    add(withV1(window.location.origin));
+  }
+
+  if (typeof window === "undefined") {
+    add("http://localhost:4000/api/v1");
+  }
+  return candidates;
+}
+
+export const API_URL = getApiCandidates()[0];
 
 /**
  * Returns true if the given string is a safe image URL (data URI or HTTPS).
@@ -79,20 +111,27 @@ export async function apiFetch<T = any>(
   }
 
   const token = getAccessToken();
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options?.headers ?? {}),
-    },
-  });
+  let lastError: unknown;
 
-  const data = await res.json();
+  for (const baseUrl of getApiCandidates()) {
+    try {
+      const res = await fetch(`${baseUrl}${path}`, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(options?.headers ?? {}),
+        },
+      });
 
-  if (!res.ok) {
-    throw new Error(data.error || `HTTP ${res.status}`);
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      return data;
+    } catch (err) {
+      lastError = err;
+    }
   }
-
-  return data;
+  throw lastError instanceof Error ? lastError : new Error("Failed to reach API");
 }

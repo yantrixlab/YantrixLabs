@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText } from 'lucide-react';
-import { API_URL } from '@/lib/api';
+import { apiFetch } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 import { track } from '@/lib/analytics/client';
 
@@ -20,13 +20,11 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const data = await apiFetch<any>('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password: formData.password }),
       });
-      const data = await res.json();
-      if (data.success) {
+      if (data?.success) {
         void track('auth_login', { stage: 'success' });
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
