@@ -17,6 +17,7 @@
     --brand-700: 0 61 153;
     --brand-800: 0 41 102;
     --brand-900: 0 20 51;
+    --brand-950: 0 14 36;
 
     /* Neutral */
     --neutral-0: 255 255 255;
@@ -605,6 +606,7 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
 .bg-indigo-700, .bg-violet-700, .bg-purple-700 { background-color: rgb(var(--brand-700)) !important; }
 .bg-indigo-800, .bg-violet-800, .bg-purple-800 { background-color: rgb(var(--brand-800)) !important; }
 .bg-indigo-900, .bg-violet-900, .bg-purple-900 { background-color: rgb(var(--brand-900)) !important; }
+.bg-indigo-950, .bg-violet-950, .bg-purple-950 { background-color: rgb(var(--brand-950)) !important; }
 
 .border-indigo-100, .border-violet-100, .border-purple-100 { border-color: rgb(var(--brand-100)) !important; }
 .border-indigo-200, .border-violet-200, .border-purple-200 { border-color: rgb(var(--brand-200)) !important; }
@@ -622,3 +624,35 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
 .hover\:text-indigo-600:hover, .hover\:text-violet-600:hover, .hover\:text-purple-600:hover { color: rgb(var(--brand-600)) !important; }
 .focus\:border-indigo-500:focus, .focus\:border-violet-500:focus, .focus\:border-purple-500:focus { border-color: rgb(var(--brand-500)) !important; }
 .focus\:ring-indigo-500:focus, .focus\:ring-violet-500:focus, .focus\:ring-purple-500:focus { --tw-ring-color: rgb(var(--brand-500)) !important; }
+
+/* Force legacy purple/violet gradient stops to blue brand scale */
+.from-violet-50, .from-purple-50 { --tw-gradient-from: rgb(var(--brand-50)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-50) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-100, .from-purple-100 { --tw-gradient-from: rgb(var(--brand-100)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-100) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-200, .from-purple-200 { --tw-gradient-from: rgb(var(--brand-200)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-200) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-300, .from-purple-300 { --tw-gradient-from: rgb(var(--brand-300)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-300) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-400, .from-purple-400 { --tw-gradient-from: rgb(var(--brand-400)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-400) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-500, .from-purple-500 { --tw-gradient-from: rgb(var(--brand-500)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-500) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-600, .from-purple-600 { --tw-gradient-from: rgb(var(--brand-600)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-600) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-700, .from-purple-700 { --tw-gradient-from: rgb(var(--brand-700)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-700) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-800, .from-purple-800 { --tw-gradient-from: rgb(var(--brand-800)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-800) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-900, .from-purple-900 { --tw-gradient-from: rgb(var(--brand-900)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-900) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+.from-violet-950, .from-purple-950 { --tw-gradient-from: rgb(var(--brand-950)) var(--tw-gradient-from-position) !important; --tw-gradient-to: rgb(var(--brand-950) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important; }
+
+.via-violet-200, .via-purple-200 { --tw-gradient-via-position: var(--tw-gradient-via-position) !important; --tw-gradient-to: rgb(var(--brand-200) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), rgb(var(--brand-200)) var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+.via-violet-300, .via-purple-300 { --tw-gradient-to: rgb(var(--brand-300) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), rgb(var(--brand-300)) var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+.via-violet-400, .via-purple-400 { --tw-gradient-to: rgb(var(--brand-400) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), rgb(var(--brand-400)) var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+.via-violet-500, .via-purple-500 { --tw-gradient-to: rgb(var(--brand-500) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), rgb(var(--brand-500)) var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+.via-violet-600, .via-purple-600 { --tw-gradient-to: rgb(var(--brand-600) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), rgb(var(--brand-600)) var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+.via-violet-700, .via-purple-700 { --tw-gradient-to: rgb(var(--brand-700) / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-from), rgb(var(--brand-700)) var(--tw-gradient-via-position), var(--tw-gradient-to) !important; }
+
+.to-violet-50, .to-purple-50 { --tw-gradient-to: rgb(var(--brand-50)) var(--tw-gradient-to-position) !important; }
+.to-violet-100, .to-purple-100 { --tw-gradient-to: rgb(var(--brand-100)) var(--tw-gradient-to-position) !important; }
+.to-violet-200, .to-purple-200 { --tw-gradient-to: rgb(var(--brand-200)) var(--tw-gradient-to-position) !important; }
+.to-violet-300, .to-purple-300 { --tw-gradient-to: rgb(var(--brand-300)) var(--tw-gradient-to-position) !important; }
+.to-violet-400, .to-purple-400 { --tw-gradient-to: rgb(var(--brand-400)) var(--tw-gradient-to-position) !important; }
+.to-violet-500, .to-purple-500 { --tw-gradient-to: rgb(var(--brand-500)) var(--tw-gradient-to-position) !important; }
+.to-violet-600, .to-purple-600 { --tw-gradient-to: rgb(var(--brand-600)) var(--tw-gradient-to-position) !important; }
+.to-violet-700, .to-purple-700 { --tw-gradient-to: rgb(var(--brand-700)) var(--tw-gradient-to-position) !important; }
+.to-violet-800, .to-purple-800 { --tw-gradient-to: rgb(var(--brand-800)) var(--tw-gradient-to-position) !important; }
+.to-violet-900, .to-purple-900 { --tw-gradient-to: rgb(var(--brand-900)) var(--tw-gradient-to-position) !important; }
+.to-violet-950, .to-purple-950 { --tw-gradient-to: rgb(var(--brand-950)) var(--tw-gradient-to-position) !important; }

@@ -22,7 +22,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "type-check": "turbo run type-check"
     ,
-    "seo:check": "node scripts/seo-silo-check.mjs"
+    "seo:check": "node scripts/seo-silo-check.mjs",
+    "brand:check": "node scripts/brand-color-guard.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.13.0"

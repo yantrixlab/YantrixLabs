@@ -97,7 +97,6 @@ export default function RegisterPage() {
             </div>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-gray-900">Create Account</h1>
-          <p className="text-gray-500 mt-1">Start your 14-day free trial today</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
@@ -208,12 +207,6 @@ export default function RegisterPage() {
               </Link>
             </p>
           </div>
-        </div>
-
-        <div className="mt-6 flex items-center justify-center gap-6 text-xs text-gray-500">
-          <span className="flex items-center gap-1"><CheckCircle className="h-3.5 w-3.5 text-green-500" /> No credit card needed</span>
-          <span className="flex items-center gap-1"><CheckCircle className="h-3.5 w-3.5 text-green-500" /> 14-day free trial</span>
-          <span className="flex items-center gap-1"><CheckCircle className="h-3.5 w-3.5 text-green-500" /> Cancel anytime</span>
         </div>
       </motion.div>
     </div>
