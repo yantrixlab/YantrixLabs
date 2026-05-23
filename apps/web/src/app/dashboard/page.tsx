@@ -383,7 +383,7 @@ export default function DashboardPage() {
                 onClick={(e) => {
                   if (!requireAuthForAction(`quick:${action.href}`)) e.preventDefault();
                 }}
-                className={`flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition-all duration-150 ${action.hoverBg} ${action.hoverBorder} hover:shadow-sm group`}
+                className={`quick-action-item flex items-center gap-3 rounded-xl border border-gray-100 p-3 transition-all duration-150 ${action.hoverBg} ${action.hoverBorder} hover:shadow-sm group`}
               >
                 <div className={`h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0 ${action.iconBg} transition-transform duration-150 group-hover:scale-110`}>
                   <action.icon className={`h-4 w-4 ${action.iconColor}`} />
@@ -443,7 +443,7 @@ export default function DashboardPage() {
               <Link
                 key={invoice.id}
                 href={`/invoices/${invoice.id}`}
-                className="flex items-center gap-4 px-6 py-3.5 hover:bg-gray-50/80 transition-colors group"
+                className="recent-invoice-row flex items-center gap-4 px-6 py-3.5 hover:bg-gray-50/80 transition-colors group"
               >
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold text-gray-900 group-hover:text-indigo-700 transition-colors">{invoice.invoiceNumber}</p>

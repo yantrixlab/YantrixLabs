@@ -184,6 +184,26 @@
   background-color: #1a3470 !important;
 }
 
+/* Dashboard recent invoices: stronger dark-mode hover row contrast */
+.dark :global(.recent-invoice-row:hover) {
+  background-color: #223658 !important;
+}
+
+/* Dashboard quick actions: modern professional dark hover treatment */
+.dark :global(.quick-action-item:hover) {
+  background: linear-gradient(120deg, rgba(39, 66, 110, 0.58), rgba(24, 42, 74, 0.86)) !important;
+  border-color: #4f6f9f !important;
+  box-shadow: inset 0 1px 0 rgba(142, 168, 219, 0.2), 0 10px 24px rgba(3, 8, 20, 0.35) !important;
+}
+
+.dark :global(.quick-action-item:hover span) {
+  color: #e6efff !important;
+}
+
+.dark :global(.quick-action-item:hover svg) {
+  color: #c5d8ff !important;
+}
+
 .dark :global(button),
 .dark :global(a) {
   transition: all 150ms ease;
