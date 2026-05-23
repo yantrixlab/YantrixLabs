@@ -135,3 +135,33 @@ export async function apiFetch<T = any>(
   }
   throw lastError instanceof Error ? lastError : new Error("Failed to reach API");
 }
+
+// Use for unauthenticated/public flows like login/register.
+export async function publicApiFetch<T = any>(
+  path: string,
+  options?: RequestInit
+): Promise<T> {
+  let lastError: unknown;
+
+  for (const baseUrl of getApiCandidates()) {
+    try {
+      const res = await fetch(`${baseUrl}${path}`, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...(options?.headers ?? {}),
+        },
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      return data;
+    } catch (err) {
+      lastError = err;
+    }
+  }
+
+  throw lastError instanceof Error ? lastError : new Error("Failed to reach API");
+}

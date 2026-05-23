@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, ShieldCheck, X } from 'lucide-react';
-import { apiFetch } from '@/lib/api';
+import { publicApiFetch } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 
 interface AuthRequiredModalProps {
@@ -77,7 +77,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
     setError('');
     setIsLoading(true);
     try {
-      const data = await apiFetch<any>('/auth/login', {
+      const data = await publicApiFetch<any>('/auth/login', {
         method: 'POST',
         body: JSON.stringify({
           email: signInForm.email.trim(),
@@ -119,7 +119,7 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
         password: signUpForm.password,
       };
 
-      const data = await apiFetch<any>('/auth/register', {
+      const data = await publicApiFetch<any>('/auth/register', {
         method: 'POST',
         body: JSON.stringify(payload),
       });

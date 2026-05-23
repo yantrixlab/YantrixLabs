@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText, CheckCircle } from 'lucide-react';
-import { apiFetch } from '@/lib/api';
+import { publicApiFetch } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 import { track } from '@/lib/analytics/client';
 
@@ -28,7 +28,7 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const data = await apiFetch<any>('/auth/register', {
+      const data = await publicApiFetch<any>('/auth/register', {
         method: 'POST',
         body: JSON.stringify({
           name: formData.name,

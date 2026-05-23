@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText } from 'lucide-react';
-import { apiFetch } from '@/lib/api';
+import { publicApiFetch } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 import { track } from '@/lib/analytics/client';
 
@@ -20,7 +20,7 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
     try {
-      const data = await apiFetch<any>('/auth/login', {
+      const data = await publicApiFetch<any>('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email: formData.email, password: formData.password }),
       });
