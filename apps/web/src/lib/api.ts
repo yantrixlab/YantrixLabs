@@ -38,11 +38,19 @@ export function getApiCandidates(): string[] {
     candidates.push(normalized);
   };
 
-  add(rawApiUrl);
-
   if (typeof window !== "undefined" && window.location?.origin) {
     // Always try same-origin proxy first in browsers to avoid CORS/mixed-content issues.
     add(`${window.location.origin}/api/proxy`);
+  }
+
+  add(rawApiUrl);
+  add("https://api.yantrixlab.com/api/v1");
+  add("https://api.yantrixlab.com/v1");
+  add("https://api.yantrix.in/api/v1");
+  add("https://api.yantrix.in/v1");
+
+  // Keep this last as optional legacy fallback only.
+  if (typeof window !== "undefined" && window.location?.origin) {
     add(withV1(window.location.origin));
   }
 

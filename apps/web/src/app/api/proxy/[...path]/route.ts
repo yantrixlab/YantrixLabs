@@ -14,6 +14,8 @@ function getServerApiCandidates(): string[] {
   const raw = [
     process.env.API_INTERNAL_URL,
     process.env.NEXT_PUBLIC_API_URL,
+    "https://api.yantrixlab.com/api/v1",
+    "https://api.yantrixlab.com/v1",
     "https://api.yantrix.in/api/v1",
     "https://api.yantrix.in/v1",
   ].filter(Boolean) as string[];
