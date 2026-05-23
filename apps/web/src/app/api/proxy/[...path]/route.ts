@@ -10,6 +10,14 @@ function normalizeBase(url: string): string {
   return `${trimmed}/api/v1`;
 }
 
+function toOrigin(url: string): string | null {
+  try {
+    return new URL(url).origin;
+  } catch {
+    return null;
+  }
+}
+
 function getServerApiCandidates(): string[] {
   const raw = [
     process.env.API_INTERNAL_URL,
@@ -26,9 +34,11 @@ function getServerApiCandidates(): string[] {
     const normalized = normalizeBase(value);
     // Prevent accidental self-proxy loops (web origin pointing back to itself).
     if (normalized.includes("yantrixlab.com/api/proxy")) continue;
-    if (!seen.has(normalized)) {
-      seen.add(normalized);
-      candidates.push(normalized);
+    const origin = toOrigin(normalized);
+    if (!origin) continue;
+    if (!seen.has(origin)) {
+      seen.add(origin);
+      candidates.push(origin);
     }
   }
   return candidates;
@@ -65,39 +75,44 @@ async function proxy(req: NextRequest, path: string[]) {
     method === "GET" || method === "HEAD" ? undefined : await req.arrayBuffer();
 
   let lastError: unknown;
+  const basePathVariants = ["/api/v1", "/v1", "/api", ""];
 
-  for (const base of candidates) {
-    try {
-      const upstream = await fetch(`${base}/${urlPath}${query}`, {
-        method,
-        headers,
-        body,
-        cache: "no-store",
-      });
+  for (const origin of candidates) {
+    for (const basePath of basePathVariants) {
+      const slashPath = urlPath ? `/${urlPath}` : "";
+      const upstreamUrl = `${origin}${basePath}${slashPath}${query}`;
+      try {
+        const upstream = await fetch(upstreamUrl, {
+          method,
+          headers,
+          body,
+          cache: "no-store",
+        });
 
-      const contentType = upstream.headers.get("content-type") || "";
-      // If upstream sends HTML, this is usually a wrong host/path (not API).
-      // Try next candidate instead of returning HTML to JSON clients.
-      if (contentType.includes("text/html")) {
-        lastError = new Error(`Upstream returned HTML for ${base}/${urlPath}`);
-        continue;
+        const contentType = upstream.headers.get("content-type") || "";
+        // If upstream sends HTML, this is usually a wrong host/path (not API).
+        // Try next candidate instead of returning HTML to JSON clients.
+        if (contentType.includes("text/html")) {
+          lastError = new Error(`Upstream returned HTML for ${upstreamUrl}`);
+          continue;
+        }
+
+        // Wrong API base commonly returns 404/405 for auth paths; try next candidate.
+        if (upstream.status === 404 || upstream.status === 405) {
+          lastError = new Error(`Upstream ${upstreamUrl} returned ${upstream.status}`);
+          continue;
+        }
+
+        const responseHeaders = new Headers(upstream.headers);
+        responseHeaders.set("cache-control", "no-store");
+
+        return new NextResponse(upstream.body, {
+          status: upstream.status,
+          headers: responseHeaders,
+        });
+      } catch (error) {
+        lastError = error;
       }
-
-      // Wrong API base commonly returns 404 for auth paths; try next candidate.
-      if (upstream.status === 404 || upstream.status === 405) {
-        lastError = new Error(`Upstream ${base} returned ${upstream.status} for ${urlPath}`);
-        continue;
-      }
-
-      const responseHeaders = new Headers(upstream.headers);
-      responseHeaders.set("cache-control", "no-store");
-
-      return new NextResponse(upstream.body, {
-        status: upstream.status,
-        headers: responseHeaders,
-      });
-    } catch (error) {
-      lastError = error;
     }
   }
 
