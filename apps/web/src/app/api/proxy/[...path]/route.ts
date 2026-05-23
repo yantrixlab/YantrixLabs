@@ -35,7 +35,16 @@ function getServerApiCandidates(): string[] {
 async function proxy(req: NextRequest, path: string[]) {
   const urlPath = path.join("/");
   const query = req.nextUrl.search || "";
-  const candidates = getServerApiCandidates();
+  const requestHost = req.nextUrl.host;
+  const candidates = getServerApiCandidates().filter((base) => {
+    try {
+      const host = new URL(base).host;
+      // Avoid calling the current web host as upstream API by mistake.
+      return host !== requestHost;
+    } catch {
+      return true;
+    }
+  });
 
   if (candidates.length === 0) {
     return NextResponse.json(
@@ -69,6 +78,12 @@ async function proxy(req: NextRequest, path: string[]) {
       // Try next candidate instead of returning HTML to JSON clients.
       if (contentType.includes("text/html")) {
         lastError = new Error(`Upstream returned HTML for ${base}/${urlPath}`);
+        continue;
+      }
+
+      // Wrong API base commonly returns 404 for auth paths; try next candidate.
+      if (upstream.status === 404 || upstream.status === 405) {
+        lastError = new Error(`Upstream ${base} returned ${upstream.status} for ${urlPath}`);
         continue;
       }
 
