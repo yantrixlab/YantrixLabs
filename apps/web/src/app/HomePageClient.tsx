@@ -1455,7 +1455,7 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <footer className="bg-gray-900 text-gray-400 py-16">
+      <footer className="public-footer-fixed bg-gray-900 text-gray-400 py-16">
         <div className="container-wide">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="md:col-span-2">
