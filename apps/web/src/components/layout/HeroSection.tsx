@@ -144,25 +144,25 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-[#060616]/90 backdrop-blur-2xl border-b border-white/[0.06] shadow-2xl shadow-black/30'
-            : 'bg-transparent'
+            ? 'bg-[#041633]/95 backdrop-blur-xl border-y border-[#1e4a86]/60 shadow-[0_10px_30px_rgba(1,10,28,0.45)]'
+            : 'bg-[#041633]/92 border-y border-[#1e4a86]/55'
         }`}
       >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-[68px] items-center justify-between">
+        <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
+          <div className="flex h-[72px] items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-              <img src="/app_logo.png" alt="Yantrix Labs" className="h-9 w-9 rounded-xl shadow-lg shadow-indigo-600/30 transition-shadow duration-200 group-hover:shadow-indigo-500/50" />
-              <span className="text-[17px] font-bold text-white tracking-tight">Yantrix Labs</span>
+              <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
+              <span className="text-[16px] font-semibold text-[#e9f1ff] tracking-tight">Yantrix Labs</span>
             </Link>
 
             {/* Desktop links */}
-            <div className="hidden md:flex items-center gap-0.5">
+            <div className="hidden md:flex items-center gap-1.5">
               {NAV_LINKS.map(link => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-3.5 py-2 rounded-lg text-sm font-medium text-white/60 hover:text-white hover:bg-white/[0.07] transition-all duration-150"
+                  className="px-3 py-1.5 rounded-lg text-sm font-semibold text-[#f1f6ff] hover:text-white hover:bg-[#0f2a57] transition-all duration-150"
                 >
                   {link.label}
                 </Link>
@@ -175,13 +175,13 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
                 type="button"
                 aria-label={`Toggle theme. Current ${resolvedTheme}`}
                 onClick={onThemeToggle}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/[0.05] text-white/80 transition-all hover:bg-white/[0.1] hover:text-white"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2f5ea4] bg-[#0b2c5c] text-[#d6e6ff] transition-all hover:bg-[#123a74] hover:text-white"
               >
                 {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </button>
               <Link
                 href="/contact"
-                className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-[#135bc8]"
               >
                 Enquiry
                 <ArrowRight className="h-3.5 w-3.5" />
