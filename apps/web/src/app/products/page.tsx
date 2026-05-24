@@ -408,16 +408,19 @@ export default function ProductsPage() {
       <div className="flex items-start justify-between mb-4">
         <div><h1 className="text-2xl font-bold text-gray-900">Products & Services</h1><p className="text-gray-500 mt-1">{filtered.length} items in catalog</p></div>
         <div className="flex items-center gap-2">
-          <button onClick={connectScanner} className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100"><ScanLine className="h-4 w-4" /> Connect Android Scanner</button>
+          <button onClick={connectScanner} className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100">
+            <span className="pointer-events-none absolute inset-0 rounded-xl border border-indigo-300/60" />
+            <span className="pointer-events-none absolute -inset-2">
+              <span className="absolute inset-0 rounded-2xl bg-indigo-300/35 animate-ping" />
+            </span>
+            <ScanLine className="relative h-4 w-4" />
+            <span className="relative">Connect Android Scanner</span>
+          </button>
           <a
             href="/android_app_apk/product_scanner.apk"
             download
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-100"
+            className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-100"
           >
-            <span className="pointer-events-none absolute inset-0 rounded-xl border border-emerald-300/60" />
-            <span className="pointer-events-none absolute -inset-2">
-              <span className="absolute inset-0 rounded-2xl bg-emerald-400/30 animate-ping" />
-            </span>
             <AndroidLogoIcon className="h-4 w-4" />
             <span>Download Product Scanner</span>
           </a>
