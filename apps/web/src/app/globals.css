@@ -909,6 +909,56 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
   background-color: rgb(var(--brand-700) / 0.35) !important;
 }
 
+/* Keep blog hero typography stable across theme mode toggles */
+.public-site .blog-hero-fixed {
+  color: #ffffff !important;
+}
+
+.public-site .blog-hero-fixed .text-white,
+.public-site .blog-hero-fixed .text-indigo-200,
+.public-site .blog-hero-fixed .text-indigo-300,
+.public-site .blog-hero-fixed .text-indigo-200\/90,
+.public-site .blog-hero-fixed .text-indigo-300\/80 {
+  color: #c8dbff !important;
+}
+
+.public-site .blog-hero-fixed h1 {
+  color: transparent !important;
+}
+
+.public-site .blog-hero-fixed input {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.public-site .blog-hero-fixed input::placeholder {
+  color: rgba(196, 216, 255, 0.82) !important;
+}
+
+/* Keep home hero visuals fixed (no public theme color remap) */
+.public-site .home-hero-fixed,
+.public-site .home-hero-fixed * {
+  color: inherit;
+}
+
+.public-site .home-hero-fixed .text-white {
+  color: #eef4ff !important;
+}
+
+.public-site .home-hero-fixed .text-white\/50 {
+  color: rgba(238, 244, 255, 0.55) !important;
+}
+
+.public-site .home-hero-fixed .text-white\/40 {
+  color: rgba(238, 244, 255, 0.44) !important;
+}
+
+.public-site .home-hero-fixed .text-indigo-300,
+.public-site .home-hero-fixed .text-indigo-400 {
+  color: #a8b5ff !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .public-site * {
     animation-duration: 1ms !important;
@@ -950,6 +1000,41 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
 
 .public-site .enquiry-btn:active {
   transform: translateY(0);
+}
+
+/* Keep footer colors constant across public theme toggles */
+.public-site .public-footer-fixed {
+  background-color: #111827 !important;
+  color: #9ca3af !important;
+}
+
+.public-site .public-footer-fixed .text-white {
+  color: #ffffff !important;
+}
+
+.public-site .public-footer-fixed .text-sm,
+.public-site .public-footer-fixed .text-xs,
+.public-site .public-footer-fixed .text-gray-400,
+.public-site .public-footer-fixed .text-gray-500,
+.public-site .public-footer-fixed .text-gray-600,
+.public-site .public-footer-fixed .text-gray-700,
+.public-site .public-footer-fixed .text-gray-800,
+.public-site .public-footer-fixed .text-gray-900 {
+  color: #93c5fd !important;
+}
+
+.public-site .public-footer-fixed .border-gray-800,
+.public-site .public-footer-fixed .border-gray-700,
+.public-site .public-footer-fixed .border-gray-600 {
+  border-color: #1f2937 !important;
+}
+
+.public-site .public-footer-fixed a {
+  color: #7fb8ff !important;
+}
+
+.public-site .public-footer-fixed a:hover {
+  color: #ffffff !important;
 }
 
 .scanner-connect-btn {

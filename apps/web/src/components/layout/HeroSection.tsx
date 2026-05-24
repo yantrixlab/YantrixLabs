@@ -144,8 +144,8 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-[#041633]/95 backdrop-blur-xl border-y border-[#1e4a86]/60 shadow-[0_10px_30px_rgba(1,10,28,0.45)]'
-            : 'bg-[#041633]/92 border-y border-[#1e4a86]/55'
+            ? 'bg-[#041633]/35 backdrop-blur-xl border-y border-[#1e4a86]/60 shadow-[0_10px_30px_rgba(1,10,28,0.45)]'
+            : 'bg-[#041633]/30 backdrop-blur-xl border-y border-[#1e4a86]/55'
         }`}
       >
         <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
@@ -231,7 +231,7 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
       </nav>
 
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#040411]">
+      <section className="home-hero-fixed relative min-h-screen flex flex-col justify-center overflow-hidden bg-[#040411]">
 
         {/* ── Background layers ── */}
         <motion.div className="absolute inset-0 pointer-events-none" style={{ y: bgY }}>

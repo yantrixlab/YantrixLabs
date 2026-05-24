@@ -110,7 +110,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       <nav
         className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-all duration-300"
         style={{
-          backgroundColor: 'rgba(4, 22, 51, 0.92)',
+          backgroundColor: 'rgba(4, 22, 51, 0.30)',
           borderTop: '1px solid rgba(30, 74, 134, 0.55)',
           borderBottom: '1px solid rgba(30, 74, 134, 0.55)',
         }}
@@ -247,7 +247,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         {children}
       </main>
 
-      <footer className="bg-gray-900 text-gray-400 py-12">
+      <footer className="public-footer-fixed bg-gray-900 text-gray-400 py-12">
         <div className="container-wide">
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div className="md:col-span-2">
