@@ -169,7 +169,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               )}
-              {!isHomePage && loggedIn ? (
+              {loggedIn ? (
                 <>
                   <Link href="/dashboard" className="flex-shrink-0">
                     <div className="h-9 w-9 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center ring-2 ring-indigo-200 hover:ring-indigo-400 transition-all">
@@ -179,25 +179,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                         <span className="text-white text-xs font-bold">{initials}</span>
                       )}
                     </div>
-                  </Link>
-                </>
-              ) : !isHomePage ? (
-                <>
-                  <Link
-                    href="/auth/login"
-                    className={`inline-flex items-center px-2 py-2 text-sm font-medium transition-colors ${isHomePage ? 'text-brand-100 hover:text-white' : 'text-gray-700 hover:text-gray-900'}`}
-                  >
-                    Sign in
-                  </Link>
-                  <Link
-                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
-                    onClick={() => {
-                      if (isGstLanding) enableGuestMode();
-                    }}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
-                  >
-                    Get Started
-                    <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </>
               ) : null}
@@ -258,7 +239,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   </Link>
                 </>
               )}
-              {!isHomePage && loggedIn ? (
+              {loggedIn ? (
                 <Link href="/dashboard" className={`flex items-center gap-2 py-2 text-sm font-medium ${isHomePage ? 'text-brand-100' : 'text-gray-700'}`} onClick={() => setMobileMenuOpen(false)}>
                   <div className="h-7 w-7 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center flex-shrink-0">
                     {businessLogo ? (
@@ -269,26 +250,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   </div>
                   Go to Dashboard
                 </Link>
-              ) : !isHomePage ? (
-                <>
-                  <Link
-                    href="/auth/login"
-                    className={`block py-2 text-sm font-medium ${isHomePage ? 'text-brand-100' : 'text-gray-700'}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Sign in
-                  </Link>
-                  <Link
-                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
-                    onClick={() => {
-                      if (isGstLanding) enableGuestMode();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="block rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2 text-center text-sm font-semibold text-white"
-                  >
-                    Get Started
-                  </Link>
-                </>
               ) : null}
             </div>
           </div>
