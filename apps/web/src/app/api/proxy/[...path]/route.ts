@@ -47,16 +47,7 @@ function getServerApiCandidates(): string[] {
 async function proxy(req: NextRequest, path: string[]) {
   const urlPath = path.join("/");
   const query = req.nextUrl.search || "";
-  const requestHost = req.nextUrl.host;
-  const candidates = getServerApiCandidates().filter((base) => {
-    try {
-      const host = new URL(base).host;
-      // Avoid calling the current web host as upstream API by mistake.
-      return host !== requestHost;
-    } catch {
-      return true;
-    }
-  });
+  const candidates = getServerApiCandidates();
 
   if (candidates.length === 0) {
     return NextResponse.json(
