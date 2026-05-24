@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, LayoutDashboard, Menu, Moon, Sun, X } from 'lucide-react';
+import { ArrowRight, Menu, Moon, Sun, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
 import { enableGuestMode } from '@/lib/guestMode';
@@ -165,10 +165,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     Enquiry
                     <ArrowRight className="h-3.5 w-3.5" />
                   </button>
-                  <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 px-4 py-2">
-                    <LayoutDashboard className="h-4 w-4" />
-                    Dashboard
-                  </Link>
                   <Link href="/dashboard" className="flex-shrink-0">
                     <div className="h-9 w-9 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center ring-2 ring-indigo-200 hover:ring-indigo-400 transition-all">
                       {businessLogo ? (
