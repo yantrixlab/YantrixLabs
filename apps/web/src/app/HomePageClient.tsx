@@ -1051,9 +1051,8 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
                       viewport={{ once: true }}
-                      className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
+                      className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
                       style={{
-                        background: getCardGradient(idx),
                         boxShadow:
                           "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
                       }}
@@ -1134,11 +1133,11 @@ export default function HomePage() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">
+                      <h3 className="text-[18px] font-bold text-[rgb(var(--public-text))] mb-2 leading-snug tracking-tight">
                         {tool.title}
                       </h3>
                       {/* Description */}
-                      <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">
+                      <p className="text-[rgb(var(--public-text-muted))] text-[13.5px] leading-relaxed flex-1 mb-5">
                         {tool.shortDescription || ""}
                       </p>
 
@@ -1161,9 +1160,8 @@ export default function HomePage() {
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.05 }}
                       viewport={{ once: true }}
-                      className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
+                      className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
                       style={{
-                        background: getCardGradient(idx),
                         boxShadow:
                           "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
                       }}
@@ -1200,11 +1198,11 @@ export default function HomePage() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">
+                      <h3 className="text-[18px] font-bold text-[rgb(var(--public-text))] mb-2 leading-snug tracking-tight">
                         {product.title}
                       </h3>
                       {/* Description */}
-                      <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">
+                      <p className="text-[rgb(var(--public-text-muted))] text-[13.5px] leading-relaxed flex-1 mb-5">
                         {product.desc}
                       </p>
 

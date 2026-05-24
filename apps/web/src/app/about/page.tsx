@@ -151,14 +151,14 @@ export default function AboutPage() {
 
           {/* Intro paragraphs */}
           <div className="grid md:grid-cols-2 gap-6 mb-14">
-            <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-6">
-              <p className="text-gray-700 leading-relaxed">
-                Yantrix Labs was built on one clear idea: businesses need <strong className="text-indigo-700">reliable, scalable, and affordable software</strong> that solves real operational problems.
+            <div className="rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 shadow-sm">
+              <p className="text-[rgb(var(--public-text-muted))] leading-relaxed">
+                Yantrix Labs was built on one clear idea: businesses need <strong className="text-[rgb(var(--public-primary-700))]">reliable, scalable, and affordable software</strong> that solves real operational problems.
               </p>
             </div>
-            <div className="rounded-2xl border border-purple-100 bg-purple-50 p-6">
-              <p className="text-gray-700 leading-relaxed">
-                Founded by a solo developer since <strong className="text-purple-700">2019</strong>, the journey began with native Android development, then expanded into React Native, full-stack web, backend systems, and SaaS product engineering.
+            <div className="rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 shadow-sm">
+              <p className="text-[rgb(var(--public-text-muted))] leading-relaxed">
+                Founded by a solo developer since <strong className="text-[rgb(var(--public-primary-700))]">2019</strong>, the journey began with native Android development, then expanded into React Native, full-stack web, backend systems, and SaaS product engineering.
               </p>
             </div>
           </div>

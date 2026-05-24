@@ -242,8 +242,8 @@ export default function ToolsPage() {
                 {cmsTools.map((tool, idx) => (
                   <div
                     key={tool.id}
-                    className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
-                    style={{ background: getCardGradient(idx), boxShadow: '0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)' }}
+                    className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
+                    style={{ boxShadow: '0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)' }}
                   >
                     {/* Top highlight line */}
                     <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
@@ -284,9 +284,9 @@ export default function ToolsPage() {
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">{tool.title}</h3>
+                    <h3 className="text-[18px] font-bold text-[rgb(var(--public-text))] mb-2 leading-snug tracking-tight">{tool.title}</h3>
                     {/* Subtitle */}
-                    <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">{tool.shortDescription || ''}</p>
+                    <p className="text-[rgb(var(--public-text-muted))] text-[13.5px] leading-relaxed flex-1 mb-5">{tool.shortDescription || ''}</p>
 
                     {/* CTA */}
                     <Link
@@ -312,8 +312,8 @@ export default function ToolsPage() {
               {FALLBACK_PRODUCTS.map((product, idx) => (
                 <div
                   key={product.title}
-                  className="group relative flex flex-col rounded-2xl border border-gray-100/80 p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl hover:border-indigo-100/80"
-                  style={{ background: getCardGradient(idx), boxShadow: '0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)' }}
+                  className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
+                  style={{ boxShadow: '0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)' }}
                 >
                   {/* Top highlight line */}
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
@@ -337,9 +337,9 @@ export default function ToolsPage() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-[18px] font-bold text-gray-900 mb-2 leading-snug tracking-tight">{product.title}</h3>
+                  <h3 className="text-[18px] font-bold text-[rgb(var(--public-text))] mb-2 leading-snug tracking-tight">{product.title}</h3>
                   {/* Subtitle */}
-                  <p className="text-gray-500 text-[13.5px] leading-relaxed flex-1 mb-5">{product.description}</p>
+                  <p className="text-[rgb(var(--public-text-muted))] text-[13.5px] leading-relaxed flex-1 mb-5">{product.description}</p>
 
                   {/* CTA */}
                   <Link

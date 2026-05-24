@@ -463,7 +463,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const handleAuthAction = () => {
     if (guest) {
       setSidebarOpen(false);
-      router.push("/auth/login");
+      setAuthModalTab("signin");
+      setAuthModalOpen(true);
       return;
     }
     handleLogout();
@@ -497,13 +498,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="h-8 w-8 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
               <img
                 src="/app_logo.png"
-                alt="Yeantrix Labs"
+                alt="Yantrix Labs"
                 className="h-full w-full object-contain"
               />
             </div>
             {!collapsed && (
               <span className="text-base font-bold text-white truncate">
-                {businessName || "Yeantrix Labs"}
+                {businessName || "Yantrix Labs"}
               </span>
             )}
           </Link>

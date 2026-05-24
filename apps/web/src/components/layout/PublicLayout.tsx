@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, Moon, Sun, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
 import { enableGuestMode } from '@/lib/guestMode';
@@ -142,6 +142,32 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div className="hidden md:flex items-center gap-3">
+              {isPublicMarketingPage && (
+                <button
+                  type="button"
+                  aria-label={`Toggle theme. Current ${resolvedTheme}`}
+                  onClick={onThemeToggle}
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 ${
+                    isHomePage
+                      ? 'border-brand-700 bg-brand-900/70 text-brand-100 hover:text-white'
+                      : 'border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
+                  }`}
+                >
+                  {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                </button>
+              )}
+              {isPublicMarketingPage && (
+                <Link
+                  href="/contact"
+                  onClick={() => {
+                    if (isGstLanding) enableGuestMode();
+                  }}
+                  className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
+                >
+                  Enquiry
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              )}
               {loggedIn ? (
                 <>
                   <Link href="/dashboard" className="flex-shrink-0">
@@ -156,26 +182,22 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 </>
               ) : (
                 <>
-                  {!isHomePage && (
-                    <Link
-                      href="/auth/login"
-                      className="inline-flex items-center px-2 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-gray-900"
-                    >
-                      Sign in
-                    </Link>
-                  )}
-                  {!isHomePage && (
-                    <Link
-                      href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
-                      onClick={() => {
-                        if (isGstLanding) enableGuestMode();
-                      }}
-                      className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
-                    >
-                      Get Started
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  )}
+                  <Link
+                    href="/auth/login"
+                    className={`inline-flex items-center px-2 py-2 text-sm font-medium transition-colors ${isHomePage ? 'text-brand-100 hover:text-white' : 'text-gray-700 hover:text-gray-900'}`}
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
+                    onClick={() => {
+                      if (isGstLanding) enableGuestMode();
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:brightness-110"
+                  >
+                    Get Started
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </>
               )}
             </div>
@@ -208,6 +230,33 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 );
               })}
             <div className="pt-2 space-y-2">
+              {isPublicMarketingPage && (
+                <>
+                  <button
+                    type="button"
+                    aria-label={`Toggle theme. Current ${resolvedTheme}`}
+                    onClick={onThemeToggle}
+                    className={`inline-flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
+                      isHomePage
+                        ? 'border-brand-700 bg-brand-900/70 text-brand-100 hover:text-white'
+                        : 'border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
+                    }`}
+                  >
+                    {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                    {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  </button>
+                  <Link
+                    href="/contact"
+                    onClick={() => {
+                      if (isGstLanding) enableGuestMode();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white"
+                  >
+                    Enquiry
+                  </Link>
+                </>
+              )}
               {loggedIn ? (
                 <Link href="/dashboard" className={`flex items-center gap-2 py-2 text-sm font-medium ${isHomePage ? 'text-brand-100' : 'text-gray-700'}`} onClick={() => setMobileMenuOpen(false)}>
                   <div className="h-7 w-7 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center flex-shrink-0">
@@ -221,27 +270,23 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 </Link>
               ) : (
                 <>
-                  {!isHomePage && (
-                    <Link
-                      href="/auth/login"
-                      className={`block py-2 text-sm font-medium ${isHomePage ? 'text-brand-100' : 'text-gray-700'}`}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign in
-                    </Link>
-                  )}
-                  {!isHomePage && (
-                    <Link
-                      href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
-                      onClick={() => {
-                        if (isGstLanding) enableGuestMode();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white"
-                    >
-                      Get Started
-                    </Link>
-                  )}
+                  <Link
+                    href="/auth/login"
+                    className={`block py-2 text-sm font-medium ${isHomePage ? 'text-brand-100' : 'text-gray-700'}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign in
+                  </Link>
+                  <Link
+                    href={isGstLanding ? '/dashboard?guest=1' : '/auth/register'}
+                    onClick={() => {
+                      if (isGstLanding) enableGuestMode();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="block rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2 text-center text-sm font-semibold text-white"
+                  >
+                    Get Started
+                  </Link>
                 </>
               )}
             </div>
