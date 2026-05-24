@@ -510,22 +510,8 @@ export default function HomePage() {
       />
 
       {/* â”€â”€â”€ TRUST STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section
-        className="relative py-16 overflow-hidden border-y border-[rgb(var(--public-border))]"
-        style={{
-          background:
-            "linear-gradient(145deg, rgb(var(--public-surface-muted)) 0%, rgb(var(--public-surface)) 52%, rgb(var(--public-surface-alt)) 100%)",
-        }}
-      >
+      <section className="py-16">
         <div className="pointer-events-none absolute inset-0">
-          <div
-            className="absolute -top-16 left-8 h-56 w-56 rounded-full blur-3xl"
-            style={{ background: "rgb(var(--brand-400) / 0.12)" }}
-          />
-          <div
-            className="absolute -bottom-20 right-10 h-72 w-72 rounded-full blur-3xl"
-            style={{ background: "rgb(var(--brand-500) / 0.10)" }}
-          />
           {FLOATING_EXPRESSIONS.map((expr, idx) => {
             const x = 6 + ((idx * 8.1) % 86);
             const y = 8 + ((idx * 14.7) % 74);
@@ -605,13 +591,7 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ FEATURED PRODUCT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section
-        className="relative py-28 overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #0c0a1e 0%, #12103a 35%, #0d1b3e 70%, #0a1628 100%)",
-        }}
-      >
+      <section className="py-28">
         {/* Ambient glow blobs */}
         <div className="pointer-events-none absolute inset-0">
           <div
