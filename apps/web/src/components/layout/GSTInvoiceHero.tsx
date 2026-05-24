@@ -11,6 +11,7 @@ import { enableGuestMode } from '@/lib/guestMode';
 export default function GSTInvoiceHero() {
   const router = useRouter();
   const [videoError, setVideoError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
 
   const handleTryDemo = () => {
     if (!isAuthenticated()) enableGuestMode();
@@ -85,9 +86,9 @@ export default function GSTInvoiceHero() {
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          initial={false}
+          animate={videoReady || videoError ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="relative mt-10 lg:mt-14"
           style={{ marginInline: 'clamp(12px, 3vw, 60px)' }}
         >
@@ -110,7 +111,11 @@ export default function GSTInvoiceHero() {
                     loop
                     playsInline
                     preload="metadata"
-                    onError={() => setVideoError(true)}
+                    onLoadedData={() => setVideoReady(true)}
+                    onError={() => {
+                      setVideoError(true);
+                      setVideoReady(true);
+                    }}
                   >
                     <source src="/app_video/app_demo.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
