@@ -12,6 +12,14 @@ import { useToast } from '@/components/ui/Toast';
 interface Product { id: string; name: string; type: string; hsnSac: string | null; price: number; mrp: number | null; gstRate: number; category: string | null; stockCount: number | null; lowStockAlert: number | null; }
 interface ScanSessionData { sessionId: string; pairingPayloadText: string; }
 
+function AndroidLogoIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M7.05 8.15h9.9c-.44-1.2-1.25-2.2-2.3-2.89l1.07-1.57a.75.75 0 0 0-1.24-.84l-1.13 1.66A7.2 7.2 0 0 0 12 4.12c-.48 0-.95.05-1.4.15L9.47 2.6a.75.75 0 0 0-1.24.84L9.3 5.01c-1.05.69-1.86 1.69-2.25 2.89Zm-.68 1.5h-.62a1.75 1.75 0 0 0 0 3.5h.62v4.1c0 1.04.84 1.88 1.88 1.88h.9v2.12a1.25 1.25 0 0 0 2.5 0v-2.12h.7v2.12a1.25 1.25 0 0 0 2.5 0v-2.12h.9c1.04 0 1.88-.84 1.88-1.88v-4.1h.62a1.75 1.75 0 0 0 0-3.5h-.62v5.37a.37.37 0 0 1-.38.38H8.75a.37.37 0 0 1-.38-.38V9.65Zm3.05-1.13a.85.85 0 1 1 0 1.7.85.85 0 0 1 0-1.7Zm5.16 0a.85.85 0 1 1 0 1.7.85.85 0 0 1 0-1.7Z" />
+    </svg>
+  );
+}
+
 function StockBadge({ stockCount, lowStockAlert, type }: { stockCount: number | null; lowStockAlert: number | null; type: string }) {
   if (type === 'service') return <span className="text-xs text-gray-400 italic">N/A</span>;
   if (stockCount === null) return <span className="text-sm text-gray-400">-</span>;
@@ -401,6 +409,18 @@ export default function ProductsPage() {
         <div><h1 className="text-2xl font-bold text-gray-900">Products & Services</h1><p className="text-gray-500 mt-1">{filtered.length} items in catalog</p></div>
         <div className="flex items-center gap-2">
           <button onClick={connectScanner} className="inline-flex items-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100"><ScanLine className="h-4 w-4" /> Connect Android Scanner</button>
+          <a
+            href="/android_app_apk/product_scanner.apk"
+            download
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-100"
+          >
+            <span className="pointer-events-none absolute inset-0 rounded-xl border border-emerald-300/60" />
+            <span className="pointer-events-none absolute -inset-2">
+              <span className="absolute inset-0 rounded-2xl bg-emerald-400/30 animate-ping" />
+            </span>
+            <AndroidLogoIcon className="h-4 w-4" />
+            <span>Download Product Scanner</span>
+          </a>
           <button onClick={fetchProducts} className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"><RefreshCw className="h-4 w-4" /></button>
           <Link href="/products/new" className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700"><Plus className="h-4 w-4" /> Add Product</Link>
         </div>

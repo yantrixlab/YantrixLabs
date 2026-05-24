@@ -269,6 +269,14 @@ function calcItem(item: Partial<InvoiceItem>, interState: boolean): InvoiceItem 
 
 import { INDIAN_STATES as INDIAN_STATES_MODAL } from '@/lib/constants';
 
+function AndroidLogoIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="currentColor">
+      <path d="M7.05 8.15h9.9c-.44-1.2-1.25-2.2-2.3-2.89l1.07-1.57a.75.75 0 0 0-1.24-.84l-1.13 1.66A7.2 7.2 0 0 0 12 4.12c-.48 0-.95.05-1.4.15L9.47 2.6a.75.75 0 0 0-1.24.84L9.3 5.01c-1.05.69-1.86 1.69-2.25 2.89Zm-.68 1.5h-.62a1.75 1.75 0 0 0 0 3.5h.62v4.1c0 1.04.84 1.88 1.88 1.88h.9v2.12a1.25 1.25 0 0 0 2.5 0v-2.12h.7v2.12a1.25 1.25 0 0 0 2.5 0v-2.12h.9c1.04 0 1.88-.84 1.88-1.88v-4.1h.62a1.75 1.75 0 0 0 0-3.5h-.62v5.37a.37.37 0 0 1-.38.38H8.75a.37.37 0 0 1-.38-.38V9.65Zm3.05-1.13a.85.85 0 1 1 0 1.7.85.85 0 0 1 0-1.7Zm5.16 0a.85.85 0 1 1 0 1.7.85.85 0 0 1 0-1.7Z" />
+    </svg>
+  );
+}
+
 function AddCustomerModal({ onClose, onCreated, customerLimitReached }: { onClose: () => void; onCreated: (c: Customer) => void; customerLimitReached?: boolean }) {
   const { success, error: toastError } = useToast();
   const [form, setForm] = useState({
@@ -1347,6 +1355,18 @@ export default function NewInvoicePage() {
             >
               Connect Android Scanner
             </button>
+            <a
+              href="/android_app_apk/product_scanner.apk"
+              download
+              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm transition-all hover:bg-emerald-100"
+            >
+              <span className="pointer-events-none absolute inset-0 rounded-lg border border-emerald-300/60" />
+              <span className="pointer-events-none absolute -inset-2">
+                <span className="absolute inset-0 rounded-xl bg-emerald-400/30 animate-ping" />
+              </span>
+              <AndroidLogoIcon className="h-4 w-4" />
+              <span>Download Product Scanner</span>
+            </a>
             {!scanSession && (
               <p className="text-xs text-indigo-700">
                 Click connect to generate pairing QR for scanner app.
