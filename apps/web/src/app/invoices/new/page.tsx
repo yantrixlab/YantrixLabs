@@ -1351,13 +1351,10 @@ export default function NewInvoicePage() {
             <button
               type="button"
               onClick={connectScanner}
-              className={`${theme.accentBtn} group relative overflow-hidden rounded-lg px-3 py-1.5 text-xs font-semibold`}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--brand-300))] bg-[rgb(var(--brand-100)/0.58)] px-3 py-1.5 text-xs font-semibold text-[rgb(var(--brand-700))] shadow-sm transition-colors hover:bg-[rgb(var(--brand-100)/0.82)]"
             >
-              <span className="pointer-events-none absolute inset-0 rounded-lg border border-indigo-300/60" />
-              <span className="pointer-events-none absolute -inset-2">
-                <span className="absolute inset-0 rounded-xl bg-indigo-300/35 animate-ping" />
-              </span>
-              <span className="relative">Connect Android Scanner</span>
+              <ScanLine className="h-3.5 w-3.5" />
+              <span>Connect Android Scanner</span>
             </button>
             <a
               href="/android_app_apk/product_scanner.apk"

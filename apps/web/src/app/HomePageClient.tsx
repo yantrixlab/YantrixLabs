@@ -245,6 +245,21 @@ const PROCESS = [
   { iconKey: "support", title: "Support", desc: "Ongoing maintenance" },
 ];
 
+const FLOATING_EXPRESSIONS = [
+  "x^2 + y^2 = r^2",
+  "f(x) = sin(x)",
+  "a/b = c",
+  "E = mc^2",
+  "a^2 + b^2 = c^2",
+  "n!",
+  "sum(i=1..n)",
+  "dx/dt",
+  "P(A|B)",
+  "pi ~ 3.1416",
+  "log(n)",
+  "int f(x)dx",
+];
+
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api/v1";
 
@@ -495,9 +510,59 @@ export default function HomePage() {
       />
 
       {/* â”€â”€â”€ TRUST STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-16 bg-[#eef2f7] border-y border-gray-200 overflow-hidden">
-        <div className="container-wide text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-8">
+      <section
+        className="relative py-16 overflow-hidden border-y border-[rgb(var(--public-border))]"
+        style={{
+          background:
+            "linear-gradient(145deg, rgb(var(--public-surface-muted)) 0%, rgb(var(--public-surface)) 52%, rgb(var(--public-surface-alt)) 100%)",
+        }}
+      >
+        <div className="pointer-events-none absolute inset-0">
+          <div
+            className="absolute -top-16 left-8 h-56 w-56 rounded-full blur-3xl"
+            style={{ background: "rgb(var(--brand-400) / 0.12)" }}
+          />
+          <div
+            className="absolute -bottom-20 right-10 h-72 w-72 rounded-full blur-3xl"
+            style={{ background: "rgb(var(--brand-500) / 0.10)" }}
+          />
+          {FLOATING_EXPRESSIONS.map((expr, idx) => {
+            const x = 6 + ((idx * 8.1) % 86);
+            const y = 8 + ((idx * 14.7) % 74);
+            const duration = 8 + (idx % 5) * 2.15;
+            const drift = 9 + (idx % 4) * 3;
+            const rotation = (idx % 2 === 0 ? 1 : -1) * (3 + (idx % 3) * 2);
+            return (
+              <motion.span
+                key={`expr-${idx}-${expr}`}
+                className="absolute select-none font-mono text-xs sm:text-sm"
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  color: "rgb(var(--public-text-muted) / 0.22)",
+                  letterSpacing: "0.01em",
+                  textShadow: "0 0 8px rgb(var(--public-bg) / 0.55)",
+                }}
+                animate={{
+                  y: [0, -drift, 0, drift * 0.42, 0],
+                  x: [0, drift * 0.5, 0, -drift * 0.35, 0],
+                  rotate: [0, rotation, 0],
+                  opacity: [0.13, 0.22, 0.14],
+                }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: idx * 0.32,
+                }}
+              >
+                {expr}
+              </motion.span>
+            );
+          })}
+        </div>
+        <div className="container-wide relative z-10 text-center">
+          <p className="text-sm font-semibold uppercase tracking-widest text-[rgb(var(--public-text-soft))] mb-8">
             We use these technologies to build our products and power our
             clients' businesses
           </p>

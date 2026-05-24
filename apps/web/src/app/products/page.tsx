@@ -408,13 +408,9 @@ export default function ProductsPage() {
       <div className="flex items-start justify-between mb-4">
         <div><h1 className="text-2xl font-bold text-gray-900">Products & Services</h1><p className="text-gray-500 mt-1">{filtered.length} items in catalog</p></div>
         <div className="flex items-center gap-2">
-          <button onClick={connectScanner} className="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700 hover:bg-indigo-100">
-            <span className="pointer-events-none absolute inset-0 rounded-xl border border-indigo-300/60" />
-            <span className="pointer-events-none absolute -inset-2">
-              <span className="absolute inset-0 rounded-2xl bg-indigo-300/35 animate-ping" />
-            </span>
-            <ScanLine className="relative h-4 w-4" />
-            <span className="relative">Connect Android Scanner</span>
+          <button onClick={connectScanner} className="inline-flex items-center gap-2 rounded-xl border border-[rgb(var(--brand-300))] bg-[rgb(var(--brand-100)/0.58)] px-3 py-2 text-sm font-semibold text-[rgb(var(--brand-700))] shadow-sm transition-colors hover:bg-[rgb(var(--brand-100)/0.82)]">
+            <ScanLine className="h-4 w-4" />
+            <span>Connect Android Scanner</span>
           </button>
           <a
             href="/android_app_apk/product_scanner.apk"
