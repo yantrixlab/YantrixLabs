@@ -1351,7 +1351,7 @@ export default function NewInvoicePage() {
             <button
               type="button"
               onClick={connectScanner}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[rgb(var(--brand-300))] bg-[rgb(var(--brand-100)/0.58)] px-3 py-1.5 text-xs font-semibold text-[rgb(var(--brand-700))] shadow-sm transition-colors hover:bg-[rgb(var(--brand-100)/0.82)]"
+              className="scanner-connect-btn inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold shadow-sm transition-colors"
             >
               <ScanLine className="h-3.5 w-3.5" />
               <span>Connect Android Scanner</span>

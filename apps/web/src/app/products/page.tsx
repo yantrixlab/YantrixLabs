@@ -408,7 +408,7 @@ export default function ProductsPage() {
       <div className="flex items-start justify-between mb-4">
         <div><h1 className="text-2xl font-bold text-gray-900">Products & Services</h1><p className="text-gray-500 mt-1">{filtered.length} items in catalog</p></div>
         <div className="flex items-center gap-2">
-          <button onClick={connectScanner} className="inline-flex items-center gap-2 rounded-xl border border-[rgb(var(--brand-300))] bg-[rgb(var(--brand-100)/0.58)] px-3 py-2 text-sm font-semibold text-[rgb(var(--brand-700))] shadow-sm transition-colors hover:bg-[rgb(var(--brand-100)/0.82)]">
+          <button onClick={connectScanner} className="scanner-connect-btn inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold shadow-sm transition-colors">
             <ScanLine className="h-4 w-4" />
             <span>Connect Android Scanner</span>
           </button>

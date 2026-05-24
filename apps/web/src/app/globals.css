@@ -950,3 +950,35 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
 .public-site .enquiry-btn:active {
   transform: translateY(0);
 }
+
+.scanner-connect-btn {
+  border-color: rgb(var(--brand-300));
+  background: rgb(var(--brand-100) / 0.58);
+  color: rgb(var(--brand-700));
+}
+
+.scanner-connect-btn:hover {
+  background: rgb(var(--brand-100) / 0.82);
+}
+
+html[data-gst-theme="dark"] .scanner-connect-btn {
+  border-color: #3b5f9a;
+  background: linear-gradient(145deg, rgba(28, 55, 104, 0.9), rgba(22, 43, 84, 0.9));
+  color: #dbe8ff;
+  box-shadow: 0 6px 18px rgba(5, 15, 36, 0.45);
+}
+
+html[data-gst-theme="dark"] .scanner-connect-btn:hover {
+  background: linear-gradient(145deg, rgba(40, 73, 132, 0.95), rgba(30, 56, 108, 0.95));
+}
+
+html[data-public-theme='dark'] .public-site .scanner-connect-btn {
+  border-color: rgb(var(--brand-600) / 0.72);
+  background: linear-gradient(145deg, rgb(var(--brand-900) / 0.92), rgb(var(--brand-800) / 0.9));
+  color: rgb(var(--brand-100));
+  box-shadow: 0 8px 22px rgb(0 0 0 / 0.32);
+}
+
+html[data-public-theme='dark'] .public-site .scanner-connect-btn:hover {
+  background: linear-gradient(145deg, rgb(var(--brand-800) / 0.96), rgb(var(--brand-700) / 0.92));
+}
