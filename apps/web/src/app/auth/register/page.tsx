@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText, CheckCircle } from 'lucide-react';
-import { publicApiFetch } from '@/lib/api';
+import { API_URL } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 import { track } from '@/lib/analytics/client';
 
@@ -28,8 +28,9 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      const data = await publicApiFetch<any>('/auth/register', {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email || undefined,
@@ -38,6 +39,9 @@ export default function RegisterPage() {
           businessName: formData.businessName,
         }),
       });
+
+      const responseText = await res.text();
+      const data = responseText ? JSON.parse(responseText) : {};
 
       if (data.success) {
         void track('auth_signup_completed', { stage: 'success' });
@@ -49,8 +53,12 @@ export default function RegisterPage() {
       } else {
         setError(data.error || 'Registration failed. Please try again.');
       }
-    } catch (err: any) {
-      setError(err?.message || 'Connection error. Please try again.');
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        setError('Unexpected server response. Please verify API URL and backend status.');
+      } else {
+        setError('Connection error. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }

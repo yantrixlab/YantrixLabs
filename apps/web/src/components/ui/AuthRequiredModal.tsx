@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, ShieldCheck, X } from 'lucide-react';
-import { publicApiFetch } from '@/lib/api';
+import { API_URL } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 
 interface AuthRequiredModalProps {
@@ -77,20 +77,22 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
     setError('');
     setIsLoading(true);
     try {
-      const data = await publicApiFetch<any>('/auth/login', {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: signInForm.email.trim(),
           password: signInForm.password,
         }),
       });
+      const data = await res.json();
       if (!data?.success) {
         setError(data?.error || 'Invalid credentials. Please try again.');
         return;
       }
       handleAuthSuccess(data.data.accessToken, data.data.refreshToken);
-    } catch (err: any) {
-      setError(err?.message || 'Connection error. Please try again.');
+    } catch {
+      setError('Connection error. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -119,17 +121,19 @@ export function AuthRequiredModal({ open, onClose, defaultTab = 'signin' }: Auth
         password: signUpForm.password,
       };
 
-      const data = await publicApiFetch<any>('/auth/register', {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
+      const data = await res.json();
       if (!data?.success) {
         setError(data?.error || 'Registration failed. Please try again.');
         return;
       }
       handleAuthSuccess(data.data.accessToken, data.data.refreshToken);
-    } catch (err: any) {
-      setError(err?.message || 'Connection error. Please try again.');
+    } catch {
+      setError('Connection error. Please try again.');
     } finally {
       setIsLoading(false);
     }

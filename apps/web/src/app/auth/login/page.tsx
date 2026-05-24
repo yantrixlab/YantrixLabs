@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText } from 'lucide-react';
-import { publicApiFetch } from '@/lib/api';
+import { API_URL } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
 import { track } from '@/lib/analytics/client';
 
@@ -20,11 +20,13 @@ export default function LoginPage() {
     setIsLoading(true);
     setError('');
     try {
-      const data = await publicApiFetch<any>('/auth/login', {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password: formData.password }),
       });
-      if (data?.success) {
+      const data = await res.json();
+      if (data.success) {
         void track('auth_login', { stage: 'success' });
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
@@ -33,8 +35,8 @@ export default function LoginPage() {
       } else {
         setError(data.error || 'Invalid credentials');
       }
-    } catch (err: any) {
-      setError(err?.message || 'Connection error. Please try again.');
+    } catch {
+      setError('Connection error. Please try again.');
     } finally {
       setIsLoading(false);
     }
