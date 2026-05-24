@@ -463,8 +463,27 @@ export default function HomePage() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const storedMode =
+      (localStorage.getItem("public_theme_mode") as
+        | "light"
+        | "dark"
+        | "system"
+        | null) || "system";
+    const resolved =
+      storedMode === "system"
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+        : storedMode;
+    document.documentElement.setAttribute("data-public-theme-mode", storedMode);
+    document.documentElement.setAttribute("data-public-theme", resolved);
+    document.documentElement.style.colorScheme = resolved;
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="public-site min-h-screen bg-[rgb(var(--public-bg))]">
       {/* â”€â”€â”€ Navbar + Hero (premium dark) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <HeroSection
         homeHeader={{ ...homeHeader, badgeText: trustedText }}
@@ -1011,13 +1030,14 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ PRODUCTS GRID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-24">
+      <section className="relative py-24">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.09),transparent_56%)]" />
         <div className="container-wide">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-[rgb(var(--public-text))] mb-4">
               Our Products &amp; Tools
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-[rgb(var(--public-text-muted))]">
               Ready-to-deploy software for every business need
             </p>
           </div>
@@ -1053,8 +1073,7 @@ export default function HomePage() {
                       viewport={{ once: true }}
                       className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
                       style={{
-                        boxShadow:
-                          "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
+                        boxShadow: "var(--public-shadow)",
                       }}
                     >
                       {/* Top highlight line */}
@@ -1162,8 +1181,7 @@ export default function HomePage() {
                       viewport={{ once: true }}
                       className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
                       style={{
-                        boxShadow:
-                          "0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)",
+                        boxShadow: "var(--public-shadow)",
                       }}
                     >
                       {/* Top highlight line */}
@@ -1225,13 +1243,13 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ SERVICES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-[linear-gradient(180deg,rgba(37,99,235,0.04)_0%,rgba(255,255,255,0)_100%)]">
         <div className="container-wide">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-[rgb(var(--public-text))] mb-4">
               We Build Custom Solutions
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-[rgb(var(--public-text-muted))]">
               Have a unique requirement? We design and build from scratch.
             </p>
           </div>
@@ -1243,7 +1261,8 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.08 }}
                 viewport={{ once: true }}
-                className="flex items-start gap-4 bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md transition-shadow"
+                className="flex items-start gap-4 rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-5 transition-all hover:-translate-y-0.5"
+                style={{ boxShadow: "var(--public-shadow)" }}
               >
                 <div className="h-10 w-10 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
                   <s.icon className="h-5 w-5 text-indigo-600" />

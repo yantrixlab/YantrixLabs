@@ -661,6 +661,7 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
 :root {
   --public-bg: 245 248 255;
   --public-surface: 255 255 255;
+  --public-surface-card: 255 255 255;
   --public-surface-muted: 236 242 255;
   --public-surface-alt: 229 240 255;
   --public-border: 204 224 255;
@@ -676,6 +677,7 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
 html[data-public-theme='dark'] {
   --public-bg: 0 14 36;
   --public-surface: 0 20 51;
+  --public-surface-card: 8 29 70;
   --public-surface-muted: 0 41 102;
   --public-surface-alt: 0 61 153;
   --public-border: 0 82 204;
