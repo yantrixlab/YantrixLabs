@@ -107,32 +107,33 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
   return (
     <div className="public-site min-h-screen bg-white">
-      <nav
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-all duration-300"
-        style={{
-          backgroundColor: 'rgba(4, 22, 51, 0.92)',
-          borderTop: '1px solid rgba(30, 74, 134, 0.55)',
-          borderBottom: '1px solid rgba(30, 74, 134, 0.55)',
-        }}
-      >
-        <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
-          <div className="flex h-[72px] items-center justify-between">
+      <nav className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-xl ${
+        isHomePage
+          ? 'border-brand-700 bg-brand-950/95'
+          : 'border-gray-100 bg-white/80'
+      }`}>
+        <div className="container-wide">
+          <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-              <span className="text-[16px] font-semibold text-[#e9f1ff] tracking-tight">Yantrix Labs</span>
+              <span className={`text-xl font-bold ${isHomePage ? 'text-white' : 'text-gray-900'}`}>Yantrix Labs</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-1.5">
+            <div className="hidden md:flex items-center gap-8">
               {NAV_LINKS.map(link => {
                 const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-150 ${
-                      isActive
-                        ? 'text-[#2f8bff] bg-[#0f2a57]'
-                        : 'text-[#f1f6ff] hover:text-white hover:bg-[#0f2a57]'
+                    className={`text-sm font-medium transition-colors ${
+                      isHomePage
+                        ? isActive
+                          ? 'text-brand-400 font-semibold'
+                          : 'text-brand-50 hover:text-white'
+                        : isActive
+                          ? 'text-brand-600 font-semibold'
+                          : 'text-gray-600 hover:text-gray-900'
                     }`}
                   >
                     {link.label}
@@ -147,7 +148,11 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   type="button"
                   aria-label={`Toggle theme. Current ${resolvedTheme}`}
                   onClick={onThemeToggle}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2f5ea4] bg-[#0b2c5c] text-[#d6e6ff] transition-all hover:bg-[#123a74] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2f6fd1]"
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 ${
+                    isHomePage
+                      ? 'border-brand-700 bg-brand-900/70 text-brand-100 hover:text-white'
+                      : 'border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
+                  }`}
                 >
                   {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 </button>
@@ -158,7 +163,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   onClick={() => {
                     if (isGstLanding) enableGuestMode();
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
+                  className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
                 >
                   Enquiry
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -179,14 +184,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               ) : null}
             </div>
 
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-[#ffffff]">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2">
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-[#1e4a86]/60 bg-[#041633] px-4 py-4 space-y-2">
+          <div className={`md:hidden border-t px-4 py-4 space-y-2 ${
+            isHomePage ? 'border-brand-800 bg-brand-950' : 'border-gray-100 bg-white'
+          }`}>
             {NAV_LINKS.map(link => {
                 const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
                 return (
@@ -194,7 +201,9 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     key={link.href}
                     href={link.href}
                     className={`block py-2 text-sm font-medium ${
-                      isActive ? 'text-[#2f8bff] font-semibold' : 'text-[#f1f6ff]'
+                      isHomePage
+                        ? isActive ? 'text-brand-300 font-semibold' : 'text-brand-100'
+                        : isActive ? 'text-indigo-600 font-semibold' : 'text-gray-700'
                     }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -209,7 +218,11 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     type="button"
                     aria-label={`Toggle theme. Current ${resolvedTheme}`}
                     onClick={onThemeToggle}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#2f5ea4] bg-[#0b2c5c] px-3 py-2 text-sm font-semibold text-[#d6e6ff] transition-all hover:bg-[#123a74] hover:text-white"
+                    className={`inline-flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold transition-all ${
+                      isHomePage
+                        ? 'border-brand-700 bg-brand-900/70 text-brand-100 hover:text-white'
+                        : 'border-gray-200 bg-[rgb(var(--public-surface-muted))] text-[rgb(var(--public-text-muted))] hover:text-[rgb(var(--public-text))]'
+                    }`}
                   >
                     {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                     {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
@@ -220,7 +233,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                       if (isGstLanding) enableGuestMode();
                       setMobileMenuOpen(false);
                     }}
-                    className="block rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-4 py-2 text-center text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
+                    className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white"
                   >
                     Enquiry
                   </Link>
