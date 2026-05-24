@@ -28,8 +28,9 @@ export default function GSTInvoiceHero() {
       />
       <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(148,163,184,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.2)_1px,transparent_1px)] [background-size:56px_56px]" />
 
-      <div className="container-wide relative py-20 lg:py-24">
-        <div className="mx-auto max-w-5xl">
+      <div className="relative py-20 lg:py-24">
+        <div className="container-wide">
+          <div className="mx-auto max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -80,53 +81,54 @@ export default function GSTInvoiceHero() {
               <span className="text-cyan-200/60">·</span>
               <span>Save</span>
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative mt-10 lg:mt-14 mx-auto w-full lg:!max-w-none"
-            style={{ maxWidth: 'calc(100vw - 120px)' }}
-          >
-            <div
-              className="pointer-events-none absolute inset-0 -m-5 rounded-[2.4rem]"
-              style={{
-                background:
-                  'radial-gradient(ellipse at 70% 30%, rgba(56,189,248,0.20) 0%, rgba(59,130,246,0.10) 35%, rgba(15,23,42,0) 72%)',
-              }}
-            />
-
-            <div className="relative rounded-[2rem] border border-white/15 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(2,12,38,0.55)] backdrop-blur-xl">
-              <div className="rounded-[1.35rem] border border-cyan-200/25 bg-slate-950/80 p-2.5">
-                <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black/40">
-                  {!videoError ? (
-                    <video
-                      className="block aspect-video h-auto w-full object-cover"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
-                      onError={() => setVideoError(true)}
-                    >
-                      <source src="/app_video/app_demo.mp4" type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
-                  ) : (
-                    <div className="flex min-h-[280px] items-center justify-center bg-slate-900/95 px-6 py-10 text-center sm:min-h-[340px]">
-                      <p className="max-w-sm text-sm font-medium text-slate-300">
-                        Demo video is unavailable right now. Please verify
-                        <span className="mx-1 font-semibold text-cyan-200">/public/app_video/app_demo.mp4</span>
-                        and refresh.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           </motion.div>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="relative mt-10 lg:mt-14"
+          style={{ marginInline: 'clamp(12px, 3vw, 60px)' }}
+        >
+          <div
+            className="pointer-events-none absolute inset-0 -m-5 rounded-[2.4rem]"
+            style={{
+              background:
+                'radial-gradient(ellipse at 70% 30%, rgba(56,189,248,0.20) 0%, rgba(59,130,246,0.10) 35%, rgba(15,23,42,0) 72%)',
+            }}
+          />
+
+          <div className="relative rounded-[2rem] border border-white/15 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(2,12,38,0.55)] backdrop-blur-xl">
+            <div className="rounded-[1.35rem] border border-cyan-200/25 bg-slate-950/80 p-2.5">
+              <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black/40">
+                {!videoError ? (
+                  <video
+                    className="block aspect-video h-auto w-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    onError={() => setVideoError(true)}
+                  >
+                    <source src="/app_video/app_demo.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <div className="flex min-h-[280px] items-center justify-center bg-slate-900/95 px-6 py-10 text-center sm:min-h-[340px]">
+                    <p className="max-w-sm text-sm font-medium text-slate-300">
+                      Demo video is unavailable right now. Please verify
+                      <span className="mx-1 font-semibold text-cyan-200">/public/app_video/app_demo.mp4</span>
+                      and refresh.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
