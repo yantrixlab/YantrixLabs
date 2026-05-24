@@ -86,7 +86,8 @@ export default function GSTInvoiceHero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative mt-10 lg:mt-14"
+            className="relative mt-10 lg:mt-14 mx-auto w-full lg:!max-w-none"
+            style={{ maxWidth: 'calc(100vw - 120px)' }}
           >
             <div
               className="pointer-events-none absolute inset-0 -m-5 rounded-[2.4rem]"
