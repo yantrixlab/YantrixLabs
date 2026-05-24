@@ -460,6 +460,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     setSidebarOpen(false);
   };
 
+  const handleAuthAction = () => {
+    if (guest) {
+      setSidebarOpen(false);
+      router.push("/auth/login");
+      return;
+    }
+    handleLogout();
+  };
+
   const handleSetupComplete = (updated: BizSettings) => {
     setSetupRequired(false);
     setSetupSettings(null);
@@ -840,17 +849,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
           {!collapsed && (
             <button
-              onClick={handleLogout}
+              onClick={handleAuthAction}
               className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all duration-150"
             >
               <LogOut className="h-4 w-4" />
-              <span>Log out</span>
+              <span>{guest ? "Login" : "Log out"}</span>
             </button>
           )}
           {collapsed && (
             <button
-              onClick={handleLogout}
-              title="Log out"
+              onClick={handleAuthAction}
+              title={guest ? "Login" : "Log out"}
               className="flex items-center justify-center rounded-xl p-2 text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all w-full mt-1"
             >
               <LogOut className="h-4 w-4" />
