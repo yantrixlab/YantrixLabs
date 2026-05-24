@@ -76,11 +76,10 @@ export default function GSTInvoiceHero() {
 
             <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-xs font-semibold text-cyan-100">
               <span>Scan</span>
-              <span className="text-cyan-200/60">·</span>
+              <span className="text-cyan-200/60">&middot;</span>
               <span>Sync</span>
-              <span className="text-cyan-200/60">·</span>
+              <span className="text-cyan-200/60">&middot;</span>
               <span>Save</span>
-            </div>
             </div>
           </motion.div>
         </div>
@@ -129,6 +128,7 @@ export default function GSTInvoiceHero() {
             </div>
           </div>
         </motion.div>
+        </div>
       </div>
     </section>
   );
