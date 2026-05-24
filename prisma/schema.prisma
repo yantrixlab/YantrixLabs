@@ -124,7 +124,6 @@ model User {
   memberships     Membership[]
   createdInvoices Invoice[]       @relation("InvoiceCreatedBy")
   auditLogs       AuditLog[]
-  analyticsEvents AnalyticsEvent[]
   notifications   Notification[]
   otpCodes        OtpCode[]
   refreshTokens   RefreshToken[]
@@ -182,7 +181,6 @@ model Business {
   subscriptions Subscription[]
   modules      BusinessModule[]
   auditLogs    AuditLog[]
-  analyticsEvents AnalyticsEvent[]
   notifications Notification[]
   apiKeys      ApiKey[]
   reviews      Review[]
@@ -647,33 +645,6 @@ model AuditLog {
   user     User?     @relation(fields: [userId], references: [id])
 
   @@map("audit_logs")
-}
-
-model AnalyticsEvent {
-  id         String   @id @default(cuid())
-  eventName  String
-  occurredAt DateTime @default(now())
-  businessId String?
-  userId     String?
-  sessionId  String?
-  source     String?
-  path       String?
-  deviceType String?
-  os         String?
-  browser    String?
-  country    String?
-  city       String?
-  properties Json     @default("{}")
-  createdAt  DateTime @default(now())
-
-  business Business? @relation(fields: [businessId], references: [id], onDelete: SetNull)
-  user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-  @@index([eventName, occurredAt])
-  @@index([businessId, occurredAt])
-  @@index([userId, occurredAt])
-  @@index([occurredAt])
-  @@map("analytics_events")
 }
 
 // ─── Notifications ────────────────────────────────────────────────────────

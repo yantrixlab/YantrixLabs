@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight, FileText } from 'lucide-react';
 import { API_URL } from '@/lib/api';
 import { disableGuestMode } from '@/lib/guestMode';
-import { track } from '@/lib/analytics/client';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +15,6 @@ export default function LoginPage() {
 
   const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    void track('auth_login', { stage: 'attempt' });
     setIsLoading(true);
     setError('');
     try {
@@ -27,7 +25,6 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (data.success) {
-        void track('auth_login', { stage: 'success' });
         localStorage.setItem('accessToken', data.data.accessToken);
         localStorage.setItem('refreshToken', data.data.refreshToken);
         disableGuestMode();

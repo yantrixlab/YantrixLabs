@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, FileText, ShieldCheck } from 'lucide-react';
 import { API_URL } from '@/lib/api';
-import { track } from '@/lib/analytics/client';
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -59,7 +58,6 @@ export default function ForgotPasswordPage() {
         setError(data?.error || 'Failed to send OTP. Please try again.');
         return;
       }
-      void track('auth_forgot_password', { stage: 'otp_sent' });
       setSuccessMsg(data?.message || 'OTP sent successfully.');
       setStep(2);
     } catch {
@@ -129,7 +127,6 @@ export default function ForgotPasswordPage() {
         setError(data?.error || 'Failed to reset password.');
         return;
       }
-      void track('auth_forgot_password', { stage: 'completed' });
       setStep(4);
     } catch {
       setError('Connection error. Please try again.');

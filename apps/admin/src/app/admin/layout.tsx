@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, Building2, CreditCard, Zap,
   Star, ScrollText, Settings, LogOut, Shield, Package, FileCode2, LayoutList, Wrench, MessageSquare, BookOpen, HelpCircle
-  , BarChart2
 } from 'lucide-react';
 import { isAdminAuthenticated, getAdminToken, API_URL } from '@/lib/api';
 
@@ -23,7 +22,6 @@ const NAV = [
   { href: '/admin/reviews', label: 'Reviews', icon: Star },
   { href: '/admin/enquiries', label: 'Enquiries', icon: MessageSquare },
   { href: '/admin/blog', label: 'Blog', icon: BookOpen },
-  { href: '/admin/analytics', label: 'Analytics', icon: BarChart2 },
   { href: '/admin/faq', label: 'FAQs', icon: HelpCircle },
   { href: '/admin/audit-logs', label: 'Audit Logs', icon: ScrollText },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
@@ -136,3 +134,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+
