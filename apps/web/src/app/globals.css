@@ -959,6 +959,35 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
   color: #a8b5ff !important;
 }
 
+/* Lock "Let's build it" CTA section colors across theme changes */
+.public-site .home-build-cta-fixed .text-indigo-300 {
+  color: #89c2ff !important;
+}
+
+.public-site .home-build-cta-fixed .text-indigo-200 {
+  color: #a7d1ff !important;
+}
+
+.public-site .home-build-cta-fixed .text-white {
+  color: #eaf3ff !important;
+}
+
+.public-site .home-build-cta-fixed a {
+  color: inherit !important;
+}
+
+.public-site .home-build-cta-fixed a[href="/contact"] {
+  background-color: #031d47 !important;
+  color: #0a74ff !important;
+  border-color: transparent !important;
+}
+
+.public-site .home-build-cta-fixed a[href="/services"] {
+  color: #ffffff !important;
+  border-color: #3a95ff !important;
+  background-color: transparent !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .public-site * {
     animation-duration: 1ms !important;
