@@ -7,7 +7,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import {
   FileText, BarChart3, Zap, ArrowRight, IndianRupee,
   Users, ShoppingCart, Building2, UtensilsCrossed, Car, MapPin,
-  Menu, X, LayoutDashboard, TrendingUp, Briefcase,
+  Menu, X, TrendingUp, Briefcase, Moon, Sun,
 } from 'lucide-react';
 import { isSafeImageUrl } from '@/lib/api';
 
@@ -104,6 +104,7 @@ function generateParticles(count: number) {
 export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, businessLogo, businessName, initials }: HeroSectionProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
 
   const particles = useMemo(() => generateParticles(55), []);
 
@@ -116,6 +117,26 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  useEffect(() => {
+    const stored = (localStorage.getItem('public_theme_mode') || 'system') as 'light' | 'dark' | 'system';
+    const resolved = stored === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : stored;
+    document.documentElement.setAttribute('data-public-theme-mode', stored);
+    document.documentElement.setAttribute('data-public-theme', resolved);
+    document.documentElement.style.colorScheme = resolved;
+    setResolvedTheme(resolved);
+  }, []);
+
+  const onThemeToggle = () => {
+    const nextMode: 'light' | 'dark' = resolvedTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('public_theme_mode', nextMode);
+    document.documentElement.setAttribute('data-public-theme-mode', nextMode);
+    document.documentElement.setAttribute('data-public-theme', nextMode);
+    document.documentElement.style.colorScheme = nextMode;
+    setResolvedTheme(nextMode);
+  };
 
   return (
     <>
@@ -150,35 +171,21 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-3">
-              {loggedIn ? (
-                <>
-                  <Link href="/dashboard" className="inline-flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white px-3 py-2 rounded-lg hover:bg-white/[0.07] transition-all duration-150">
-                    <LayoutDashboard className="h-4 w-4" />
-                    Dashboard
-                  </Link>
-                  <Link href="/dashboard" className="flex-shrink-0">
-                    <div className="h-9 w-9 rounded-full overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-indigo-400/25 hover:ring-indigo-400/55 transition-all">
-                      {businessLogo && isSafeImageUrl(businessLogo)
-                        ? <img src={businessLogo} alt={businessName || 'Business'} className="h-full w-full object-contain" />
-                        : <span className="text-white text-xs font-bold">{initials}</span>
-                      }
-                    </div>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/dashboard" className="text-sm font-medium text-white/60 hover:text-white px-3 py-2 rounded-lg hover:bg-white/[0.07] transition-all duration-150">
-                    Sign in
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-2 text-sm font-semibold text-white hover:from-indigo-500 hover:to-violet-500 transition-all duration-200 shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 active:scale-[0.97]"
-                  >
-                    Get Started
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </>
-              )}
+              <button
+                type="button"
+                aria-label={`Toggle theme. Current ${resolvedTheme}`}
+                onClick={onThemeToggle}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/[0.05] text-white/80 transition-all hover:bg-white/[0.1] hover:text-white"
+              >
+                {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
+              <Link
+                href="/contact"
+                className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
+              >
+                Enquiry
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
             {/* Mobile hamburger */}
@@ -206,26 +213,18 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
               </Link>
             ))}
             <div className="pt-3 mt-2 border-t border-white/[0.08] space-y-2">
-              {loggedIn ? (
-                <Link href="/dashboard" className="flex items-center gap-2.5 py-2.5 px-3 text-sm font-medium text-white/65 rounded-lg hover:bg-white/[0.07]" onClick={() => setMobileMenuOpen(false)}>
-                  <div className="h-7 w-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                    {businessLogo && isSafeImageUrl(businessLogo)
-                      ? <img src={businessLogo} alt={businessName || 'Business'} className="h-full w-full object-contain" />
-                      : <span className="text-white text-[10px] font-bold">{initials}</span>
-                    }
-                  </div>
-                  Go to Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Link href="/dashboard" className="block py-2.5 px-3 text-sm font-medium text-white/65 rounded-lg hover:bg-white/[0.07]" onClick={() => setMobileMenuOpen(false)}>
-                    Sign in
-                  </Link>
-                  <Link href="/contact" className="block rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-4 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-indigo-600/25" onClick={() => setMobileMenuOpen(false)}>
-                    Get Started
-                  </Link>
-                </>
-              )}
+              <button
+                type="button"
+                aria-label={`Toggle theme. Current ${resolvedTheme}`}
+                onClick={onThemeToggle}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/[0.05] px-3 py-2.5 text-sm font-semibold text-white/80 transition-all hover:bg-white/[0.1] hover:text-white"
+              >
+                {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+              </button>
+              <Link href="/contact" className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white" onClick={() => setMobileMenuOpen(false)}>
+                Enquiry
+              </Link>
             </div>
           </div>
         )}
