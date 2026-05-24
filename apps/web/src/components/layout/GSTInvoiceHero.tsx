@@ -29,8 +29,13 @@ export default function GSTInvoiceHero() {
       <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(148,163,184,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.2)_1px,transparent_1px)] [background-size:56px_56px]" />
 
       <div className="container-wide relative py-20 lg:py-24">
-        <div className="grid items-start gap-12 lg:grid-cols-2">
-          <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
             <span className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-cyan-100">
               <Zap className="h-3.5 w-3.5" />
               India&apos;s Smart GST Billing Scanner System
@@ -44,14 +49,14 @@ export default function GSTInvoiceHero() {
               <span className="block">In One System</span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-300">
+            <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-300">
               Create GST invoices, manage inventory, track stock movement, export reports, and scan products live using any Android phone.
             </p>
             <p className="mt-3 text-sm font-medium text-slate-400">
               Works with barcode and QR products. Lightweight APK. Real-time invoice and stock sync.
             </p>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
               <button
                 onClick={handleTryDemo}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/40 transition hover:brightness-110"
@@ -81,22 +86,22 @@ export default function GSTInvoiceHero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative"
+            className="relative mt-10 lg:mt-14"
           >
             <div
-              className="pointer-events-none absolute inset-0 -m-4 rounded-[2rem]"
+              className="pointer-events-none absolute inset-0 -m-5 rounded-[2.4rem]"
               style={{
                 background:
                   'radial-gradient(ellipse at 70% 30%, rgba(56,189,248,0.20) 0%, rgba(59,130,246,0.10) 35%, rgba(15,23,42,0) 72%)',
               }}
             />
 
-            <div className="relative rounded-[1.75rem] border border-white/15 bg-white/[0.06] p-3 shadow-[0_24px_70px_rgba(2,12,38,0.55)] backdrop-blur-xl">
-              <div className="rounded-2xl border border-cyan-200/25 bg-slate-950/80 p-2">
+            <div className="relative rounded-[2rem] border border-white/15 bg-white/[0.06] p-4 shadow-[0_24px_70px_rgba(2,12,38,0.55)] backdrop-blur-xl">
+              <div className="rounded-[1.35rem] border border-cyan-200/25 bg-slate-950/80 p-2.5">
                 <div className="relative overflow-hidden rounded-xl border border-white/10 bg-black/40">
                   {!videoError ? (
                     <video
-                      className="block h-auto w-full object-cover"
+                      className="block aspect-video h-auto w-full object-cover"
                       autoPlay
                       muted
                       loop
@@ -125,4 +130,3 @@ export default function GSTInvoiceHero() {
     </section>
   );
 }
-
