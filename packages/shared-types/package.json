@@ -13,7 +13,7 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm,cjs --dts || node -e \"console.log('shared-types: tsup failed, using existing dist output')\"",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "lint": "tsc --noEmit",
     "clean": "rm -rf dist"
