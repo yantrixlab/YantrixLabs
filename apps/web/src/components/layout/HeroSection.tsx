@@ -181,7 +181,7 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
               </button>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-[#135bc8]"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
               >
                 Enquiry
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -191,7 +191,7 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/[0.09] transition-all"
+              className="md:hidden p-2 rounded-lg text-white/60 hover:text-[#ffffff] hover:bg-white/[0.09] transition-all"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -222,7 +222,7 @@ export default function HeroSection({ homeHeader, homeHeaderLoading, loggedIn, b
                 {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                 {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
               </button>
-              <Link href="/contact" className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/contact" className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-[#ffffff]" onClick={() => setMobileMenuOpen(false)}>
                 Enquiry
               </Link>
             </div>

@@ -107,7 +107,14 @@ export function PublicLayout({ children }: PublicLayoutProps) {
 
   return (
     <div className="public-site min-h-screen bg-white">
-      <nav className="fixed top-0 left-0 right-0 z-50 border-y border-[#1e4a86]/55 bg-[#041633]/92 backdrop-blur-xl transition-all duration-300">
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-all duration-300"
+        style={{
+          backgroundColor: 'rgba(4, 22, 51, 0.92)',
+          borderTop: '1px solid rgba(30, 74, 134, 0.55)',
+          borderBottom: '1px solid rgba(30, 74, 134, 0.55)',
+        }}
+      >
         <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
           <div className="flex h-[72px] items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
@@ -151,7 +158,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   onClick={() => {
                     if (isGstLanding) enableGuestMode();
                   }}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-[#135bc8]"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
                 >
                   Enquiry
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -172,7 +179,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               ) : null}
             </div>
 
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-white">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-[#ffffff]">
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
@@ -213,7 +220,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                       if (isGstLanding) enableGuestMode();
                       setMobileMenuOpen(false);
                     }}
-                    className="block rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-4 py-2 text-center text-sm font-semibold text-white transition-all hover:bg-[#135bc8]"
+                    className="block rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-4 py-2 text-center text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
                   >
                     Enquiry
                   </Link>
