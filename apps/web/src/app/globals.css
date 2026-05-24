@@ -977,15 +977,25 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
 }
 
 .public-site .home-build-cta-fixed a[href="/contact"] {
-  background-color: #031d47 !important;
-  color: #0a74ff !important;
+  background-color: #ffffff !important;
+  color: #255fce !important;
   border-color: transparent !important;
+  box-shadow: 0 12px 28px rgba(3, 25, 70, 0.26) !important;
+}
+
+.public-site .home-build-cta-fixed a[href="/contact"]:hover {
+  background-color: #eef4ff !important;
+  color: #1f56bf !important;
 }
 
 .public-site .home-build-cta-fixed a[href="/services"] {
   color: #ffffff !important;
   border-color: #3a95ff !important;
   background-color: transparent !important;
+}
+
+.public-site .home-build-cta-fixed a[href="/services"]:hover {
+  background-color: rgba(76, 143, 255, 0.2) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
