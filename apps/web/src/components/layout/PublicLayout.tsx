@@ -142,7 +142,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             </div>
 
             <div className="hidden md:flex items-center gap-3">
-              {isPublicMarketingPage && (
+              {!isHomePage && isPublicMarketingPage && (
                 <button
                   type="button"
                   aria-label={`Toggle theme. Current ${resolvedTheme}`}
@@ -158,13 +158,6 @@ export function PublicLayout({ children }: PublicLayoutProps) {
               )}
               {loggedIn ? (
                 <>
-                  <button
-                    type="button"
-                    className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
-                  >
-                    Enquiry
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
                   <Link href="/dashboard" className="flex-shrink-0">
                     <div className="h-9 w-9 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center ring-2 ring-indigo-200 hover:ring-indigo-400 transition-all">
                       {businessLogo ? (
@@ -177,16 +170,18 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 </>
               ) : (
                 <>
-                  <Link
-                    href="/contact"
-                    onClick={() => {
-                      if (isGstLanding) enableGuestMode();
-                    }}
-                    className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
-                  >
-                    Enquiry
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
+                  {!isHomePage && (
+                    <Link
+                      href="/contact"
+                      onClick={() => {
+                        if (isGstLanding) enableGuestMode();
+                      }}
+                      className="enquiry-btn inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-white"
+                    >
+                      Enquiry
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  )}
                 </>
               )}
             </div>
@@ -218,7 +213,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   </Link>
                 );
               })}
-            {isPublicMarketingPage && (
+            {!isHomePage && isPublicMarketingPage && (
               <div className="pt-2">
                 <p className={`px-0.5 pb-2 text-[11px] font-semibold uppercase tracking-widest ${isHomePage ? 'text-brand-300' : 'text-gray-400'}`}>Theme</p>
                 <button
@@ -250,15 +245,17 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 </Link>
               ) : (
                 <>
-                  <Link
-                    href="/contact"
-                    onClick={() => {
-                      if (isGstLanding) enableGuestMode();
-                    }}
-                    className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white"
-                  >
-                    Enquiry
-                  </Link>
+                  {!isHomePage && (
+                    <Link
+                      href="/contact"
+                      onClick={() => {
+                        if (isGstLanding) enableGuestMode();
+                      }}
+                      className="enquiry-btn block rounded-lg px-4 py-2 text-center text-sm font-semibold text-white"
+                    >
+                      Enquiry
+                    </Link>
+                  )}
                 </>
               )}
             </div>
