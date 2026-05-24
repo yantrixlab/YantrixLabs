@@ -952,9 +952,12 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
 }
 
 .scanner-connect-btn {
+  position: relative;
+  overflow: hidden;
   border-color: rgb(var(--brand-300));
   background: rgb(var(--brand-100) / 0.58);
   color: rgb(var(--brand-700));
+  animation: scannerConnectRipple 2.1s infinite;
 }
 
 .scanner-connect-btn:hover {
@@ -981,4 +984,22 @@ html[data-public-theme='dark'] .public-site .scanner-connect-btn {
 
 html[data-public-theme='dark'] .public-site .scanner-connect-btn:hover {
   background: linear-gradient(145deg, rgb(var(--brand-800) / 0.96), rgb(var(--brand-700) / 0.92));
+}
+
+@keyframes scannerConnectRipple {
+  0% {
+    box-shadow:
+      0 0 0 0 rgb(var(--brand-400) / 0.35),
+      0 4px 14px rgb(var(--brand-900) / 0.14);
+  }
+  65% {
+    box-shadow:
+      0 0 0 12px rgb(var(--brand-400) / 0),
+      0 8px 18px rgb(var(--brand-900) / 0.2);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgb(var(--brand-400) / 0),
+      0 4px 14px rgb(var(--brand-900) / 0.14);
+  }
 }

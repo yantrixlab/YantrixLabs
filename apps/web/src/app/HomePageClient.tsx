@@ -582,11 +582,7 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.4 }}
                   transition={{ duration: 0.55, delay: idx * 0.08 }}
-                  className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-2xl border border-gray-200 bg-white p-3 shadow-sm"
-                  style={{
-                    boxShadow:
-                      "0 8px 22px rgba(15,23,42,0.07), 0 2px 6px rgba(15,23,42,0.05)",
-                  }}
+                  className="relative mx-auto flex h-20 w-20 items-center justify-center rounded-2xl p-3"
                 >
                   <motion.img
                     src={`/home_animated_logos/${logo}`}
@@ -848,12 +844,11 @@ export default function HomePage() {
 
                 {/* Glass card */}
                 <div
-                  className="relative rounded-2xl border border-white/10 p-5 overflow-hidden"
+                  className="relative rounded-2xl p-5 overflow-hidden"
                   style={{
-                    background: "rgba(12, 10, 36, 0.75)",
-                    backdropFilter: "blur(24px)",
-                    boxShadow:
-                      "0 30px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
+                    background: "transparent",
+                    backdropFilter: "none",
+                    boxShadow: "none",
                   }}
                 >
                   {/* Inner top highlight line */}
@@ -873,8 +868,8 @@ export default function HomePage() {
                     <div
                       className="ml-3 flex items-center gap-1.5 rounded-md px-3 py-1 text-xs"
                       style={{
-                        background: "rgba(99,102,241,0.08)",
-                        border: "1px solid rgba(99,102,241,0.18)",
+                        background: "transparent",
+                        border: "none",
                         color: "rgba(165,180,252,0.55)",
                       }}
                     >
@@ -931,8 +926,8 @@ export default function HomePage() {
                         viewport={{ once: true }}
                         className="rounded-xl p-3.5"
                         style={{
-                          background: s.bg,
-                          border: `1px solid ${s.border}`,
+                          background: "transparent",
+                          border: "none",
                         }}
                       >
                         <p
@@ -962,8 +957,8 @@ export default function HomePage() {
                     viewport={{ once: true }}
                     className="rounded-xl p-3.5 mb-4"
                     style={{
-                      background: "rgba(99,102,241,0.06)",
-                      border: "1px solid rgba(99,102,241,0.14)",
+                      background: "transparent",
+                      border: "none",
                     }}
                   >
                     <div className="flex items-center justify-between mb-3">
@@ -1006,8 +1001,8 @@ export default function HomePage() {
                     viewport={{ once: true }}
                     className="rounded-xl p-3.5"
                     style={{
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.07)",
+                      background: "transparent",
+                      border: "none",
                     }}
                   >
                     <p
