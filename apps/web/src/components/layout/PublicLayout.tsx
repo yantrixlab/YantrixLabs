@@ -26,6 +26,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const isGstLanding = pathname === '/gst-invoice';
   const isPublicMarketingPage =
     pathname === '/' ||
+    pathname === '/gst-invoice' ||
     pathname === '/tools' ||
     pathname.startsWith('/tools/') ||
     pathname === '/services' ||
@@ -168,7 +169,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               )}
-              {loggedIn ? (
+              {!isHomePage && loggedIn ? (
                 <>
                   <Link href="/dashboard" className="flex-shrink-0">
                     <div className="h-9 w-9 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center ring-2 ring-indigo-200 hover:ring-indigo-400 transition-all">
@@ -180,7 +181,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     </div>
                   </Link>
                 </>
-              ) : (
+              ) : !isHomePage ? (
                 <>
                   <Link
                     href="/auth/login"
@@ -199,7 +200,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </>
-              )}
+              ) : null}
             </div>
 
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2">
@@ -257,7 +258,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   </Link>
                 </>
               )}
-              {loggedIn ? (
+              {!isHomePage && loggedIn ? (
                 <Link href="/dashboard" className={`flex items-center gap-2 py-2 text-sm font-medium ${isHomePage ? 'text-brand-100' : 'text-gray-700'}`} onClick={() => setMobileMenuOpen(false)}>
                   <div className="h-7 w-7 rounded-full overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center flex-shrink-0">
                     {businessLogo ? (
@@ -268,7 +269,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                   </div>
                   Go to Dashboard
                 </Link>
-              ) : (
+              ) : !isHomePage ? (
                 <>
                   <Link
                     href="/auth/login"
@@ -288,7 +289,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                     Get Started
                   </Link>
                 </>
-              )}
+              ) : null}
             </div>
           </div>
         )}
