@@ -4,12 +4,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import Link from 'next/link';
 import {
-  FileText, Users, ShoppingCart, Building2, UtensilsCrossed,
-  Car, MapPin, BarChart3, Briefcase, Settings, ArrowRight, Zap,
+  ArrowRight, Zap,
   Search, Star, Wrench, X, Filter,
 } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
+const TOOLS_API_BASE = '/api/proxy/tools';
 
 interface CMSTool {
   id: string;
@@ -26,19 +25,6 @@ interface CMSTool {
   viewCount: number;
   sortOrder: number;
 }
-
-const FALLBACK_PRODUCTS = [
-  { icon: FileText, title: 'GST Invoice Tool', description: 'Professional GST billing, invoicing, and compliance. Auto-calculate CGST, SGST, IGST. Generate GSTR-1 and GSTR-3B reports. Built for Indian businesses.', href: '/gst-invoice', badge: 'Live', color: 'bg-indigo-50 text-indigo-600', badgeColor: 'bg-indigo-100 text-indigo-700' },
-  { icon: Users, title: 'Attendance System', description: 'Biometric and digital attendance tracking for teams. Real-time reports, leave management, and payroll integration.', href: '/contact', badge: 'Coming Soon', color: 'bg-green-50 text-green-600', badgeColor: 'bg-green-100 text-green-700' },
-  { icon: ShoppingCart, title: 'Ecommerce Platform', description: 'Full-featured online store with payments, inventory management, and order tracking. Launch your store in days.', href: '/contact', badge: 'Coming Soon', color: 'bg-amber-50 text-amber-600', badgeColor: 'bg-amber-100 text-amber-700' },
-  { icon: Building2, title: 'Hotel Booking System', description: 'Property management and room booking for hospitality businesses. Online reservations, housekeeping, and billing.', href: '/contact', badge: 'Coming Soon', color: 'bg-blue-50 text-blue-600', badgeColor: 'bg-blue-100 text-blue-700' },
-  { icon: UtensilsCrossed, title: 'Restaurant POS', description: 'Order management and billing for restaurants and F&B businesses. Table management, kitchen display, and GST billing.', href: '/contact', badge: 'Coming Soon', color: 'bg-rose-50 text-rose-600', badgeColor: 'bg-rose-100 text-rose-700' },
-  { icon: Car, title: 'Taxi Booking App', description: 'Driver and ride management platform. Passenger app, driver app, and admin dashboard with real-time tracking.', href: '/contact', badge: 'Coming Soon', color: 'bg-purple-50 text-purple-600', badgeColor: 'bg-purple-100 text-purple-700' },
-  { icon: MapPin, title: 'GPS Fleet Tracking', description: 'Real-time fleet tracking and route optimization for logistics businesses. Live map, trip history, and fuel monitoring.', href: '/contact', badge: 'Coming Soon', color: 'bg-cyan-50 text-cyan-600', badgeColor: 'bg-cyan-100 text-cyan-700' },
-  { icon: BarChart3, title: 'CRM', description: 'Manage leads, customers, and sales pipelines. Track deals, send follow-ups, and measure conversion.', href: '/contact', badge: 'Coming Soon', color: 'bg-orange-50 text-orange-600', badgeColor: 'bg-orange-100 text-orange-700' },
-  { icon: Briefcase, title: 'HRMS', description: 'HR, payroll, and employee lifecycle management. Onboarding, leaves, appraisals, and salary processing.', href: '/contact', badge: 'Coming Soon', color: 'bg-pink-50 text-pink-600', badgeColor: 'bg-pink-100 text-pink-700' },
-  { icon: Settings, title: 'Custom ERP', description: 'Tailored enterprise resource planning systems built for your specific workflow and industry requirements.', href: '/contact', badge: 'Custom Build', color: 'bg-violet-50 text-violet-600', badgeColor: 'bg-violet-100 text-violet-700' },
-];
 
 const CATEGORY_COLORS = ['text-indigo-600', 'text-emerald-600', 'text-amber-600', 'text-blue-600', 'text-rose-600', 'text-purple-600', 'text-cyan-600', 'text-orange-600', 'text-pink-600', 'text-violet-600'];
 const ICON_GRADIENTS = [
@@ -57,20 +43,6 @@ const ICON_GRADIENTS = [
 function getColorForIndex(idx: number) { return CATEGORY_COLORS[idx % CATEGORY_COLORS.length]; }
 function getIconGradient(idx: number) { return ICON_GRADIENTS[idx % ICON_GRADIENTS.length]; }
 
-function getFallbackBadgeClass(badgeColor: string): string {
-  if (badgeColor.includes('green')) return 'border-emerald-200/80 text-emerald-700';
-  if (badgeColor.includes('indigo')) return 'border-indigo-200/80 text-indigo-700';
-  if (badgeColor.includes('violet')) return 'border-violet-200/80 text-violet-700';
-  return 'border-gray-200/80 text-gray-500';
-}
-
-function getFallbackBadgeStyle(badgeColor: string): React.CSSProperties {
-  if (badgeColor.includes('green')) return { background: 'linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' };
-  if (badgeColor.includes('indigo')) return { background: 'linear-gradient(135deg,#eef2ff 0%,#e0e7ff 100%)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' };
-  if (badgeColor.includes('violet')) return { background: 'linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' };
-  return { background: '#f9fafb' };
-}
-
 function getToolHref(tool: CMSTool): string {
   if (tool.ctaUrl) return tool.ctaUrl;
   if (tool.toolType === 'COMING_SOON') return '/contact';
@@ -83,17 +55,18 @@ export default function ToolsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('');
-  const [useFallback, setUseFallback] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchTools = useCallback(async () => {
     setLoading(true);
+    setErrorMessage('');
     try {
       const params = new URLSearchParams({ limit: '100' });
       if (search) params.set('search', search);
       if (activeCategory) params.set('category', activeCategory);
       params.set('_ts', String(Date.now()));
 
-      const res = await fetch(`${API_URL}/tools?${params.toString()}`, {
+      const res = await fetch(`${TOOLS_API_BASE}?${params.toString()}`, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -109,19 +82,20 @@ export default function ToolsPage() {
           return orderDiff !== 0 ? orderDiff : a.id.localeCompare(b.id);
         });
         setCmsTools(sorted);
-        setUseFallback(sorted.length === 0 && !search && !activeCategory);
       } else {
-        setUseFallback(true);
+        setCmsTools([]);
+        setErrorMessage('Unable to load published tools right now.');
       }
     } catch {
-      setUseFallback(true);
+      setCmsTools([]);
+      setErrorMessage('Unable to reach tools service. Please try again in a moment.');
     } finally {
       setLoading(false);
     }
   }, [search, activeCategory]);
 
   useEffect(() => {
-    const url = `${API_URL}/tools/categories?_ts=${Date.now()}`;
+    const url = `${TOOLS_API_BASE}/categories?_ts=${Date.now()}`;
     fetch(url, {
       cache: 'no-store',
       headers: {
@@ -155,27 +129,25 @@ export default function ToolsPage() {
             Browse our ready-to-deploy business software solutions.
             From invoicing to booking platforms &mdash; built for India.
           </p>
-          {!useFallback && (
-            <div className="relative max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search tools..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="w-full pl-12 pr-10 py-3.5 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
-              />
-              {search && (
-                <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          )}
+          <div className="relative max-w-xl mx-auto">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search tools..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full pl-12 pr-10 py-3.5 rounded-2xl border border-gray-200 bg-white shadow-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            />
+            {search && (
+              <button onClick={() => setSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
-      {!useFallback && categories.length > 0 && (
+      {categories.length > 0 && (
         <section className="py-4 border-b border-gray-100 bg-white sticky top-0 z-10 shadow-sm">
           <div className="container-wide">
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -189,7 +161,7 @@ export default function ToolsPage() {
         </section>
       )}
 
-      {!useFallback && !loading && featuredTools.length > 0 && !search && !activeCategory && (
+      {!loading && featuredTools.length > 0 && !search && !activeCategory && (
         <section className="py-16 bg-gradient-to-br from-indigo-900 to-gray-900">
           <div className="container-wide">
             <div className="flex items-center gap-3 mb-8">
@@ -217,10 +189,9 @@ export default function ToolsPage() {
         </section>
       )}
 
-      {!useFallback && (
-        <section className="py-20">
-          <div className="container-wide">
-            {loading ? (
+      <section className="py-20">
+        <div className="container-wide">
+          {loading ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="bg-white rounded-2xl border border-gray-100 p-6 animate-pulse">
@@ -228,6 +199,12 @@ export default function ToolsPage() {
                     <div className="h-4 w-3/4 rounded bg-gray-100 mb-2" /><div className="h-3 w-full rounded bg-gray-100 mb-1" /><div className="h-3 w-5/6 rounded bg-gray-100 mb-5" /><div className="h-3.5 w-24 rounded bg-gray-100" />
                   </div>
                 ))}
+              </div>
+            ) : errorMessage ? (
+              <div className="text-center py-20">
+                <div className="inline-flex h-16 w-16 rounded-2xl bg-red-50 items-center justify-center mb-4"><Wrench className="h-8 w-8 text-red-400" /></div>
+                <p className="text-gray-700 font-medium mb-2">{errorMessage}</p>
+                <p className="text-gray-400 text-sm">Published tools are managed from admin and loaded live.</p>
               </div>
             ) : cmsTools.length === 0 ? (
               <div className="text-center py-20">
@@ -292,55 +269,9 @@ export default function ToolsPage() {
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {useFallback && (
-        <section className="py-20">
-          <div className="container-wide">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {FALLBACK_PRODUCTS.map((product, idx) => (
-                <div
-                  key={product.title}
-                  className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
-                  style={{ boxShadow: '0 1px 4px 0 rgb(0 0 0/0.06),0 1px 2px -1px rgb(0 0 0/0.04)' }}
-                >
-                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
-                  <div className="pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-[220ms]" style={{ background: 'radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 70%)' }} />
-
-                  <div className="flex items-start justify-between mb-5">
-                    <div
-                      className={`relative inline-flex h-12 w-12 items-center justify-center rounded-xl flex-shrink-0 transition-transform duration-[220ms] group-hover:scale-105 ${product.color}`}
-                      style={{ background: getIconGradient(idx), boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.07),0 1px 3px rgba(0,0,0,0.06)' }}
-                    >
-                      <product.icon className="h-5 w-5" />
-                    </div>
-                    <span
-                      className={`inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full border ${getFallbackBadgeClass(product.badgeColor)}`}
-                      style={getFallbackBadgeStyle(product.badgeColor)}
-                    >
-                      {product.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="text-[18px] font-bold text-[rgb(var(--public-text))] mb-2 leading-snug tracking-tight">{product.title}</h3>
-                  <p className="text-[rgb(var(--public-text-muted))] text-[13.5px] leading-relaxed flex-1 mb-5">{product.description}</p>
-
-                  <Link
-                    href={product.href}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-[220ms]"
-                  >
-                    {product.badge === 'Live' ? 'View Product' : product.badge === 'Custom Build' ? 'Build Custom' : 'Get Notified'}
-                    <ArrowRight className="h-4 w-4 transition-transform duration-[220ms] group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+          )}
+        </div>
+      </section>
 
       <section
         className="py-20 text-center"
