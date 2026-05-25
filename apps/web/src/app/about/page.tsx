@@ -1,19 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import { Users, Target, Heart, Award, TrendingUp, Globe, LayoutDashboard, ShoppingCart, CalendarCheck, UtensilsCrossed, MapPin, Car, ScanFace, UserCog, Receipt, Workflow, BrainCircuit, Smartphone, Wrench, CheckCircle2 } from 'lucide-react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
-
-const ABOUT_STATS_DEFAULTS = [
-  { value: '0', label: '' },
-  { value: '0', label: '' },
-  { value: '0', label: '' },
-  { value: '0', label: '' },
+const ABOUT_STATS = [
+  { value: '6+', label: 'Years of Product Building' },
+  { value: '40+', label: 'Business Solutions Delivered' },
+  { value: '15+', label: 'Industries Served' },
+  { value: '100%', label: 'Custom Build Focus' },
 ];
 
-const TEAM_DEFAULTS: Array<{ id: string; name: string; role: string; bio: string; imageUrl: string | null }> = [];
+const TEAM: Array<{ id: string; name: string; role: string; bio: string; imageUrl: string | null }> = [
+  { id: 'team-1', name: 'Yantrix Labs Team', role: 'Product & Engineering', bio: 'A focused team building practical, scalable software systems for Indian businesses.', imageUrl: null },
+  { id: 'team-2', name: 'UI/UX Unit', role: 'Design & Experience', bio: 'Designing clear interfaces that reduce manual work and speed up operations.', imageUrl: null },
+  { id: 'team-3', name: 'Backend Unit', role: 'Systems & Automation', bio: 'Building secure APIs, automation pipelines, and reliable business logic.', imageUrl: null },
+  { id: 'team-4', name: 'Support Unit', role: 'Delivery & Care', bio: 'Ensuring smooth launches and responsive support for every implementation.', imageUrl: null },
+];
 
 const AVATAR_COLORS = [
   'from-indigo-500 to-purple-600',
@@ -63,40 +64,6 @@ const MILESTONES = [
 ];
 
 export default function AboutPage() {
-  const [stats, setStats] = useState(ABOUT_STATS_DEFAULTS);
-  const [team, setTeam] = useState(TEAM_DEFAULTS);
-  const [statsLoading, setStatsLoading] = useState(true);
-  const [teamLoading, setTeamLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`${API_URL}/settings/about-stats`, { cache: 'no-store' })
-      .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
-      .then(d => {
-        if (d.success && d.data) {
-          const data = d.data;
-          const updated = [
-            { value: data.stat1Value || ABOUT_STATS_DEFAULTS[0].value, label: data.stat1Label || ABOUT_STATS_DEFAULTS[0].label },
-            { value: data.stat2Value || ABOUT_STATS_DEFAULTS[1].value, label: data.stat2Label || ABOUT_STATS_DEFAULTS[1].label },
-            { value: data.stat3Value || ABOUT_STATS_DEFAULTS[2].value, label: data.stat3Label || ABOUT_STATS_DEFAULTS[2].label },
-            { value: data.stat4Value || ABOUT_STATS_DEFAULTS[3].value, label: data.stat4Label || ABOUT_STATS_DEFAULTS[3].label },
-          ];
-          setStats(updated);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setStatsLoading(false));
-
-    fetch(`${API_URL}/settings/team-members`, { cache: 'no-store' })
-      .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
-      .then(d => {
-        if (d.success && Array.isArray(d.data) && d.data.length > 0) {
-          setTeam(d.data);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setTeamLoading(false));
-  }, []);
-
   return (
     <PublicLayout>
       {/* Hero */}
@@ -121,14 +88,9 @@ export default function AboutPage() {
       <section className="py-16 bg-indigo-600">
         <div className="container-wide">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {statsLoading ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={`stat-skeleton-${i}`} className="animate-pulse">
-                <div className="h-8 w-16 mx-auto rounded bg-indigo-300/40" />
-                <div className="h-3 w-24 mx-auto mt-2 rounded bg-indigo-300/25" />
-              </div>
-            )) : stats.map((stat, i) => (
+            {ABOUT_STATS.map((stat, i) => (
               <div key={`stat-${i}`}>
-                <p className="text-3xl font-bold text-white">{stat.value || '0'}</p>
+                <p className="text-3xl font-bold text-white">{stat.value}</p>
                 <p className="text-indigo-200 mt-1 text-sm">{stat.label}</p>
               </div>
             ))}
@@ -276,14 +238,7 @@ export default function AboutPage() {
             <p className="text-gray-600">A small, passionate group obsessed with making Indian businesses thrive.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamLoading ? Array.from({ length: 4 }).map((_, i) => (
-            <div key={`team-skeleton-${i}`} className="bg-white rounded-2xl border border-gray-100 p-6 text-center animate-pulse">
-              <div className="h-16 w-16 rounded-full bg-gray-200 mx-auto mb-4" />
-              <div className="h-4 w-32 bg-gray-200 rounded mx-auto mb-2" />
-              <div className="h-3 w-24 bg-gray-200 rounded mx-auto mb-3" />
-              <div className="h-3 w-full bg-gray-100 rounded" />
-            </div>
-          )) : team.map((member, i) => {
+            {TEAM.map((member, i) => {
               const initials = member.name.split(' ').filter((n: string) => n).map((n: string) => n[0]).join('').slice(0, 2).toUpperCase();
               const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
               return (
