@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PublicLayout } from '@/components/layout/PublicLayout';
 import Link from 'next/link';
 import {
@@ -8,8 +8,7 @@ import {
   Search, Star, Wrench, X, Filter,
 } from 'lucide-react';
 
-const TOOLS_API_BASE = '/api/proxy/tools';
-const DIRECT_API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1').replace(/\/+$/, '');
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1';
 
 interface CMSTool {
   id: string;
@@ -52,79 +51,62 @@ function getToolHref(tool: CMSTool): string {
 
 export default function ToolsPage() {
   const [cmsTools, setCmsTools] = useState<CMSTool[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const fetchTools = useCallback(async () => {
+  useEffect(() => {
     setLoading(true);
     setErrorMessage('');
-    try {
-      const params = new URLSearchParams({ limit: '100' });
-      if (search) params.set('search', search);
-      if (activeCategory) params.set('category', activeCategory);
-      params.set('_ts', String(Date.now()));
-
-      const requestInit: RequestInit = {
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          Pragma: 'no-cache',
-          Expires: '0',
-        },
-      };
-
-      let res = await fetch(`${TOOLS_API_BASE}?${params.toString()}`, requestInit);
-      if (!res.ok) {
-        res = await fetch(`${DIRECT_API_BASE}/tools?${params.toString()}`, requestInit);
-      }
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-      if (data.success && Array.isArray(data.data)) {
-        const sorted = [...data.data].sort((a: CMSTool, b: CMSTool) => {
-          const orderDiff = (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
-          return orderDiff !== 0 ? orderDiff : a.id.localeCompare(b.id);
-        });
-        setCmsTools(sorted);
-      } else {
-        setCmsTools([]);
-        setErrorMessage('Unable to load published tools right now.');
-      }
-    } catch {
-      setCmsTools([]);
-      setErrorMessage('Unable to reach tools service. Please try again in a moment.');
-    } finally {
-      setLoading(false);
-    }
-  }, [search, activeCategory]);
-
-  useEffect(() => {
-    const url = `${TOOLS_API_BASE}/categories?_ts=${Date.now()}`;
-    const requestInit: RequestInit = {
-      cache: 'no-store',
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        Pragma: 'no-cache',
-        Expires: '0',
-      },
-    };
-
-    fetch(url, requestInit)
-      .then(r => r.json())
-      .then(d => { if (d.success) setCategories(d.data); })
+    fetch(`${API_URL}/tools?limit=100`, { cache: 'no-store' })
+      .then(r => {
+        if (!r.ok) throw new Error('API error');
+        return r.json();
+      })
+      .then(data => {
+        if (data.success && Array.isArray(data.data)) {
+          const sorted = [...data.data].sort((a: CMSTool, b: CMSTool) => {
+            const orderDiff = (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+            return orderDiff !== 0 ? orderDiff : a.id.localeCompare(b.id);
+          });
+          setCmsTools(sorted);
+        } else {
+          setCmsTools([]);
+          setErrorMessage('Unable to load published tools right now.');
+        }
+      })
       .catch(() => {
-        fetch(`${DIRECT_API_BASE}/tools/categories?_ts=${Date.now()}`, requestInit)
-          .then(r => r.json())
-          .then(d => { if (d.success) setCategories(d.data); })
-          .catch(() => {});
+        setCmsTools([]);
+        setErrorMessage('Unable to reach tools service. Please try again in a moment.');
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, []);
 
-  useEffect(() => { fetchTools(); }, [fetchTools]);
+  const categories = useMemo(() => {
+    const uniq = new Set<string>();
+    cmsTools.forEach(t => {
+      const value = (t.category || '').trim();
+      if (value) uniq.add(value);
+    });
+    return Array.from(uniq).sort((a, b) => a.localeCompare(b));
+  }, [cmsTools]);
 
-  const featuredTools = cmsTools.filter(t => t.featured);
+  const filteredTools = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return cmsTools.filter(tool => {
+      if (activeCategory && (tool.category || '').trim() !== activeCategory) return false;
+      if (!q) return true;
+      const text = `${tool.title} ${tool.shortDescription || ''} ${tool.category || ''}`.toLowerCase();
+      return text.includes(q);
+    });
+  }, [cmsTools, search, activeCategory]);
+
+  const featuredTools = useMemo(() => (
+    filteredTools.filter(t => t.featured)
+  ), [filteredTools]);
 
   return (
     <PublicLayout>
@@ -219,7 +201,7 @@ export default function ToolsPage() {
                 <p className="text-gray-700 font-medium mb-2">{errorMessage}</p>
                 <p className="text-gray-400 text-sm">Published tools are managed from admin and loaded live.</p>
               </div>
-            ) : cmsTools.length === 0 ? (
+            ) : filteredTools.length === 0 ? (
               <div className="text-center py-20">
                 <div className="inline-flex h-16 w-16 rounded-2xl bg-gray-100 items-center justify-center mb-4"><Search className="h-8 w-8 text-gray-400" /></div>
                 <p className="text-gray-600 font-medium mb-2">No tools found</p>
@@ -228,7 +210,7 @@ export default function ToolsPage() {
               </div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {cmsTools.map((tool, idx) => (
+                {filteredTools.map((tool, idx) => (
                   <div
                     key={tool.id}
                     className="group relative flex flex-col rounded-2xl border border-[rgb(var(--public-border))] bg-[rgb(var(--public-surface-card))] p-6 overflow-hidden transition-all duration-[220ms] ease-out hover:-translate-y-1.5 hover:shadow-xl"
