@@ -125,7 +125,7 @@ export default function ToolsPage() {
           <h2 className="text-3xl font-bold text-white mb-4">Don&apos;t see what you need?</h2>
           <p className="text-indigo-200 mb-8 text-lg">We build custom software for any business requirement. Tell us what you need.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/contact" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-lg">Start a Project<ArrowRight className="h-4 w-4" /></Link>
+            <Link href="/contact" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#001a4d] px-8 py-4 text-base font-semibold text-[#0b6bff] hover:bg-[#001238] transition-all shadow-lg shadow-black/30">Start a Project<ArrowRight className="h-4 w-4" /></Link>
             <Link href="/gst-invoice" className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-400 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-500/20 transition-all">Try GST Tool</Link>
           </div>
         </div>
