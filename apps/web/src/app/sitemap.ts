@@ -1,9 +1,10 @@
-﻿import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yantrixlab.com';
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = [
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticRoutes = [
     '/',
     '/about',
     '/blog',
@@ -30,6 +31,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/blog/mobile-app-development-kolkata',
   ];
 
+  let toolRoutes: string[] = [];
+  try {
+    const res = await fetch(`${apiUrl.replace(/\/+$/, '')}/tools?limit=500`, { cache: 'no-store' });
+    const data = await res.json();
+    if (data?.success && Array.isArray(data.data)) {
+      toolRoutes = data.data
+        .map((tool: { slug?: string }) => tool.slug)
+        .filter((slug: unknown): slug is string => typeof slug === 'string' && slug.length > 0)
+        .map(slug => `/${slug}`);
+    }
+  } catch {
+    toolRoutes = [];
+  }
+
+  const routes = Array.from(new Set([...staticRoutes, ...toolRoutes]));
+
   const priorityMap: Record<string, number> = {
     '/': 1.0,
     '/services': 0.9,
@@ -46,4 +63,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
   }));
 }
-

@@ -96,13 +96,13 @@ export default function PreviewToolPage() {
           </Link>
           <div>
             <h1 className="text-xl font-bold text-white">Preview: {tool.title}</h1>
-            <p className="text-sm text-gray-500">/tools/{tool.slug}</p>
+            <p className="text-sm text-gray-500">/{tool.slug}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {tool.status === 'PUBLISHED' && tool.visibility === 'PUBLIC' && (
             <a
-              href={`/tools/${tool.slug}`}
+              href={`/${tool.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-xl border border-gray-700 px-4 py-2 text-sm font-medium text-gray-300 hover:bg-gray-800 transition-colors"
@@ -214,7 +214,7 @@ export default function PreviewToolPage() {
             <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">SEO Preview</h3>
               <p className="text-blue-400 text-sm font-medium">{tool.seoTitle || tool.title}</p>
-              <p className="text-green-600 text-xs mt-0.5">yantrixlab.com/tools/{tool.slug}</p>
+              <p className="text-green-600 text-xs mt-0.5">yantrixlab.com/{tool.slug}</p>
               {tool.seoDescription && (
                 <p className="text-gray-400 text-xs mt-1 leading-relaxed">{tool.seoDescription}</p>
               )}
@@ -297,7 +297,7 @@ export default function PreviewToolPage() {
                           <div className="h-2.5 w-2.5 rounded-full bg-red-500/60" />
                           <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/60" />
                           <div className="h-2.5 w-2.5 rounded-full bg-green-500/60" />
-                          <span className="ml-2 text-xs text-gray-500">yantrixlab.com/tools/{tool.slug}</span>
+                          <span className="ml-2 text-xs text-gray-500">yantrixlab.com/{tool.slug}</span>
                         </div>
                         <iframe
                           sandbox="allow-scripts"

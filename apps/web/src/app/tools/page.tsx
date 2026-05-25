@@ -46,7 +46,7 @@ function getIconGradient(idx: number) { return ICON_GRADIENTS[idx % ICON_GRADIEN
 function getToolHref(tool: CMSTool): string {
   if (tool.ctaUrl) return tool.ctaUrl;
   if (tool.toolType === 'COMING_SOON') return '/contact';
-  return `/tools/${tool.slug}`;
+  return `/${tool.slug}`;
 }
 
 export default function ToolsPage() {

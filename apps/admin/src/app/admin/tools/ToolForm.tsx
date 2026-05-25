@@ -10,6 +10,41 @@ import {
 } from 'lucide-react';
 import { adminFetch } from '@/lib/api';
 
+const RESERVED_TOOL_SLUGS = [
+  'about',
+  'ai-tools-for-business-growth',
+  'api',
+  'auth',
+  'blog',
+  'business-automation-tools',
+  'contact',
+  'crm',
+  'custom-software-development-services',
+  'customers',
+  'dashboard',
+  'expenses',
+  'gst-invoice',
+  'hrm',
+  'inventory',
+  'invoices',
+  'mobile-app-development-services',
+  'mvp-development-company',
+  'passive-income-tools-for-business',
+  'payments',
+  'pricing',
+  'privacy',
+  'products',
+  'reports',
+  'saas-development-services',
+  'scanner',
+  'services',
+  'settings',
+  'terms',
+  'tools',
+  'web-app-development-services',
+  'website-development-company-kolkata',
+];
+
 interface ToolFormData {
   title: string;
   slug: string;
@@ -58,7 +93,7 @@ const GST_INVOICE_PRESET: Partial<ToolFormData> = {
   visibility: 'PUBLIC',
   featured: true,
   toolType: 'INTERNAL_APP',
-  internalRoute: '/tools/gst-invoice',
+  internalRoute: '/gst-invoice',
   ctaText: 'Launch Tool',
   pricingType: 'FREE',
   seoTitle: 'GST Invoice Tool — Professional GST Billing for Indian Businesses',
@@ -68,6 +103,10 @@ const GST_INVOICE_PRESET: Partial<ToolFormData> = {
 
 function generateSlug(title: string) {
   return title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
+}
+
+function normalizeSlug(slug: string) {
+  return slug.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
 }
 
 interface ToolFormProps {
@@ -117,8 +156,18 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
     setError('');
     setSuccess('');
     try {
+      const normalizedSlug = normalizeSlug(form.slug || form.title);
+      if (!normalizedSlug) {
+        setError('Slug is required.');
+        return;
+      }
+      if (RESERVED_TOOL_SLUGS.includes(normalizedSlug)) {
+        setError('This slug is reserved by an existing page. Please choose a different slug.');
+        return;
+      }
       const payload = {
         ...form,
+        slug: normalizedSlug,
         screenshots: form.screenshots ? form.screenshots.split('\n').map(u => u.trim()).filter(Boolean) : [],
         tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
         sortOrder: parseInt(form.sortOrder) || 0,
@@ -170,7 +219,7 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
               {mode === 'create' ? 'Create New Tool' : `Edit: ${form.title || 'Untitled'}`}
             </h1>
             <p className="text-sm text-gray-500">
-              {mode === 'create' ? 'Add a new tool to the CMS' : `/tools/${form.slug}`}
+              {mode === 'create' ? 'Add a new tool to the CMS' : `/${form.slug}`}
             </p>
           </div>
         </div>
@@ -308,17 +357,20 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
                 <div>
                   <label className={labelClass}>Slug (URL-friendly ID)</label>
                   <div className="flex gap-2">
-                    <span className="flex items-center px-3 rounded-l-lg bg-gray-700 border border-gray-600 border-r-0 text-gray-400 text-sm">/tools/</span>
+                    <span className="flex items-center px-3 rounded-l-lg bg-gray-700 border border-gray-600 border-r-0 text-gray-400 text-sm">/</span>
                     <input
                       type="text"
                       placeholder="gst-invoice-tool"
                       value={form.slug}
-                      onChange={e => { setSlugManual(true); set('slug', e.target.value.toLowerCase().replace(/\s+/g, '-')); }}
+                      onChange={e => { setSlugManual(true); set('slug', normalizeSlug(e.target.value)); }}
                       className={`${inputClass} rounded-l-none flex-1`}
                     />
                   </div>
                   {!slugManual && (
                     <p className="text-xs text-gray-600 mt-1">Auto-generated from title. Edit to customize.</p>
+                  )}
+                  {RESERVED_TOOL_SLUGS.includes(normalizeSlug(form.slug || '')) && (
+                    <p className="text-xs text-red-400 mt-1">This slug is reserved and cannot be used.</p>
                   )}
                 </div>
                 <div>
@@ -378,7 +430,7 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
                     <label className={labelClass}>CTA Button URL</label>
                     <input
                       type="text"
-                      placeholder="/tools/gst-invoice or https://..."
+                      placeholder="/qr-code-generator or https://..."
                       value={form.ctaUrl}
                       onChange={e => set('ctaUrl', e.target.value)}
                       className={inputClass}
@@ -478,7 +530,7 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
                     <label className={labelClass}>Internal Route</label>
                     <input
                       type="text"
-                      placeholder="/tools/gst-invoice"
+                      placeholder="/gst-invoice"
                       value={form.internalRoute}
                       onChange={e => set('internalRoute', e.target.value)}
                       className={inputClass}
@@ -704,8 +756,8 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
                 {/* SEO Preview */}
                 <div className="rounded-xl border border-gray-700 p-4 bg-gray-800/30">
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Google Preview</p>
-                  <p className="text-blue-400 text-sm font-medium">{form.seoTitle || form.title || 'Tool Title'}</p>
-                  <p className="text-green-600 text-xs mt-0.5">yantrixlab.com/tools/{form.slug || 'tool-slug'}</p>
+                    <p className="text-blue-400 text-sm font-medium">{form.seoTitle || form.title || 'Tool Title'}</p>
+                  <p className="text-green-600 text-xs mt-0.5">yantrixlab.com/{form.slug || 'tool-slug'}</p>
                   <p className="text-gray-400 text-xs mt-1 leading-relaxed">
                     {form.seoDescription || form.shortDescription || 'Tool description will appear here...'}
                   </p>

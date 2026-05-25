@@ -11,6 +11,41 @@ import {
   SUBSCRIPTION_CONTROL_KEY,
 } from "../utils/subscriptionControl";
 
+const RESERVED_TOOL_SLUGS = [
+  "about",
+  "ai-tools-for-business-growth",
+  "api",
+  "auth",
+  "blog",
+  "business-automation-tools",
+  "contact",
+  "crm",
+  "custom-software-development-services",
+  "customers",
+  "dashboard",
+  "expenses",
+  "gst-invoice",
+  "hrm",
+  "inventory",
+  "invoices",
+  "mobile-app-development-services",
+  "mvp-development-company",
+  "passive-income-tools-for-business",
+  "payments",
+  "pricing",
+  "privacy",
+  "products",
+  "reports",
+  "saas-development-services",
+  "scanner",
+  "services",
+  "settings",
+  "terms",
+  "tools",
+  "web-app-development-services",
+  "website-development-company-kolkata",
+];
+
 const router = Router();
 router.use(authenticate);
 router.use(requireSuperAdmin);
@@ -923,6 +958,15 @@ function generateSlug(title: string): string {
     .replace(/-+/g, "-");
 }
 
+function normalizeToolSlug(slug: string): string {
+  return slug
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 router.post(
   "/tools",
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -959,9 +1003,18 @@ router.post(
         return;
       }
 
-      const finalSlug = (slug || generateSlug(title))
-        .toLowerCase()
-        .replace(/\s+/g, "-");
+      const finalSlug = normalizeToolSlug(slug || generateSlug(title));
+      if (!finalSlug) {
+        res.status(400).json({ success: false, error: "Slug is required" });
+        return;
+      }
+      if (RESERVED_TOOL_SLUGS.includes(finalSlug)) {
+        res.status(400).json({
+          success: false,
+          error: "This slug is reserved by an existing page. Please choose a different slug.",
+        });
+        return;
+      }
 
       const existing = await prisma.tool.findUnique({
         where: { slug: finalSlug },
@@ -1060,6 +1113,13 @@ router.put(
       }
       if (data.sortOrder !== undefined)
         data.sortOrder = parseInt(data.sortOrder);
+      if (data.slug !== undefined) {
+        data.slug = normalizeToolSlug(String(data.slug));
+        if (!data.slug) {
+          res.status(400).json({ success: false, error: "Slug is required" });
+          return;
+        }
+      }
 
       // System tools: prevent slug changes, unpublishing, or making private
       if (existing.isSystem) {
@@ -1091,6 +1151,13 @@ router.put(
 
       // If slug is being changed, check for uniqueness
       if (data.slug && data.slug !== existing.slug) {
+        if (RESERVED_TOOL_SLUGS.includes(data.slug)) {
+          res.status(400).json({
+            success: false,
+            error: "This slug is reserved by an existing page. Please choose a different slug.",
+          });
+          return;
+        }
         const slugConflict = await prisma.tool.findUnique({
           where: { slug: data.slug },
         });

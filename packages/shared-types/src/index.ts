@@ -91,6 +91,42 @@ export enum NotificationType {
   SYSTEM = 'SYSTEM',
 }
 
+export const RESERVED_TOOL_SLUGS = [
+  '',
+  'about',
+  'ai-tools-for-business-growth',
+  'api',
+  'auth',
+  'blog',
+  'business-automation-tools',
+  'contact',
+  'crm',
+  'custom-software-development-services',
+  'customers',
+  'dashboard',
+  'expenses',
+  'gst-invoice',
+  'hrm',
+  'inventory',
+  'invoices',
+  'mobile-app-development-services',
+  'mvp-development-company',
+  'passive-income-tools-for-business',
+  'payments',
+  'pricing',
+  'privacy',
+  'products',
+  'reports',
+  'saas-development-services',
+  'scanner',
+  'services',
+  'settings',
+  'terms',
+  'tools',
+  'web-app-development-services',
+  'website-development-company-kolkata',
+].sort();
+
 // ─── Core Types ────────────────────────────────────────────────────────────
 
 export interface User {

@@ -352,7 +352,7 @@ interface CMSTool {
 function getCmsToolHref(tool: CMSTool): string {
   if (tool.ctaUrl) return tool.ctaUrl;
   if (tool.toolType === "COMING_SOON") return "/contact";
-  return `/services`;
+  return `/${tool.slug}`;
 }
 
 const HOME_HEADER_DEFAULTS = {
