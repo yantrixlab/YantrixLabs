@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 const TOOLS_API_BASE = '/api/proxy/tools';
+const DIRECT_API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000/api/v1').replace(/\/+$/, '');
 
 interface CMSTool {
   id: string;
@@ -66,14 +67,19 @@ export default function ToolsPage() {
       if (activeCategory) params.set('category', activeCategory);
       params.set('_ts', String(Date.now()));
 
-      const res = await fetch(`${TOOLS_API_BASE}?${params.toString()}`, {
+      const requestInit: RequestInit = {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           Pragma: 'no-cache',
           Expires: '0',
         },
-      });
+      };
+
+      let res = await fetch(`${TOOLS_API_BASE}?${params.toString()}`, requestInit);
+      if (!res.ok) {
+        res = await fetch(`${DIRECT_API_BASE}/tools?${params.toString()}`, requestInit);
+      }
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
@@ -96,17 +102,24 @@ export default function ToolsPage() {
 
   useEffect(() => {
     const url = `${TOOLS_API_BASE}/categories?_ts=${Date.now()}`;
-    fetch(url, {
+    const requestInit: RequestInit = {
       cache: 'no-store',
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         Pragma: 'no-cache',
         Expires: '0',
       },
-    })
+    };
+
+    fetch(url, requestInit)
       .then(r => r.json())
       .then(d => { if (d.success) setCategories(d.data); })
-      .catch(() => {});
+      .catch(() => {
+        fetch(`${DIRECT_API_BASE}/tools/categories?_ts=${Date.now()}`, requestInit)
+          .then(r => r.json())
+          .then(d => { if (d.success) setCategories(d.data); })
+          .catch(() => {});
+      });
   }, []);
 
   useEffect(() => { fetchTools(); }, [fetchTools]);
