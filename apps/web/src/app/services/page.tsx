@@ -174,21 +174,24 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-brand-600 to-brand-900 text-center">
+      <section
+        className="py-20 text-center"
+        style={{ background: 'linear-gradient(135deg, #0b3d91 0%, #062968 100%)' }}
+      >
         <div className="container-wide max-w-2xl mx-auto">
-          <div className="mb-8 text-indigo-100 text-sm leading-relaxed">
-            <Link href="/saas-development-services" className="font-semibold text-white hover:underline">SaaS development services</Link>
+          <div className="mb-8 text-sm leading-relaxed" style={{ color: '#cfe0ff' }}>
+            <Link href="/saas-development-services" className="font-semibold hover:underline" style={{ color: '#ffffff' }}>SaaS development services</Link>
             {' '}|{' '}
-            <Link href="/web-app-development-services" className="font-semibold text-white hover:underline">web app development services</Link>
+            <Link href="/web-app-development-services" className="font-semibold hover:underline" style={{ color: '#ffffff' }}>web app development services</Link>
             {' '}|{' '}
-            <Link href="/mobile-app-development-services" className="font-semibold text-white hover:underline">mobile app development services</Link>
+            <Link href="/mobile-app-development-services" className="font-semibold hover:underline" style={{ color: '#ffffff' }}>mobile app development services</Link>
             {' '}|{' '}
-            <Link href="/mvp-development-company" className="font-semibold text-white hover:underline">MVP app development services</Link>
+            <Link href="/mvp-development-company" className="font-semibold hover:underline" style={{ color: '#ffffff' }}>MVP app development services</Link>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-3xl font-bold mb-4" style={{ color: '#ffffff' }}>
             Let&apos;s build your project
           </h2>
-          <p className="text-indigo-200 mb-8 text-lg">
+          <p className="mb-8 text-lg" style={{ color: '#8fc2ff' }}>
             Tell us about your requirements. We&apos;ll respond within 24 hours.
           </p>
           <Link

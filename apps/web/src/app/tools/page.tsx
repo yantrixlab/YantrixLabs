@@ -113,17 +113,20 @@ export default function ToolsPage() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-brand-600 to-brand-900 text-center">
+      <section
+        className="py-20 text-center"
+        style={{ background: 'linear-gradient(135deg, #0b3d91 0%, #062968 100%)' }}
+      >
         <div className="container-wide max-w-2xl mx-auto">
-          <div className="mb-8 text-indigo-100 text-sm leading-relaxed">
-            <Link href="/tools" className="font-semibold text-white hover:underline">business automation tools</Link>
+          <div className="mb-8 text-sm leading-relaxed" style={{ color: '#cfe0ff' }}>
+            <Link href="/tools" className="font-semibold hover:underline" style={{ color: '#ffffff' }}>business automation tools</Link>
             {' '}|{' '}
-            <Link href="/passive-income-tools-for-business" className="font-semibold text-white hover:underline">passive income tools</Link>
+            <Link href="/passive-income-tools-for-business" className="font-semibold hover:underline" style={{ color: '#ffffff' }}>passive income tools</Link>
             {' '}|{' '}
-            <Link href="/ai-tools-for-business-growth" className="font-semibold text-white hover:underline">AI business tools</Link>
+            <Link href="/ai-tools-for-business-growth" className="font-semibold hover:underline" style={{ color: '#ffffff' }}>AI business tools</Link>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-4">Don&apos;t see what you need?</h2>
-          <p className="text-indigo-200 mb-8 text-lg">We build custom software for any business requirement. Tell us what you need.</p>
+          <h2 className="text-3xl font-bold mb-4" style={{ color: '#ffffff' }}>Don&apos;t see what you need?</h2>
+          <p className="mb-8 text-lg" style={{ color: '#8fc2ff' }}>We build custom software for any business requirement. Tell us what you need.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/contact" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#001a4d] px-8 py-4 text-base font-semibold text-[#0b6bff] hover:bg-[#001238] transition-all shadow-lg shadow-black/30">Start a Project<ArrowRight className="h-4 w-4" /></Link>
             <Link href="/gst-invoice" className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-400 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-500/20 transition-all">Try GST Tool</Link>

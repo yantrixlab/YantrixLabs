@@ -265,11 +265,14 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-brand-600 to-brand-900 text-center">
+      <section
+        className="py-20 text-center"
+        style={{ background: 'linear-gradient(135deg, #0b3d91 0%, #062968 100%)' }}
+      >
         <div className="container-wide max-w-2xl mx-auto">
-          <TrendingUp className="h-12 w-12 text-indigo-300 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-white mb-4">Let&apos;s build something together</h2>
-          <p className="text-indigo-200 mb-8">We work with startups, SMEs, and enterprises to create software that drives growth.</p>
+          <TrendingUp className="h-12 w-12 mx-auto mb-6" style={{ color: '#8fc2ff' }} />
+          <h2 className="text-3xl font-bold mb-4" style={{ color: '#ffffff' }}>Let&apos;s build something together</h2>
+          <p className="mb-8" style={{ color: '#8fc2ff' }}>We work with startups, SMEs, and enterprises to create software that drives growth.</p>
           <a
             href="/contact"
             className="inline-flex items-center gap-2 rounded-xl bg-[#001a4d] px-8 py-4 text-base font-semibold text-[#0b6bff] hover:bg-[#001238] transition-all shadow-lg shadow-black/30"
