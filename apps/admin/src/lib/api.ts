@@ -18,6 +18,22 @@ function normalizeApiUrl(url?: string): string {
 
 export const API_URL = normalizeApiUrl(rawApiUrl);
 
+export function getApiCandidates(): string[] {
+  const candidates = new Set<string>();
+
+  if (rawApiUrl) {
+    candidates.add(normalizeApiUrl(rawApiUrl));
+  }
+
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    candidates.add(`${window.location.origin}/api/v1`);
+  }
+
+  candidates.add('http://localhost:4000/api/v1');
+
+  return Array.from(candidates);
+}
+
 export function getAdminToken(): string | null {
   if (typeof window === 'undefined') return null;
   return localStorage.getItem('adminToken');
