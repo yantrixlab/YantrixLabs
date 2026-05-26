@@ -55,9 +55,9 @@ const navLinks = [
 const trustItems = ['Android Development', 'iOS Apps', 'Web Platforms', 'AI Automation', 'SaaS Products'];
 
 const floatCards = [
-  { title: 'Android App', subtitle: 'Native Kotlin Performance', icon: Smartphone, x: -120, y: 42, delay: 0 },
-  { title: 'Enterprise Web', subtitle: 'Scalable Product Systems', icon: Globe, x: 84, y: -90, delay: 0.3 },
-  { title: 'AI Workflow', subtitle: 'Automated Ops Intelligence', icon: Bot, x: 102, y: 92, delay: 0.6 },
+  { title: 'Android App', subtitle: 'Native Kotlin Performance', icon: Smartphone, x: -165, y: 10, delay: 0 },
+  { title: 'Enterprise Web', subtitle: 'Scalable Product Systems', icon: Globe, x: 135, y: -120, delay: 0.3 },
+  { title: 'AI Workflow', subtitle: 'Automated Ops Intelligence', icon: Bot, x: 145, y: 135, delay: 0.6 },
 ];
 
 export default function HeroSection({ loggedIn }: HeroSectionProps) {
@@ -200,6 +200,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
 
       <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-14 px-6 pb-16 pt-28 md:px-10 lg:grid-cols-2 lg:gap-10 lg:px-12">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }} className="text-center lg:text-left">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-[52%] bg-[radial-gradient(ellipse_at_left,rgba(2,8,24,0.55),transparent_70%)]" />
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -220,7 +221,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.08 }}
-            className="text-5xl font-extrabold leading-[1.02] tracking-tight text-white md:text-7xl"
+            className="text-5xl font-extrabold leading-[1.02] tracking-tight text-white drop-shadow-[0_8px_30px_rgba(15,23,42,0.65)] md:text-7xl"
           >
             Modern Apps, <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">AI</span> Tools &{' '}
             <span className="bg-gradient-to-r from-violet-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent">Automation</span>{' '}
@@ -231,7 +232,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.16 }}
-            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-300 lg:mx-0"
+            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-100 lg:mx-0"
           >
             We engineer native Android and iOS apps, robust web platforms, SaaS products, custom business automation, and scalable
             software systems with modern UI/UX for ambitious teams.
@@ -269,19 +270,19 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             className="mt-8 flex flex-wrap items-center justify-center gap-2 lg:justify-start"
           >
             {trustItems.map((item) => (
-              <span key={item} className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-200">
+              <span key={item} className="rounded-full border border-cyan-200/25 bg-slate-900/65 px-3 py-1.5 text-xs font-medium text-cyan-100">
                 {item}
               </span>
             ))}
           </motion.div>
         </motion.div>
 
-        <div className="relative h-[560px] w-full">
+        <div className="relative h-[620px] w-full">
           <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.2 }}
-            className="absolute left-1/2 top-1/2 w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-xl shadow-[0_24px_60px_rgba(2,10,30,0.55)]"
+            className="absolute left-1/2 top-1/2 z-20 w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-xl shadow-[0_24px_60px_rgba(2,10,30,0.55)]"
           >
             <div className="mb-4 flex items-center justify-between">
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Live Metrics</span>
@@ -323,7 +324,9 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
                   rotate: { duration: 5 + idx, repeat: Infinity, ease: 'easeInOut', delay: card.delay },
                 }}
                 whileHover={{ scale: 1.04 }}
-                className="absolute left-1/2 top-1/2 w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl shadow-[0_18px_40px_rgba(2,10,30,0.45)]"
+                className={`absolute left-1/2 top-1/2 w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl shadow-[0_18px_40px_rgba(2,10,30,0.45)] ${
+                  idx === 1 ? 'z-30' : idx === 0 ? 'z-10' : 'z-10'
+                }`}
               >
                 <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10">
                   <Icon className="h-4 w-4 text-cyan-100" />
@@ -336,9 +339,9 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
 
           <motion.div
             initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: [120, 104, 120] }}
+            animate={{ opacity: 1, y: [165, 150, 165] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute left-[12%] top-1/2 w-[230px] rounded-2xl border border-white/20 bg-slate-950/55 p-4 backdrop-blur-xl"
+            className="absolute left-[2%] top-1/2 z-20 w-[230px] rounded-2xl border border-white/20 bg-slate-950/70 p-4 backdrop-blur-xl"
           >
             <div className="mb-2 flex items-center gap-2 text-xs text-slate-300">
               <Braces className="h-4 w-4 text-cyan-200" />
@@ -355,9 +358,9 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
 
           <motion.div
             initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: [-140, -154, -140] }}
+            animate={{ opacity: 1, y: [-180, -194, -180] }}
             transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
-            className="absolute right-[3%] top-1/2 w-[210px] rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl"
+            className="absolute right-[2%] top-1/2 z-20 w-[210px] rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl"
           >
             <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-slate-100">
               <Zap className="h-4 w-4 text-violet-200" />
@@ -374,7 +377,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="absolute right-[16%] top-[14%] rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs text-slate-100 backdrop-blur-xl"
+            className="absolute right-[18%] top-[6%] z-30 rounded-xl border border-white/20 bg-white/80 px-3 py-2 text-xs text-slate-700 backdrop-blur-xl"
           >
             <div className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4 text-emerald-200" />
