@@ -121,7 +121,6 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
               <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
               <span className="text-[16px] font-semibold text-[#e9f1ff] tracking-tight">Yantrix Labs</span>
             </Link>
-          </Link>
 
           <nav className="hidden items-center gap-1.5 md:flex">
             {navLinks.map((item) => {
