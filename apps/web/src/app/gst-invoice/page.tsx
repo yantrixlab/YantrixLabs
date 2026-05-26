@@ -5,26 +5,23 @@ import GSTInvoiceHero from '@/components/layout/GSTInvoiceHero';
 import { BarChart3, Boxes, FileSpreadsheet, FileText, PackageSearch, QrCode, ScanLine, ShieldCheck } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'GST Billing & Inventory Management Software India | Android Scanner Billing | Yantrix',
+  title: 'GST Billing & Inventory Software for Indian Businesses | Yantrix Labs',
   description:
-    'Modern GST billing and inventory software for Indian businesses. Create invoices, scan products from Android, track stock, and export PDF/Excel reports in one platform.',
+    'Create GST invoices, scan products from Android, manage inventory, and export PDF/Excel reports from one modern billing platform.',
   keywords: [
     'GST billing software India',
-    'GST invoice scanner',
-    'Android barcode scanner for billing',
-    'barcode billing system India',
-    'inventory scanner app',
-    'GST inventory software India',
-    'free GST invoice generator',
-    'invoice generator with GST',
+    'GST invoice generator',
+    'Android barcode scanner billing',
+    'inventory management software India',
+    'barcode billing system',
+    'GST inventory software',
+    'PDF invoice generator',
+    'Excel billing reports',
   ],
-  alternates: {
-    canonical: 'https://yantrixlab.com/gst-invoice',
-  },
+  alternates: { canonical: 'https://yantrixlab.com/gst-invoice' },
   openGraph: {
-    title: 'GST Billing, Inventory & Mobile Scanner in One System | Yantrix Labs',
-    description:
-      'Run GST billing, inventory, exports, and Android scan-to-invoice workflows from one modern business platform.',
+    title: 'GST Billing + Inventory + Android Scanner | Yantrix Labs',
+    description: 'Fast GST billing with live product scanning, stock updates, and export-ready reports.',
     url: 'https://yantrixlab.com/gst-invoice',
     siteName: 'Yantrix Labs',
     locale: 'en_IN',
@@ -33,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GST Billing & Inventory Software with Android Scanner',
-    description: 'Create GST invoices, scan products live, update inventory, and export reports in one app.',
+    title: 'GST Billing & Inventory with Android Scanner',
+    description: 'Generate GST invoices, scan products, track stock, and export reports in one workflow.',
     images: ['https://yantrixlab.com/og-gst-tool.png'],
   },
 };
@@ -45,93 +42,85 @@ const faqJsonLd = {
   mainEntity: [
     {
       '@type': 'Question',
-      name: 'Can I use an Android phone as a GST invoice scanner?',
+      name: 'Can I use an Android phone for GST billing product scanning?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. You can pair Android with QR and scan barcode or QR products directly into invoice workflows.',
+        text: 'Yes. You can pair Android using QR and scan product barcodes directly into invoice workflows.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Do I need a dedicated barcode scanner machine?',
+      name: 'Does it support inventory updates while billing?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'No. Yantrix supports scan-based billing with Android phones, so extra hardware is optional.',
+        text: 'Yes. Product scans can update invoice rows and stock movement in real time.',
       },
     },
     {
       '@type': 'Question',
-      name: 'Does scanning also help with inventory updates?',
+      name: 'Can I export GST invoices and business reports?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. Scan actions can support both invoice line updates and real-time stock movement workflows.',
-      },
-    },
-    {
-      '@type': 'Question',
-      name: 'Can I export invoices and reports?',
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: 'Yes. You can generate PDF invoices and export business data to Excel for accounting and reporting.',
+        text: 'Yes. You can download invoices in PDF and export business data in Excel format.',
       },
     },
   ],
 };
 
-const trustBadges = ['GST Invoice', 'Inventory', 'Barcode Scanner', 'Stock Tracking', 'PDF Invoice', 'Excel Export', 'Reports', 'Multi Templates'];
+const highlights = ['GST Invoice', 'Inventory', 'Barcode Scanner', 'PDF Invoice', 'Excel Export', 'Reports'];
 
 const features = [
   {
     icon: FileText,
-    title: 'Professional GST Invoicing',
-    desc: 'Auto GST calculations, clean tax splits, customer details, and ready-to-share invoice formats.',
+    title: 'GST Invoice Generation',
+    desc: 'Create tax-ready invoices with clean customer details, item-level tax, and polished templates.',
   },
   {
     icon: ScanLine,
-    title: 'Instant Mobile Barcode Scanning',
-    desc: 'Connect Android with QR and add products directly into live invoices without manual typing.',
+    title: 'Android Product Scanner',
+    desc: 'Scan products from Android and push them into invoices instantly for faster billing counters.',
     highlight: true,
   },
   {
     icon: Boxes,
-    title: 'Real-Time Inventory Management',
-    desc: 'Track stock movement, monitor low inventory, and update product records through scan workflows.',
+    title: 'Inventory Control',
+    desc: 'Monitor stock levels, track movement, and reduce manual errors across daily operations.',
   },
   {
     icon: BarChart3,
-    title: 'Reports & Exports',
-    desc: 'Get GST-ready summaries, business snapshots, and export data as PDF or Excel quickly.',
+    title: 'Business Reports',
+    desc: 'Generate actionable summaries for sales, tax, and inventory in one unified dashboard.',
   },
   {
     icon: PackageSearch,
-    title: 'Multiple Professional Templates',
-    desc: 'Use polished templates that look credible for retailers, distributors, and service businesses.',
+    title: 'Multi-Template Billing',
+    desc: 'Use modern invoice templates tailored for retailers, wholesalers, and service businesses.',
   },
 ];
 
-const steps = [
-  { step: '01', title: 'Create Invoice', desc: 'Start a bill with customer details and pricing setup.' },
-  { step: '02', title: 'Scan Products Using Android', desc: 'Pair scanner app with QR and scan barcode or QR items.' },
-  { step: '03', title: 'Inventory Updates Automatically', desc: 'Invoice rows and stock values sync instantly.' },
-  { step: '04', title: 'Download PDF or Export Excel', desc: 'Share invoices fast and keep records reporting-ready.' },
+const workflow = [
+  { step: '01', title: 'Create Bill', desc: 'Add customer and start invoice instantly.' },
+  { step: '02', title: 'Scan Products', desc: 'Use Android scanner to add items quickly.' },
+  { step: '03', title: 'Sync Stock', desc: 'Inventory updates as items are billed.' },
+  { step: '04', title: 'Export & Share', desc: 'Download PDF or Excel in one click.' },
 ];
 
 const faqs = [
   {
-    q: 'Can I use this as GST barcode billing software for my shop?',
-    a: 'Yes. It is built for Indian shop owners and SMEs who need fast GST billing with scan-based product entry.',
+    q: 'Is this suitable for small and medium businesses in India?',
+    a: 'Yes. It is designed for Indian shops, trading businesses, and service teams that need faster GST billing and stock management.',
   },
   {
-    q: 'Does Android scanner flow require extra login every time?',
-    a: 'No. You can pair the scanner through QR and continue scan workflows without repeated setup.',
+    q: 'Do I need dedicated scanner hardware?',
+    a: 'No. Android scan workflows are supported, so additional scanner devices are optional.',
   },
   {
-    q: 'Is this suitable for inventory scanner app use cases?',
-    a: 'Yes. Along with invoicing, the workflow supports stock tracking and product operations from the same system.',
+    q: 'Can my team use it for both billing and inventory?',
+    a: 'Yes. Billing and stock operations run together to reduce duplicate work and improve accuracy.',
   },
   {
-    q: 'Can I export billing and inventory data for accounting?',
-    a: 'Yes. You can export PDF invoices and Excel reports for business sharing and compliance records.',
+    q: 'Can I keep records for accounting and compliance?',
+    a: 'Yes. Export-ready PDF invoices and Excel reports make audits and accounting workflows easier.',
   },
 ];
 
@@ -144,10 +133,10 @@ export default function GSTInvoicePage() {
 
       <section className="border-y border-slate-800 bg-[#0f172a] py-8">
         <div className="container-wide">
-          <p className="text-center text-sm font-medium text-slate-300">Everything needed to run GST billing efficiently</p>
-          <div className="mt-5 flex flex-wrap justify-center gap-2.5">
-            {trustBadges.map((badge) => (
-              <span key={badge} className="rounded-full border border-slate-700 bg-slate-900/70 px-4 py-2 text-xs font-semibold text-cyan-100">
+          <p className="text-center text-sm font-medium text-slate-300">Built for high-speed GST billing operations</p>
+          <div className="mt-4 flex flex-wrap justify-center gap-2.5">
+            {highlights.map((badge) => (
+              <span key={badge} className="rounded-full border border-slate-700 bg-slate-900/75 px-4 py-2 text-xs font-semibold text-cyan-100">
                 {badge}
               </span>
             ))}
@@ -158,9 +147,9 @@ export default function GSTInvoicePage() {
       <section className="bg-[#0b1020] py-20">
         <div className="container-wide">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">Everything you need to manage GST billing</h2>
+            <h2 className="text-3xl font-bold text-white sm:text-4xl">Everything Needed for Modern GST Billing</h2>
             <p className="mt-4 text-slate-300">
-              Built for fast, accurate GST billing with live scanning, inventory control, and export-ready reporting.
+              One platform for GST invoices, Android scanning, inventory updates, and reporting workflows.
             </p>
           </div>
 
@@ -168,7 +157,7 @@ export default function GSTInvoicePage() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className={`group rounded-2xl border p-6 transition duration-300 hover:-translate-y-1 ${
+                className={`rounded-2xl border p-6 transition duration-300 hover:-translate-y-1 ${
                   feature.highlight
                     ? 'border-cyan-400/50 bg-gradient-to-br from-cyan-500/20 via-blue-500/10 to-violet-500/20 shadow-xl shadow-cyan-950/40'
                     : 'border-slate-700 bg-slate-900/60 hover:border-slate-500'
@@ -180,22 +169,18 @@ export default function GSTInvoicePage() {
               </div>
             ))}
           </div>
-
-          <div className="mt-8 rounded-2xl border border-cyan-400/30 bg-cyan-500/10 px-5 py-4 text-center text-sm font-semibold text-cyan-100">
-            Scan · Sync · Save
-          </div>
         </div>
       </section>
 
       <section className="bg-[#10182f] py-20">
         <div className="container-wide">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">How It Works</h2>
-            <p className="mt-4 text-slate-300">Simple flow for faster billing, cleaner operations, and fewer manual errors.</p>
+            <h2 className="text-3xl font-bold text-white sm:text-4xl">Simple Workflow, Faster Billing</h2>
+            <p className="mt-4 text-slate-300">A clean 4-step flow designed for teams that need speed and accuracy.</p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {steps.map((item) => (
+            {workflow.map((item) => (
               <div key={item.step} className="rounded-2xl border border-slate-700 bg-slate-900/70 p-6">
                 <p className="text-xs font-bold tracking-wider text-cyan-300">STEP {item.step}</p>
                 <h3 className="mt-3 text-lg font-semibold text-white">{item.title}</h3>
@@ -209,8 +194,8 @@ export default function GSTInvoicePage() {
       <section className="bg-[#0b1020] py-20">
         <div className="container-wide">
           <div className="mx-auto mb-12 max-w-3xl text-center">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">Live Dashboard Showcase</h2>
-            <p className="mt-4 text-slate-300">Billing, stock, scanner status, and exports in one modern workspace.</p>
+            <h2 className="text-3xl font-bold text-white sm:text-4xl">Product Snapshot</h2>
+            <p className="mt-4 text-slate-300">A unified dashboard for invoice generation, inventory, and exports.</p>
           </div>
 
           <div className="rounded-3xl border border-slate-700 bg-slate-950/80 p-5 shadow-2xl shadow-blue-950/40">
@@ -223,15 +208,15 @@ export default function GSTInvoicePage() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between rounded-lg bg-slate-800 px-3 py-2 text-sm text-slate-200">
                     <span>A4 Copier Paper</span>
-                    <span>₹1,950</span>
+                    <span>Rs 1,950</span>
                   </div>
                   <div className="flex items-center justify-between rounded-lg bg-slate-800 px-3 py-2 text-sm text-slate-200">
                     <span>Packing Tape Roll</span>
-                    <span>₹540</span>
+                    <span>Rs 540</span>
                   </div>
                   <div className="flex items-center justify-between rounded-lg bg-slate-800 px-3 py-2 text-sm text-slate-200">
                     <span>Marker Set</span>
-                    <span>₹380</span>
+                    <span>Rs 380</span>
                   </div>
                 </div>
               </div>
@@ -244,7 +229,7 @@ export default function GSTInvoicePage() {
                 </div>
                 <div className="rounded-2xl border border-slate-700 bg-slate-900 p-4">
                   <p className="text-xs font-semibold text-slate-400">GST Summary</p>
-                  <p className="mt-1 text-lg font-bold text-white">₹2,870 tax</p>
+                  <p className="mt-1 text-lg font-bold text-white">Rs 2,870 tax</p>
                   <p className="text-xs text-slate-400">CGST + SGST split ready</p>
                 </div>
                 <div className="rounded-2xl border border-slate-700 bg-slate-900 p-4">
@@ -260,10 +245,10 @@ export default function GSTInvoicePage() {
 
           <div className="mt-8 grid gap-4 md:grid-cols-4">
             {[
-              { icon: QrCode, label: 'QR Instant Connect' },
-              { icon: ScanLine, label: 'Live Scan to Invoice' },
+              { icon: QrCode, label: 'QR Pairing' },
+              { icon: ScanLine, label: 'Live Scan Billing' },
               { icon: ShieldCheck, label: 'Reliable Data Flow' },
-              { icon: FileSpreadsheet, label: 'Business Exports' },
+              { icon: FileSpreadsheet, label: 'Excel Exports' },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-900/60 p-4">
                 <item.icon className="h-5 w-5 text-cyan-300" />
@@ -292,21 +277,15 @@ export default function GSTInvoicePage() {
 
       <section className="bg-gradient-to-r from-[#0e1a33] via-[#12335f] to-[#142b46] py-16 text-center text-white">
         <div className="container-wide mx-auto max-w-3xl">
-          <h2 className="text-3xl font-bold sm:text-4xl">Modern GST Billing &amp; Inventory Software for Growing Businesses</h2>
+          <h2 className="text-3xl font-bold sm:text-4xl">Start Faster GST Billing with Scanner + Inventory in One Platform</h2>
           <p className="mt-4 text-cyan-100">
-            Faster billing, real-time stock tracking, Android barcode scanning, PDF invoices, and Excel exports in one platform.
+            Reduce billing time, improve stock accuracy, and keep export-ready GST records from one modern system.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              href="/dashboard?guest=1"
-              className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#0b3b5a] hover:bg-slate-100"
-            >
+            <Link href="/dashboard?guest=1" className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#0b3b5a] hover:bg-slate-100">
               Start Free Billing
             </Link>
-            <Link
-              href="/scanner"
-              className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
-            >
+            <Link href="/scanner" className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
               Download Scanner APK
             </Link>
           </div>
