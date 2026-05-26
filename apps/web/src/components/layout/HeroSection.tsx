@@ -107,10 +107,20 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
         <div className="absolute inset-0 bg-[linear-gradient(rgba(125,145,180,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(125,145,180,0.10)_1px,transparent_1px)] bg-[size:62px_62px] [mask-image:radial-gradient(ellipse_at_center,black_44%,transparent_82%)]" />
       </div>
 
-      <header className="fixed left-0 right-0 top-0 z-50 border-b border-[#7188a8]/60 bg-[#9ca7b8]/95 backdrop-blur-md">
-        <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 md:px-10 lg:px-12">
-          <Link href="/" className="text-lg font-semibold tracking-tight text-white">
-            Yantrix Labs
+      <header
+        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-all duration-300"
+        style={{
+          backgroundColor: 'rgba(4, 22, 51, 0.30)',
+          borderTop: '1px solid rgba(30, 74, 134, 0.55)',
+          borderBottom: '1px solid rgba(30, 74, 134, 0.55)',
+        }}
+      >
+        <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
+          <div className="flex h-[72px] items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
+              <span className="text-[16px] font-semibold text-[#e9f1ff] tracking-tight">Yantrix Labs</span>
+            </Link>
           </Link>
 
           <nav className="hidden items-center gap-1.5 md:flex">
@@ -150,14 +160,15 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             </Link>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen((v) => !v)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0f5ec8] text-white md:hidden"
-            aria-label="Menu"
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((v) => !v)}
+              className="md:hidden p-2 text-[#ffffff]"
+              aria-label="Menu"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-[#1e4a86]/60 bg-[#041633] px-4 py-4 space-y-2">
