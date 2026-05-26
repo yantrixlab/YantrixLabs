@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -11,6 +12,7 @@ import {
   Globe,
   Menu,
   Moon,
+  Sun,
   Smartphone,
   Sparkles,
   X,
@@ -59,7 +61,29 @@ const floatCards = [
 ];
 
 export default function HeroSection({ loggedIn }: HeroSectionProps) {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
+
+  useEffect(() => {
+    const stored = (localStorage.getItem('public_theme_mode') || 'system') as 'light' | 'dark' | 'system';
+    const resolved = stored === 'system'
+      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      : stored;
+    document.documentElement.setAttribute('data-public-theme-mode', stored);
+    document.documentElement.setAttribute('data-public-theme', resolved);
+    document.documentElement.style.colorScheme = resolved;
+    setResolvedTheme(resolved);
+  }, []);
+
+  const onThemeToggle = () => {
+    const nextMode: 'light' | 'dark' = resolvedTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('public_theme_mode', nextMode);
+    document.documentElement.setAttribute('data-public-theme-mode', nextMode);
+    document.documentElement.setAttribute('data-public-theme', nextMode);
+    document.documentElement.style.colorScheme = nextMode;
+    setResolvedTheme(nextMode);
+  };
 
   const particles = useMemo(
     () =>
@@ -89,27 +113,40 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             Yantrix Labs
           </Link>
 
-          <nav className="hidden items-center gap-6 text-sm font-semibold text-white/90 md:flex">
-            {navLinks.map((item) =>
-              item.href === '/tools' ? (
-                <Link key={item.href} href={item.href} className="rounded-lg bg-[#0d4da8] px-3 py-1.5 text-white">
+          <nav className="hidden items-center gap-1.5 md:flex">
+            {navLinks.map((item) => {
+              const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-150 ${
+                    isActive
+                      ? 'bg-[#0f2a57] text-[#2f8bff]'
+                      : 'text-[#f1f6ff] hover:bg-[#0f2a57] hover:text-white'
+                  }`}
+                >
                   {item.label}
                 </Link>
-              ) : (
-                <Link key={item.href} href={item.href} className="transition-colors hover:text-white">
-                  {item.label}
-                </Link>
-              )
-            )}
+              );
+            })}
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
-            <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#0b458f] text-white">
-              <Moon className="h-4 w-4" />
+            <button
+              type="button"
+              onClick={onThemeToggle}
+              aria-label={`Toggle theme. Current ${resolvedTheme}`}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2f5ea4] bg-[#0b2c5c] text-[#d6e6ff] transition-all hover:bg-[#123a74] hover:text-white"
+            >
+              {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <Link href="/contact" className="inline-flex items-center gap-2 rounded-xl bg-[#0f5ec8] px-5 py-2.5 text-sm font-semibold text-white">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
+            >
               Enquiry
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
@@ -123,13 +160,39 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
           </button>
         </div>
         {mobileMenuOpen && (
-          <div className="mx-4 mb-3 rounded-2xl border border-white/20 bg-slate-900/85 p-4 backdrop-blur-xl md:hidden">
-            <div className="flex flex-col gap-3 text-sm font-semibold text-slate-100">
-              {navLinks.map((item) => (
-                <Link key={item.href} href={item.href} onClick={() => setMobileMenuOpen(false)}>
+          <div className="md:hidden border-t border-[#1e4a86]/60 bg-[#041633] px-4 py-4 space-y-2">
+            {navLinks.map((item) => {
+              const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`block py-2 text-sm font-medium ${
+                    isActive ? 'text-[#2f8bff] font-semibold' : 'text-[#f1f6ff]'
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   {item.label}
                 </Link>
-              ))}
+              );
+            })}
+            <div className="pt-2 space-y-2">
+              <button
+                type="button"
+                aria-label={`Toggle theme. Current ${resolvedTheme}`}
+                onClick={onThemeToggle}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#2f5ea4] bg-[#0b2c5c] px-3 py-2 text-sm font-semibold text-[#d6e6ff] transition-all hover:bg-[#123a74] hover:text-white"
+              >
+                {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+              </button>
+              <Link
+                href="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-4 py-2 text-center text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
+              >
+                Enquiry
+              </Link>
             </div>
           </div>
         )}
