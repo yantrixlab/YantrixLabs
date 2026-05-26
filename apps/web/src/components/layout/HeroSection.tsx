@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
+  BarChart3,
   Bot,
   Braces,
-  ChartNoAxesCombined,
   Globe,
   Menu,
   Moon,
@@ -314,7 +314,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             className="absolute right-[16%] top-[14%] rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-xs text-slate-100 backdrop-blur-xl"
           >
             <div className="flex items-center gap-2">
-              <ChartNoAxesCombined className="h-4 w-4 text-emerald-200" />
+              <BarChart3 className="h-4 w-4 text-emerald-200" />
               Live performance improved by 31%
             </div>
           </motion.div>
