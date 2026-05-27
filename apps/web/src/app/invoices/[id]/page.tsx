@@ -483,12 +483,14 @@ export default function InvoiceDetailPage() {
     const resize = () => {
       const bodyHeight = doc.body?.scrollHeight ?? 0;
       const htmlHeight = doc.documentElement?.scrollHeight ?? 0;
+      const rootTop = doc.documentElement.getBoundingClientRect().top;
       const maxElementBottom = Array.from(doc.querySelectorAll('*')).reduce((max, el) => {
-        const node = el as HTMLElement;
-        const bottom = node.offsetTop + Math.max(node.offsetHeight, node.scrollHeight);
+        const rect = (el as HTMLElement).getBoundingClientRect();
+        const bottom = rect.bottom - rootTop;
         return Math.max(max, bottom);
       }, 0);
-      const nextHeight = Math.max(bodyHeight, htmlHeight, maxElementBottom, 900);
+      const a4MinHeight = Math.ceil((frame.clientWidth || 794) * 1.4143); // A4 portrait ratio
+      const nextHeight = Math.max(bodyHeight, htmlHeight, maxElementBottom, a4MinHeight);
       setTemplateFrameHeight(nextHeight);
       frame.style.height = `${nextHeight}px`;
     };
