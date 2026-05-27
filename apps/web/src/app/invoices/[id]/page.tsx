@@ -259,6 +259,7 @@ export default function InvoiceDetailPage() {
   const [templates, setTemplates] = useState<PublicTemplate[]>([]);
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+  const [templateFrameHeight, setTemplateFrameHeight] = useState(900);
 
   const TEMPLATE_STORAGE_KEY = 'invoice_default_template';
 
@@ -457,6 +458,23 @@ export default function InvoiceDetailPage() {
     document.title = prevTitle;
   };
 
+  const handleTemplateFrameLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
+    const frame = e.currentTarget;
+    const doc = frame.contentDocument;
+    if (!doc) return;
+
+    const resize = () => {
+      const bodyHeight = doc.body?.scrollHeight ?? 0;
+      const htmlHeight = doc.documentElement?.scrollHeight ?? 0;
+      const nextHeight = Math.max(bodyHeight, htmlHeight, 900);
+      setTemplateFrameHeight(nextHeight);
+    };
+
+    resize();
+    setTimeout(resize, 50);
+    setTimeout(resize, 200);
+  };
+
   const handleWhatsApp = () => {
     if (!invoice) return;
     const msg = `Hi ${invoice.customer.name}, your invoice ${invoice.invoiceNumber} for ₹${invoice.total.toLocaleString('en-IN')} is ready. Please make payment at your earliest convenience. Thank you!`;
@@ -624,13 +642,14 @@ export default function InvoiceDetailPage() {
         {/* ── Invoice Document ─────────────────────────────────────── */}
         {selectedTemplate ? (
           /* Template-rendered view */
-          <div className="invoice-document bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm print:shadow-none print:border-0 print:rounded-none">
+          <div className="invoice-document bg-white border border-gray-200 rounded-2xl shadow-sm print:shadow-none print:border-0 print:rounded-none">
             <iframe
               srcDoc={renderTemplateHtml(selectedTemplate.html, invoice)}
               className="w-full border-0"
-              style={{ minHeight: '900px' }}
+              style={{ height: `${templateFrameHeight}px` }}
               title="Invoice Preview"
               sandbox=""
+              onLoad={handleTemplateFrameLoad}
             />
           </div>
         ) : (
