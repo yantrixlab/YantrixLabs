@@ -31,12 +31,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
   const [adminName, setAdminName] = useState('Super Admin');
+  const [adminAvatar, setAdminAvatar] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isAdminAuthenticated()) {
       router.replace('/login');
       return;
     }
+
+    const cachedName = localStorage.getItem('adminName');
+    const cachedAvatar = localStorage.getItem('adminAvatar');
+    if (cachedName) setAdminName(cachedName);
+    if (cachedAvatar) setAdminAvatar(cachedAvatar);
+
     // Decode name from token
     const token = getAdminToken();
     if (token) {
@@ -48,7 +55,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })
             .then(r => r.json())
             .then(data => {
-              if (data.data?.user?.name) setAdminName(data.data.user.name);
+              const user = data.data?.user;
+              if (user?.name) {
+                setAdminName(user.name);
+                localStorage.setItem('adminName', user.name);
+              }
+              const avatar = user?.avatar || user?.image || user?.imageUrl || user?.profileImage || null;
+              if (avatar) {
+                setAdminAvatar(avatar);
+                localStorage.setItem('adminAvatar', avatar);
+              }
             })
             .catch(() => {});
         }
@@ -94,9 +110,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="p-4 border-t border-gray-800">
           <div className="flex items-center gap-2 mb-3 px-1">
             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs font-bold">
-                {adminName.charAt(0).toUpperCase()}
-              </span>
+              {adminAvatar ? (
+                <img src={adminAvatar} alt={adminName} className="h-full w-full rounded-full object-cover" />
+              ) : (
+                <span className="text-white text-xs font-bold">
+                  {adminName.charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
             <p className="text-xs font-medium text-gray-300 truncate">{adminName}</p>
           </div>
@@ -104,6 +124,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             onClick={() => {
               localStorage.removeItem('adminToken');
               localStorage.removeItem('adminRefreshToken');
+              localStorage.removeItem('adminName');
+              localStorage.removeItem('adminAvatar');
               window.location.href = '/login';
             }}
             className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-gray-200"
@@ -122,9 +144,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex items-center gap-3">
             <span className="text-xs bg-red-900/50 text-red-400 px-2 py-1 rounded-full border border-red-800">SUPER ADMIN</span>
             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
-              <span className="text-white text-xs font-bold">
-                {adminName.charAt(0).toUpperCase()}
-              </span>
+              {adminAvatar ? (
+                <img src={adminAvatar} alt={adminName} className="h-full w-full rounded-full object-cover" />
+              ) : (
+                <span className="text-white text-xs font-bold">
+                  {adminName.charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
           </div>
         </header>

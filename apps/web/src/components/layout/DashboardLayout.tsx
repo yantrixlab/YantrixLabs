@@ -97,6 +97,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     name?: string;
     email?: string;
     role?: string;
+    avatar?: string;
   }>({});
   const [planInfo, setPlanInfo] = useState<{
     name: string;
@@ -177,17 +178,40 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       setGuest(false);
     }
 
+    const cachedName = localStorage.getItem("gstUserName");
+    const cachedAvatar = localStorage.getItem("gstUserAvatar");
+    if (cachedName || cachedAvatar) {
+      setUserData((prev) => ({
+        ...prev,
+        ...(cachedName ? { name: cachedName } : {}),
+        ...(cachedAvatar ? { avatar: cachedAvatar } : {}),
+      }));
+    }
+
     const tokenData = getUserData();
     setUserData(tokenData);
 
     apiFetch("/auth/me")
       .then((res: any) => {
         if (res.data?.user) {
+          const userAvatar =
+            res.data.user.avatar ||
+            res.data.user.image ||
+            res.data.user.imageUrl ||
+            res.data.user.profileImage ||
+            null;
           setUserData((prev) => ({
             ...prev,
             name: res.data.user.name,
             email: res.data.user.email,
+            avatar: userAvatar || prev.avatar,
           }));
+          if (res.data.user.name) {
+            localStorage.setItem("gstUserName", res.data.user.name);
+          }
+          if (userAvatar) {
+            localStorage.setItem("gstUserAvatar", userAvatar);
+          }
         }
         const biz = res.data?.memberships?.[0]?.business;
         if (
@@ -453,6 +477,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("gstUserName");
+    localStorage.removeItem("gstUserAvatar");
     enableGuestMode();
     setGuest(true);
     setAuthModalTab("signin");
@@ -824,6 +850,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ring-white">
               {guest ? (
                 <UserCircle className="h-5 w-5 text-white" />
+              ) : userData.avatar && isSafeImageUrl(userData.avatar) ? (
+                <img
+                  src={userData.avatar}
+                  alt={displayName}
+                  className="h-full w-full object-cover"
+                />
               ) : businessLogo ? (
                 <img
                   src={businessLogo}
