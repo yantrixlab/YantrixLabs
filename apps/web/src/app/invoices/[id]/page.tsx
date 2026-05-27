@@ -458,6 +458,23 @@ export default function InvoiceDetailPage() {
     document.title = prevTitle;
   };
 
+  const buildTemplatePreviewHtml = (templateHtml: string, inv: Invoice): string => {
+    const rendered = renderTemplateHtml(templateHtml, inv);
+    const previewCss = `
+      <style id="yantrix-preview-reset">
+        html, body {
+          height: auto !important;
+          min-height: 0 !important;
+          overflow: visible !important;
+        }
+      </style>
+    `;
+    if (rendered.includes('</head>')) {
+      return rendered.replace('</head>', `${previewCss}</head>`);
+    }
+    return `${previewCss}${rendered}`;
+  };
+
   const handleTemplateFrameLoad = (e: React.SyntheticEvent<HTMLIFrameElement>) => {
     const frame = e.currentTarget;
     const doc = frame.contentDocument;
@@ -466,10 +483,17 @@ export default function InvoiceDetailPage() {
     const resize = () => {
       const bodyHeight = doc.body?.scrollHeight ?? 0;
       const htmlHeight = doc.documentElement?.scrollHeight ?? 0;
-      const nextHeight = Math.max(bodyHeight, htmlHeight, 900);
+      const maxElementBottom = Array.from(doc.querySelectorAll('*')).reduce((max, el) => {
+        const node = el as HTMLElement;
+        const bottom = node.offsetTop + Math.max(node.offsetHeight, node.scrollHeight);
+        return Math.max(max, bottom);
+      }, 0);
+      const nextHeight = Math.max(bodyHeight, htmlHeight, maxElementBottom, 900);
       setTemplateFrameHeight(nextHeight);
+      frame.style.height = `${nextHeight}px`;
     };
 
+    frame.style.overflow = 'hidden';
     resize();
     setTimeout(resize, 50);
     setTimeout(resize, 200);
@@ -644,11 +668,12 @@ export default function InvoiceDetailPage() {
           /* Template-rendered view */
           <div className="invoice-document bg-white border border-gray-200 rounded-2xl shadow-sm print:shadow-none print:border-0 print:rounded-none">
             <iframe
-              srcDoc={renderTemplateHtml(selectedTemplate.html, invoice)}
+              srcDoc={buildTemplatePreviewHtml(selectedTemplate.html, invoice)}
               className="w-full border-0"
               style={{ height: `${templateFrameHeight}px` }}
               title="Invoice Preview"
               sandbox=""
+              scrolling="no"
               onLoad={handleTemplateFrameLoad}
             />
           </div>
