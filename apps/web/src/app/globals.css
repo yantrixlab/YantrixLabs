@@ -397,7 +397,7 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 0;
+    margin: 12mm;
   }
 
   * {
@@ -419,13 +419,12 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
     display: none !important;
   }
 
+  /* Keep invoice visual template intact in print/PDF.
+     Only enforce flow/height so content is not clipped. */
   .invoice-document {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0 !important;
   }
 
   tr, .inv-totals-card {

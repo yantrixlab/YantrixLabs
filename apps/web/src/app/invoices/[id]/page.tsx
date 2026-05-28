@@ -668,7 +668,7 @@ export default function InvoiceDetailPage() {
         {/* ── Invoice Document ─────────────────────────────────────── */}
         {selectedTemplate ? (
           /* Template-rendered view */
-          <div className="invoice-document bg-white border border-gray-200 rounded-2xl shadow-sm print:shadow-none print:border-0 print:rounded-none">
+          <div className="invoice-document bg-white border border-gray-200 rounded-2xl shadow-sm">
             <iframe
               srcDoc={buildTemplatePreviewHtml(selectedTemplate.html, invoice)}
               className="w-full border-0"
@@ -682,7 +682,7 @@ export default function InvoiceDetailPage() {
         ) : (
           <div
             id="invoice-document"
-            className="invoice-document bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm print:shadow-none print:border-0 print:rounded-none flex flex-col overflow-x-hidden print:overflow-visible"
+            className="invoice-document bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm flex flex-col overflow-x-hidden print:overflow-visible"
           >
           {/* Top accent bar */}
           <div className="h-1.5 flex-shrink-0 print:h-1" style={{ background: t.accent }} />
