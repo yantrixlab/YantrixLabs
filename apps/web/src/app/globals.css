@@ -397,7 +397,7 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 12mm;
+    margin: 0;
   }
 
   * {
