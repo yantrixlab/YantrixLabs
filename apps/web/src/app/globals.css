@@ -425,6 +425,7 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
+    min-height: 100vh !important;
   }
 
   tr, .inv-totals-card {

@@ -755,7 +755,7 @@ export default function InvoiceDetailPage() {
           </div>
 
           {/* ── Scrollable body ── */}
-          <div className="print:overflow-visible">
+          <div className="print:overflow-visible flex flex-1 flex-col">
 
             {/* Bill To / Ship To / Supply Details */}
             <div className="grid grid-cols-3 gap-px bg-gray-100 border-b border-gray-100">
@@ -933,6 +933,9 @@ export default function InvoiceDetailPage() {
                 )}
               </div>
             </div>
+
+            {/* Push closing blocks (terms + signature) to page bottom when content is short */}
+            <div className="flex-1" />
 
             {/* ── Notes & Terms ── */}
             {(invoice.notes || invoice.terms) && (
