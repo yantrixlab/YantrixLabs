@@ -8,4 +8,4 @@ cmds = ["pnpm i --frozen-lockfile"]
 cmds = ["pnpm turbo build --filter=@yantrix/web --concurrency=1"]
 
 [start]
-cmd = "pnpm --filter @yantrix/web start"
+cmd = "sh -lc 'node apps/web/.next/standalone/server.js || node apps/web/.next/standalone/apps/web/server.js'"
