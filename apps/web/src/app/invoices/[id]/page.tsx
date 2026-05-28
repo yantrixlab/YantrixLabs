@@ -465,6 +465,10 @@ export default function InvoiceDetailPage() {
         html, body {
           overflow: visible !important;
         }
+        body {
+          padding-bottom: 220px !important;
+          box-sizing: border-box !important;
+        }
       </style>
     `;
     if (rendered.includes('</head>')) {
@@ -490,7 +494,7 @@ export default function InvoiceDetailPage() {
         return Math.max(max, bottom);
       }, 0);
       const a4MinHeight = Math.ceil((frame.clientWidth || 794) * 1.4143); // A4 portrait ratio
-      const nextHeight = Math.max(
+      const measuredHeight = Math.max(
         bodyHeight,
         htmlHeight,
         bodyRectHeight,
@@ -498,6 +502,7 @@ export default function InvoiceDetailPage() {
         maxElementBottom + 36,
         a4MinHeight,
       );
+      const nextHeight = Math.max(measuredHeight + 180, 1400);
       setTemplateFrameHeight(nextHeight);
       frame.style.height = `${nextHeight}px`;
     };
