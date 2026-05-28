@@ -887,7 +887,7 @@ export default function InvoiceDetailPage() {
               </div>
 
               {/* Totals card */}
-              <div className="w-full sm:w-72 rounded-xl overflow-hidden border border-gray-200 shadow-sm print:shadow-none inv-totals-card">
+              <div className="w-72 max-w-full rounded-xl overflow-hidden border border-gray-200 shadow-sm print:shadow-none inv-totals-card">
                 <div className="divide-y divide-gray-100">
                   <div className="flex justify-between items-center px-5 py-3">
                     <span className="text-sm text-gray-500">Taxable Amount</span>
