@@ -481,6 +481,8 @@ export default function InvoiceDetailPage() {
     const resize = () => {
       const bodyHeight = Math.max(doc.body?.scrollHeight ?? 0, doc.body?.offsetHeight ?? 0);
       const htmlHeight = Math.max(doc.documentElement?.scrollHeight ?? 0, doc.documentElement?.offsetHeight ?? 0);
+      const bodyRectHeight = doc.body?.getBoundingClientRect().height ?? 0;
+      const htmlRectHeight = doc.documentElement?.getBoundingClientRect().height ?? 0;
       const rootTop = doc.documentElement.getBoundingClientRect().top;
       const maxElementBottom = Array.from(doc.querySelectorAll('*')).reduce((max, el) => {
         const rect = (el as HTMLElement).getBoundingClientRect();
@@ -488,7 +490,14 @@ export default function InvoiceDetailPage() {
         return Math.max(max, bottom);
       }, 0);
       const a4MinHeight = Math.ceil((frame.clientWidth || 794) * 1.4143); // A4 portrait ratio
-      const nextHeight = Math.max(bodyHeight, htmlHeight, maxElementBottom + 24, a4MinHeight);
+      const nextHeight = Math.max(
+        bodyHeight,
+        htmlHeight,
+        bodyRectHeight,
+        htmlRectHeight,
+        maxElementBottom + 36,
+        a4MinHeight,
+      );
       setTemplateFrameHeight(nextHeight);
       frame.style.height = `${nextHeight}px`;
     };
@@ -498,6 +507,22 @@ export default function InvoiceDetailPage() {
     setTimeout(resize, 50);
     setTimeout(resize, 200);
     setTimeout(resize, 500);
+    setTimeout(resize, 1000);
+
+    // Keep iframe height synced for templates that render late or use absolute/fixed footer blocks.
+    const win = frame.contentWindow;
+    if (win) {
+      win.addEventListener('resize', resize);
+      doc.fonts?.ready?.then(() => resize()).catch(() => {});
+    }
+    const observer = new MutationObserver(() => resize());
+    observer.observe(doc.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
+    // Store cleanup refs directly on iframe element for automatic replacement on next load
+    (frame as HTMLIFrameElement & { __cleanupPreview?: () => void }).__cleanupPreview?.();
+    (frame as HTMLIFrameElement & { __cleanupPreview?: () => void }).__cleanupPreview = () => {
+      observer.disconnect();
+      if (win) win.removeEventListener('resize', resize);
+    };
   };
 
   const handleWhatsApp = () => {
