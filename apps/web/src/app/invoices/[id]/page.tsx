@@ -463,8 +463,6 @@ export default function InvoiceDetailPage() {
     const previewCss = `
       <style id="yantrix-preview-reset">
         html, body {
-          height: auto !important;
-          min-height: 0 !important;
           overflow: visible !important;
         }
       </style>
@@ -481,8 +479,8 @@ export default function InvoiceDetailPage() {
     if (!doc) return;
 
     const resize = () => {
-      const bodyHeight = doc.body?.scrollHeight ?? 0;
-      const htmlHeight = doc.documentElement?.scrollHeight ?? 0;
+      const bodyHeight = Math.max(doc.body?.scrollHeight ?? 0, doc.body?.offsetHeight ?? 0);
+      const htmlHeight = Math.max(doc.documentElement?.scrollHeight ?? 0, doc.documentElement?.offsetHeight ?? 0);
       const rootTop = doc.documentElement.getBoundingClientRect().top;
       const maxElementBottom = Array.from(doc.querySelectorAll('*')).reduce((max, el) => {
         const rect = (el as HTMLElement).getBoundingClientRect();
@@ -490,7 +488,7 @@ export default function InvoiceDetailPage() {
         return Math.max(max, bottom);
       }, 0);
       const a4MinHeight = Math.ceil((frame.clientWidth || 794) * 1.4143); // A4 portrait ratio
-      const nextHeight = Math.max(bodyHeight, htmlHeight, maxElementBottom, a4MinHeight);
+      const nextHeight = Math.max(bodyHeight, htmlHeight, maxElementBottom + 24, a4MinHeight);
       setTemplateFrameHeight(nextHeight);
       frame.style.height = `${nextHeight}px`;
     };
@@ -499,6 +497,7 @@ export default function InvoiceDetailPage() {
     resize();
     setTimeout(resize, 50);
     setTimeout(resize, 200);
+    setTimeout(resize, 500);
   };
 
   const handleWhatsApp = () => {
