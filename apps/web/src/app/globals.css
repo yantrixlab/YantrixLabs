@@ -937,9 +937,8 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
 }
 
 /* Keep home hero visuals fixed (no public theme color remap) */
-.public-site .home-hero-fixed,
-.public-site .home-hero-fixed * {
-  color: inherit;
+.public-site .home-hero-fixed {
+  color: #eef4ff !important;
 }
 
 .public-site .home-hero-fixed .text-white {
@@ -958,6 +957,16 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
 .public-site .home-hero-fixed .text-indigo-400 {
   color: #a8b5ff !important;
 }
+
+/* Ensure key hero utility text tones remain stable across theme toggles */
+.public-site .home-hero-fixed .text-slate-100 { color: #dbe7ff !important; }
+.public-site .home-hero-fixed .text-slate-200 { color: #c9dcff !important; }
+.public-site .home-hero-fixed .text-slate-300 { color: #a9c3ec !important; }
+.public-site .home-hero-fixed .text-slate-400 { color: #86a5d6 !important; }
+.public-site .home-hero-fixed .text-cyan-100 { color: #c7f4ff !important; }
+.public-site .home-hero-fixed .text-cyan-200 { color: #9cecff !important; }
+.public-site .home-hero-fixed .text-emerald-200 { color: #9ff4d0 !important; }
+.public-site .home-hero-fixed .text-emerald-300 { color: #7de7bb !important; }
 
 /* Lock "Let's build it" CTA section colors across theme changes */
 .public-site .home-build-cta-fixed .text-indigo-300 {
