@@ -1007,6 +1007,18 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
   background-color: rgba(76, 143, 255, 0.2) !important;
 }
 
+/* Keep home hero secondary CTA readable across theme changes */
+.public-site .home-hero-fixed .hero-secondary-cta {
+  background-color: rgba(8, 24, 56, 0.42) !important;
+  border-color: rgba(114, 158, 232, 0.55) !important;
+  color: #eaf3ff !important;
+}
+
+.public-site .home-hero-fixed .hero-secondary-cta:hover {
+  background-color: rgba(12, 34, 74, 0.62) !important;
+  color: #ffffff !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .public-site * {
     animation-duration: 1ms !important;

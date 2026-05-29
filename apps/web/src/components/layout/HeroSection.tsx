@@ -235,7 +235,6 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
 
       <div className="relative mx-auto grid min-h-screen max-w-7xl grid-cols-1 items-center gap-14 px-6 pb-16 pt-28 md:px-10 lg:grid-cols-2 lg:gap-10 lg:px-12">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }} className="text-center lg:text-left">
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-[52%] bg-[radial-gradient(ellipse_at_left,rgba(2,8,24,0.55),transparent_70%)]" />
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -291,7 +290,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
               <Link
                 href={loggedIn ? '/dashboard' : '/tools'}
-                className="inline-flex items-center rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]"
+                className="hero-secondary-cta inline-flex items-center rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]"
               >
                 View Our Products
               </Link>
