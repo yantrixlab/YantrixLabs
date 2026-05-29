@@ -1186,7 +1186,11 @@ export default function NewInvoicePage() {
         if (noteToSave) localStorage.setItem(key, noteToSave);
         else localStorage.removeItem(key);
       }
-      router.push(`/invoices/${res.data.id}`);
+      if (statusOverride === 'SENT') {
+        router.push(`/invoices/${res.data.id}?reviewPrompt=1`);
+      } else {
+        router.push(`/invoices/${res.data.id}`);
+      }
     } catch (err: any) {
       toastError('Failed to save invoice', err.message);
     } finally { setIsLoading(false); }

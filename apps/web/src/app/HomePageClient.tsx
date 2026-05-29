@@ -245,6 +245,14 @@ const PROCESS = [
   { iconKey: "support", title: "Support", desc: "Ongoing maintenance" },
 ];
 
+interface ApprovedReview {
+  id: string;
+  rating: number;
+  comment: string | null;
+  user: { name: string };
+  business: { name: string; city: string | null } | null;
+}
+
 const FLOATING_EXPRESSIONS = [
   "x^2 + y^2 = r^2",
   "f(x) = sin(x)",
@@ -381,6 +389,7 @@ export default function HomePage() {
   const [homeHeaderLoading, setHomeHeaderLoading] = useState(true);
   const [homeAnimatedLogos, setHomeAnimatedLogos] =
     useState<string[]>(HOME_ANIMATED_LOGOS);
+  const [approvedReviews, setApprovedReviews] = useState<ApprovedReview[]>([]);
   const businessCount = Number.parseInt(homeHeader.stat2Value || "", 10);
   const trustedText =
     businessCount && businessCount > 0
@@ -477,6 +486,36 @@ export default function HomePage() {
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    apiFetch<{ data: ApprovedReview[] }>("/reviews/approved?limit=6")
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setApprovedReviews(res.data.filter((r) => !!r.comment));
+        }
+      })
+      .catch(() => {
+        setApprovedReviews([]);
+      });
+  }, []);
+
+  const testimonialCards =
+    approvedReviews.length > 0
+      ? approvedReviews.map((r) => ({
+          name: r.user.name,
+          business: r.business
+            ? `${r.business.name}${r.business.city ? `, ${r.business.city}` : ""}`
+            : "Verified customer",
+          avatar: (r.user.name || "U")
+            .split(" ")
+            .slice(0, 2)
+            .map((part) => part.charAt(0))
+            .join("")
+            .toUpperCase(),
+          quote: r.comment || "",
+          rating: r.rating,
+        }))
+      : TESTIMONIALS.map((t) => ({ ...t, rating: 5 }));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -1381,7 +1420,7 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {TESTIMONIALS.map((t, idx) => (
+            {testimonialCards.map((t, idx) => (
               <motion.div
                 key={t.name}
                 initial={{ opacity: 0, y: 20 }}
@@ -1394,7 +1433,7 @@ export default function HomePage() {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
-                      className="h-4 w-4 fill-amber-400 text-amber-400"
+                      className={`h-4 w-4 ${i < t.rating ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
                     />
                   ))}
                 </div>

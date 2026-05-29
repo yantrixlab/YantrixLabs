@@ -7,8 +7,7 @@ import { adminFetch, API_URL, getAdminToken } from '@/lib/api';
 interface Review {
   id: string;
   rating: number;
-  title: string | null;
-  content: string;
+  comment: string | null;
   isApproved: boolean;
   adminReply: string | null;
   repliedAt: string | null;
@@ -120,8 +119,7 @@ export default function AdminReviewsPage() {
                     </div>
                   </div>
 
-                  {review.title && <p className="text-sm font-semibold text-white mb-1">{review.title}</p>}
-                  <p className="text-sm text-gray-300 mb-4">{review.content}</p>
+                  <p className="text-sm text-gray-300 mb-4">{review.comment || '-'}</p>
 
                   {replyingId === review.id ? (
                     <div className="space-y-2">
@@ -190,7 +188,7 @@ export default function AdminReviewsPage() {
                       </span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-400">{review.content}</p>
+                  <p className="text-sm text-gray-400">{review.comment || '-'}</p>
                   {review.adminReply && (
                     <div className="mt-3 pl-3 border-l-2 border-orange-800">
                       <p className="text-xs text-orange-400 font-medium mb-1">Admin Reply</p>

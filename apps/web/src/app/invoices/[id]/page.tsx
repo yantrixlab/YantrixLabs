@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
@@ -13,6 +13,8 @@ import { apiFetch, isSafeImageUrl } from '@/lib/api';
 import { numberToWords } from '@/lib/numberToWords';
 import { useToast } from '@/components/ui/Toast';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { ReviewPromptModal } from '@/components/ui/ReviewPromptModal';
+import { markReviewPromptShown, markReviewSubmitted, shouldShowReviewPrompt } from '@/lib/reviewPrompt';
 
 interface PublicTemplate {
   id: string;
@@ -246,6 +248,7 @@ function RecordPaymentModal({ invoice, onClose, onPaid }: { invoice: Invoice; on
 
 export default function InvoiceDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { success, error: toastError } = useToast();
   const [invoice, setInvoice] = useState<Invoice | null>(null);
@@ -260,6 +263,7 @@ export default function InvoiceDetailPage() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
   const [templateFrameHeight, setTemplateFrameHeight] = useState(900);
+  const [showReviewPrompt, setShowReviewPrompt] = useState(false);
 
   const TEMPLATE_STORAGE_KEY = 'invoice_default_template';
 
@@ -303,11 +307,23 @@ export default function InvoiceDetailPage() {
       .catch((err: unknown) => { console.error('Failed to load invoice templates:', err); });
   }, []);
 
+  useEffect(() => {
+    const promptFromFlow = searchParams.get('reviewPrompt') === '1';
+    if (promptFromFlow && shouldShowReviewPrompt()) {
+      setShowReviewPrompt(true);
+      markReviewPromptShown();
+    }
+  }, [searchParams]);
+
   const handleMarkSent = async () => {
     setActionLoading('sent');
     try {
       await apiFetch(`/invoices/${id}/send`, { method: 'POST' });
       success('Invoice marked as sent');
+      if (shouldShowReviewPrompt()) {
+        setShowReviewPrompt(true);
+        markReviewPromptShown();
+      }
       await fetchInvoice();
     } catch (err: any) {
       toastError('Failed', err.message);
@@ -559,6 +575,11 @@ export default function InvoiceDetailPage() {
 
   return (
     <>
+      <ReviewPromptModal
+        open={showReviewPrompt}
+        onClose={() => setShowReviewPrompt(false)}
+        onSubmitted={markReviewSubmitted}
+      />
       {showPayment && (
         <RecordPaymentModal invoice={invoice} onClose={() => setShowPayment(false)} onPaid={fetchInvoice} />
       )}
