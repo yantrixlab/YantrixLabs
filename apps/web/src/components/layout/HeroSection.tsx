@@ -123,7 +123,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
   );
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-slate-950">
+    <section className="home-hero-fixed relative min-h-screen overflow-hidden bg-slate-950">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(1200px_680px_at_12%_8%,rgba(59,130,246,0.24),transparent_60%),radial-gradient(1000px_620px_at_92%_12%,rgba(99,102,241,0.22),transparent_60%),linear-gradient(180deg,#020617_0%,#040b20_48%,#04091a_100%)]" />
         <div className="absolute -left-24 top-12 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
