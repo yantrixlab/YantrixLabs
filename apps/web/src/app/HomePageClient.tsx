@@ -591,7 +591,8 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ FEATURED PRODUCT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="py-28">
+      <section className="featured-product-fixed relative overflow-hidden py-28">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1100px_520px_at_18%_12%,rgba(37,99,235,0.22),transparent_65%),radial-gradient(900px_460px_at_82%_6%,rgba(99,102,241,0.2),transparent_68%),linear-gradient(180deg,#020b1f_0%,#031231_52%,#020d24_100%)]" />
         {/* Ambient glow blobs */}
         <div className="pointer-events-none absolute inset-0">
           <div

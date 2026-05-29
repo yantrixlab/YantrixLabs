@@ -1007,6 +1007,31 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
   background-color: rgba(76, 143, 255, 0.2) !important;
 }
 
+/* Keep Featured Product section visuals static across theme changes */
+.public-site .featured-product-fixed {
+  isolation: isolate;
+  background:
+    radial-gradient(1100px 520px at 18% 12%, rgba(37, 99, 235, 0.22), transparent 65%),
+    radial-gradient(900px 460px at 82% 6%, rgba(99, 102, 241, 0.2), transparent 68%),
+    linear-gradient(180deg, #020b1f 0%, #031231 52%, #020d24 100%) !important;
+}
+
+.public-site .featured-product-fixed .text-white {
+  color: #eaf3ff !important;
+}
+
+.public-site .featured-product-fixed .text-gray-900,
+.public-site .featured-product-fixed .text-gray-800 {
+  color: #eaf3ff !important;
+}
+
+.public-site .featured-product-fixed .text-gray-700,
+.public-site .featured-product-fixed .text-gray-600,
+.public-site .featured-product-fixed .text-gray-500,
+.public-site .featured-product-fixed .text-gray-400 {
+  color: #b9ccef !important;
+}
+
 /* Keep home hero secondary CTA readable across theme changes */
 .public-site .home-hero-fixed .hero-secondary-cta {
   background-color: rgba(8, 24, 56, 0.42) !important;
