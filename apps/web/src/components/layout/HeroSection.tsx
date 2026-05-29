@@ -54,10 +54,35 @@ const navLinks = [
 
 const trustItems = ['Android Development', 'iOS Apps', 'Web Platforms', 'AI Automation', 'SaaS Products'];
 
-const floatCards = [
-  { title: 'Android App', subtitle: 'Native Kotlin Performance', icon: Smartphone, x: -165, y: 10, delay: 0 },
-  { title: 'Enterprise Web', subtitle: 'Scalable Product Systems', icon: Globe, x: 135, y: -120, delay: 0.3 },
-  { title: 'AI Workflow', subtitle: 'Automated Ops Intelligence', icon: Bot, x: 145, y: 135, delay: 0.6 },
+const expertiseCards = [
+  {
+    title: 'Android Systems',
+    subtitle: 'Native Kotlin pipelines with release governance',
+    icon: Smartphone,
+    accent: 'from-cyan-300/20 to-blue-400/5',
+    border: 'border-cyan-300/30',
+  },
+  {
+    title: 'Web Platforms',
+    subtitle: 'Scalable architecture tuned for growth milestones',
+    icon: Globe,
+    accent: 'from-blue-300/20 to-indigo-400/5',
+    border: 'border-blue-300/30',
+  },
+  {
+    title: 'AI Automation',
+    subtitle: 'Operational workflows with intelligent decisioning',
+    icon: Bot,
+    accent: 'from-violet-300/20 to-blue-400/5',
+    border: 'border-violet-300/30',
+  },
+];
+
+const deliverySteps = [
+  { label: 'Discovery', value: 100 },
+  { label: 'UX Blueprint', value: 88 },
+  { label: 'Engineering', value: 76 },
+  { label: 'Launch + Scale', value: 92 },
 ];
 
 export default function HeroSection({ loggedIn }: HeroSectionProps) {
@@ -288,112 +313,137 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
         </motion.div>
 
         <div className="relative h-[620px] w-full">
+          <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.18)_0%,rgba(37,99,235,0.1)_36%,transparent_72%)] blur-2xl" />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.16 }}
+            className="absolute right-[5%] top-[5%] z-30 rounded-2xl border border-emerald-300/35 bg-emerald-300/10 px-3.5 py-2.5 text-xs text-emerald-100 backdrop-blur-xl shadow-[0_14px_28px_rgba(1,50,32,0.35)]"
+          >
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Avg. delivery speed improved by 31%
+            </div>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.2 }}
-            className="absolute left-1/2 top-1/2 z-20 w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-xl shadow-[0_24px_60px_rgba(2,10,30,0.55)]"
+            className="absolute left-1/2 top-1/2 z-20 w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/15 bg-[linear-gradient(160deg,rgba(11,26,57,0.82),rgba(5,15,35,0.72))] p-5 backdrop-blur-xl shadow-[0_24px_60px_rgba(2,10,30,0.55)]"
           >
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Live Metrics</span>
-              <span className="rounded-full border border-emerald-300/30 bg-emerald-300/15 px-2 py-1 text-[11px] font-semibold text-emerald-200">
-                +24.8%
+            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Execution Command Center</span>
+              <span className="rounded-full border border-cyan-300/30 bg-cyan-300/15 px-2 py-1 text-[11px] font-semibold text-cyan-100">
+                Live
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
-                <p className="text-xs text-slate-400">Products</p>
+            <div className="mb-4 grid grid-cols-2 gap-3">
+              <div className="rounded-xl border border-white/10 bg-slate-950/35 p-3">
+                <p className="text-xs text-slate-400">Deployments / Month</p>
                 <p className="mt-1 text-lg font-semibold text-white">142</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
+              <div className="rounded-xl border border-white/10 bg-slate-950/35 p-3">
                 <p className="text-xs text-slate-400">Automation Runs</p>
                 <p className="mt-1 text-lg font-semibold text-white">18.9k</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
-                <p className="text-xs text-slate-400">AI Assist</p>
-                <p className="mt-1 text-lg font-semibold text-white">Realtime</p>
+            </div>
+
+            <div className="space-y-3 rounded-2xl border border-white/10 bg-slate-950/35 p-3.5">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">Delivery Pipeline</p>
+                <p className="text-xs text-emerald-200">On Track</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
-                <p className="text-xs text-slate-400">Uptime</p>
-                <p className="mt-1 text-lg font-semibold text-white">99.99%</p>
-              </div>
+              {deliverySteps.map((step) => (
+                <div key={step.label}>
+                  <div className="mb-1 flex items-center justify-between">
+                    <p className="text-[11px] text-slate-300">{step.label}</p>
+                    <p className="text-[11px] font-semibold text-slate-200">{step.value}%</p>
+                  </div>
+                  <div className="h-1.5 overflow-hidden rounded-full bg-slate-800/80">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${step.value}%` }}
+                      transition={{ duration: 0.9, delay: 0.35 }}
+                      className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-400"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          {floatCards.map((card, idx) => {
-            const Icon = card.icon;
-            return (
-              <motion.div
-                key={card.title}
-                initial={{ opacity: 0, x: idx === 1 ? 100 : -80, y: idx === 1 ? -80 : 80, rotate: idx === 1 ? 6 : -5 }}
-                animate={{ opacity: 1, x: card.x, y: [card.y - 14, card.y + 14, card.y - 14], rotate: idx === 2 ? [-4, 2, -4] : [-2, 2, -2] }}
-                transition={{
-                  opacity: { duration: 0.8, delay: 0.35 + idx * 0.14 },
-                  x: { duration: 0.8, delay: 0.35 + idx * 0.14 },
-                  y: { duration: 4 + idx, repeat: Infinity, ease: 'easeInOut', delay: card.delay },
-                  rotate: { duration: 5 + idx, repeat: Infinity, ease: 'easeInOut', delay: card.delay },
-                }}
-                whileHover={{ scale: 1.04 }}
-                className={`absolute left-1/2 top-1/2 w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl shadow-[0_18px_40px_rgba(2,10,30,0.45)] ${
-                  idx === 1 ? 'z-30' : idx === 0 ? 'z-10' : 'z-10'
-                }`}
-              >
-                <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10">
-                  <Icon className="h-4 w-4 text-cyan-100" />
-                </div>
-                <p className="text-sm font-semibold text-white">{card.title}</p>
-                <p className="mt-1 text-xs text-slate-300">{card.subtitle}</p>
-              </motion.div>
-            );
-          })}
-
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: [165, 150, 165] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute left-[2%] top-1/2 z-20 w-[230px] rounded-2xl border border-white/20 bg-slate-950/70 p-4 backdrop-blur-xl"
+            initial={{ opacity: 0, x: -24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.26 }}
+            className="absolute left-[0%] top-[44%] z-30 hidden w-[250px] -translate-y-1/2 rounded-2xl border border-white/15 bg-slate-950/65 p-4 backdrop-blur-xl lg:block"
           >
-            <div className="mb-2 flex items-center gap-2 text-xs text-slate-300">
+            <div className="mb-2 flex items-center gap-2 text-xs text-slate-200">
               <Braces className="h-4 w-4 text-cyan-200" />
               Deployment Pipeline
             </div>
             <p className="text-xs leading-relaxed text-slate-300">
-              $ deploy --product mobile-suite
+              `deploy --target production`
               <br />
-              Building Android, iOS, Web...
+              Android, iOS, and Web release sync
               <br />
-              Status: <span className="text-emerald-300">Live</span>
+              Status: <span className="text-emerald-300">Stable</span>
             </p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: [-180, -194, -180] }}
-            transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
-            className="absolute right-[2%] top-1/2 z-20 w-[210px] rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl"
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.32 }}
+            className="absolute right-[0%] top-[66%] z-30 hidden w-[240px] -translate-y-1/2 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-xl lg:block"
           >
             <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-slate-100">
               <Zap className="h-4 w-4 text-violet-200" />
-              Automation Flow
+              Automation Loop
             </div>
             <div className="space-y-1 text-[11px] text-slate-300">
-              <p>Lead Captured</p>
+              <p>Lead Intake</p>
               <p>AI Qualification</p>
-              <p>CRM Sync + Alert</p>
+              <p>CRM + Team Alert</p>
             </div>
           </motion.div>
 
+          <div className="absolute inset-x-7 bottom-0 z-30 grid gap-3 sm:grid-cols-3">
+            {expertiseCards.map((card, idx) => {
+              const Icon = card.icon;
+              return (
+                <motion.div
+                  key={card.title}
+                  initial={{ opacity: 0, y: 22 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.3 + idx * 0.08 }}
+                  className={`rounded-2xl border ${card.border} bg-gradient-to-br ${card.accent} p-3.5 backdrop-blur-xl shadow-[0_12px_24px_rgba(2,10,30,0.28)]`}
+                >
+                  <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/20 bg-slate-900/50">
+                    <Icon className="h-4 w-4 text-cyan-100" />
+                  </div>
+                  <p className="text-sm font-semibold text-white">{card.title}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-slate-300">{card.subtitle}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="absolute right-[18%] top-[6%] z-30 rounded-xl border border-white/20 bg-white/80 px-3 py-2 text-xs text-slate-700 backdrop-blur-xl"
-          >
-            <div className="flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-emerald-200" />
-              Live performance improved by 31%
-            </div>
-          </motion.div>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.25, 0.55, 0.25] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute left-[18%] top-[15%] h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.65)]"
+          />
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0.2, 0.5, 0.2] }}
+            transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+            className="absolute right-[18%] top-[28%] h-2 w-2 rounded-full bg-blue-300 shadow-[0_0_20px_rgba(96,165,250,0.65)]"
+          />
         </div>
       </div>
 
