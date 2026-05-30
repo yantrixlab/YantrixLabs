@@ -424,8 +424,8 @@ export default function EditInvoicePage() {
                     </div>
                     <div className="col-span-4 sm:col-span-2">
                       <label className="block text-xs text-gray-500 mb-1">Qty</label>
-                      <input type="number" value={item.quantity} min="0.01" step="0.01"
-                        onChange={e => updateItem(item.id, 'quantity', parseFloat(e.target.value) || 0)}
+                      <input type="number" value={item.quantity} min="1" step="1"
+                        onChange={e => updateItem(item.id, 'quantity', parseInt(e.target.value, 10) || 0)}
                         className="w-full rounded-lg border border-gray-200 px-2.5 py-1.5 text-sm focus:border-indigo-500 focus:outline-none bg-white" />
                     </div>
                     <div className="col-span-4 sm:col-span-2">

@@ -249,6 +249,7 @@ interface ApprovedReview {
   id: string;
   rating: number;
   comment: string | null;
+  platform?: string | null;
   user: { name: string };
   business: { name: string; city: string | null } | null;
 }
@@ -514,8 +515,9 @@ export default function HomePage() {
             .toUpperCase(),
           quote: r.comment || "",
           rating: r.rating,
+          productName: r.platform?.trim() || "Product Review",
         }))
-      : TESTIMONIALS.map((t) => ({ ...t, rating: 5 }));
+      : TESTIMONIALS.map((t) => ({ ...t, rating: 5, productName: "Client Project" }));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -1429,6 +1431,9 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-shadow"
               >
+                <p className="text-xs font-semibold uppercase tracking-wide text-indigo-600 mb-2">
+                  {t.productName}
+                </p>
                 <div className="flex items-center gap-1 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star

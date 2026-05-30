@@ -7,12 +7,14 @@ import { useToast } from "./Toast";
 
 interface ReviewPromptModalProps {
   open: boolean;
+  productName?: string;
   onClose: () => void;
   onSubmitted: () => void;
 }
 
 export function ReviewPromptModal({
   open,
+  productName,
   onClose,
   onSubmitted,
 }: ReviewPromptModalProps) {
@@ -34,7 +36,11 @@ export function ReviewPromptModal({
     try {
       await apiFetch("/reviews", {
         method: "POST",
-        body: JSON.stringify({ rating, comment: comment.trim() }),
+        body: JSON.stringify({
+          rating,
+          comment: comment.trim(),
+          productName: productName || "GST Invoice Tool",
+        }),
       });
       success("Thanks for your review", "We will publish it after approval.");
       onSubmitted();

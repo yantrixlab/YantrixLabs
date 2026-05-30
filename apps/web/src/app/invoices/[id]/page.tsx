@@ -577,6 +577,7 @@ export default function InvoiceDetailPage() {
     <>
       <ReviewPromptModal
         open={showReviewPrompt}
+        productName="GST Invoice Tool"
         onClose={() => setShowReviewPrompt(false)}
         onSubmitted={markReviewSubmitted}
       />

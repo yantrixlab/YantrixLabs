@@ -1626,7 +1626,7 @@ export default function NewInvoicePage() {
                             className="w-full border-0 bg-transparent text-sm text-gray-600 placeholder:text-gray-300 focus:outline-none" />
                         </td>
                         <td className="px-4 py-2.5">
-                          <input type="number" min="0.01" step="0.01" value={item.quantity} onChange={e => updateItem(item.id, 'quantity', parseFloat(e.target.value) || 0)}
+                          <input type="number" min="1" step="1" value={item.quantity} onChange={e => updateItem(item.id, 'quantity', parseInt(e.target.value, 10) || 0)}
                             className="w-full border-0 bg-transparent text-sm text-gray-700 focus:outline-none" />
                         </td>
                         <td className="px-4 py-2.5">

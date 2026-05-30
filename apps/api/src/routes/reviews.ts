@@ -52,11 +52,17 @@ router.post(
       .trim()
       .isLength({ min: 10, max: 600 })
       .withMessage("Comment must be between 10 and 600 characters"),
+    body("productName")
+      .optional()
+      .isString()
+      .trim()
+      .isLength({ min: 2, max: 80 })
+      .withMessage("Product name must be between 2 and 80 characters"),
   ],
   validate,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
-      const { rating, comment } = req.body;
+      const { rating, comment, productName } = req.body;
       const userId = req.user!.id;
       const businessId = req.user!.businessId || null;
 
@@ -84,7 +90,7 @@ router.post(
           rating: Number(rating),
           comment: comment.trim(),
           isApproved: false,
-          platform: "app",
+          platform: productName?.trim() || "app",
         },
       });
 
