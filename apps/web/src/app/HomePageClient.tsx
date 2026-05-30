@@ -391,6 +391,7 @@ export default function HomePage() {
   const [homeAnimatedLogos, setHomeAnimatedLogos] =
     useState<string[]>(HOME_ANIMATED_LOGOS);
   const [approvedReviews, setApprovedReviews] = useState<ApprovedReview[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
   const businessCount = Number.parseInt(homeHeader.stat2Value || "", 10);
   const trustedText =
     businessCount && businessCount > 0
@@ -497,6 +498,9 @@ export default function HomePage() {
       })
       .catch(() => {
         setApprovedReviews([]);
+      })
+      .finally(() => {
+        setReviewsLoading(false);
       });
   }, []);
 
@@ -1422,7 +1426,33 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonialCards.map((t, idx) => (
+            {reviewsLoading
+              ? Array.from({ length: 3 }).map((_, idx) => (
+                  <div
+                    key={`review-skeleton-${idx}`}
+                    className="rounded-2xl border border-gray-100 p-6 shadow-sm bg-white animate-pulse"
+                  >
+                    <div className="h-4 w-28 rounded bg-gray-200 mb-3" />
+                    <div className="flex items-center gap-1 mb-4">
+                      {Array.from({ length: 5 }).map((__, i) => (
+                        <div key={i} className="h-4 w-4 rounded bg-gray-200" />
+                      ))}
+                    </div>
+                    <div className="space-y-2 mb-6">
+                      <div className="h-4 w-full rounded bg-gray-200" />
+                      <div className="h-4 w-[92%] rounded bg-gray-200" />
+                      <div className="h-4 w-[78%] rounded bg-gray-200" />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-gray-200" />
+                      <div className="space-y-2">
+                        <div className="h-4 w-28 rounded bg-gray-200" />
+                        <div className="h-3 w-36 rounded bg-gray-200" />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              : testimonialCards.map((t, idx) => (
               <motion.div
                 key={t.name}
                 initial={{ opacity: 0, y: 20 }}
