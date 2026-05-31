@@ -79,6 +79,13 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6727827078869762"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <ToastProvider>{children}</ToastProvider>
