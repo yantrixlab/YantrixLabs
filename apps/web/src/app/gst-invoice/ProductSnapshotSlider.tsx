@@ -26,12 +26,8 @@ export default function ProductSnapshotSlider({ images }: ProductSnapshotSliderP
 
   if (!total) {
     return (
-      <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-gray-100">
-        <div className="flex aspect-[16/10] items-center justify-center px-6 text-center">
-          <p className="text-sm font-medium text-gray-500">
-            Add product screenshots to <span className="font-semibold">/public/gst_invoice_screenshots</span> to show them here.
-          </p>
-        </div>
+      <div className="relative overflow-hidden rounded-xl border border-white/40 bg-white/35 backdrop-blur-md">
+        <div className="aspect-[16/10]" />
       </div>
     );
   }

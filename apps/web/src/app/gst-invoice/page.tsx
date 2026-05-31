@@ -9,12 +9,9 @@ import {
   BarChart3,
   Boxes,
   CheckCircle2,
-  FileSpreadsheet,
   FileText,
   PackageSearch,
-  QrCode,
   ScanLine,
-  ShieldCheck,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -259,53 +256,11 @@ export default async function GSTInvoicePage() {
             <p className="mt-4 text-gray-600">A unified dashboard for invoice generation, inventory, and exports.</p>
           </div>
 
-          <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-            <div className="grid gap-5 lg:grid-cols-3">
-              <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 lg:col-span-2">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-gray-800">Live Product Screens</p>
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-                    Auto Rotating
-                  </span>
-                </div>
-                <ProductSnapshotSlider images={snapshotImages} />
-              </div>
-
-              <div className="space-y-4">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
-                  <p className="text-xs font-semibold text-gray-500">Stock Movement</p>
-                  <p className="mt-1 text-lg font-bold text-gray-900">-13 units</p>
-                  <p className="text-xs text-gray-500">Updated after live scan</p>
-                </div>
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
-                  <p className="text-xs font-semibold text-gray-500">GST Summary</p>
-                  <p className="mt-1 text-lg font-bold text-gray-900">Rs 2,870 tax</p>
-                  <p className="text-xs text-gray-500">CGST + SGST split ready</p>
-                </div>
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
-                  <p className="text-xs font-semibold text-gray-500">Exports</p>
-                  <div className="mt-2 flex items-center gap-2 text-xs">
-                    <span className="rounded-full bg-blue-100 px-2.5 py-1 text-blue-700">PDF Ready</span>
-                    <span className="rounded-full bg-sky-100 px-2.5 py-1 text-sky-700">Excel Ready</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="relative rounded-3xl border border-white/50 bg-white/40 p-4 shadow-[0_18px_50px_rgba(15,23,42,0.12)] backdrop-blur-xl sm:p-5">
+            <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-white/60" />
+            <ProductSnapshotSlider images={snapshotImages} />
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
-            {[
-              { icon: QrCode, label: 'QR Pairing' },
-              { icon: ScanLine, label: 'Live Scan Billing' },
-              { icon: ShieldCheck, label: 'Reliable Data Flow' },
-              { icon: FileSpreadsheet, label: 'Excel Exports' },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-4">
-                <item.icon className="h-5 w-5 text-blue-700" />
-                <p className="text-sm font-semibold text-gray-800">{item.label}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
