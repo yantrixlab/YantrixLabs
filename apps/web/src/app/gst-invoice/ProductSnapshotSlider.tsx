@@ -11,6 +11,7 @@ type ProductSnapshotSliderProps = {
 export default function ProductSnapshotSlider({ images }: ProductSnapshotSliderProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [aspectRatios, setAspectRatios] = useState<Record<string, number>>({});
   const total = images.length;
 
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function ProductSnapshotSlider({ images }: ProductSnapshotSliderP
   }, [total]);
 
   const activeImage = useMemo(() => images[activeIndex], [activeIndex, images]);
+  const activeAspectRatio = aspectRatios[activeImage] ?? 16 / 9;
 
   if (!total) {
     return (
@@ -37,7 +39,7 @@ export default function ProductSnapshotSlider({ images }: ProductSnapshotSliderP
   return (
     <div className="relative">
       <div className="relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="relative aspect-[16/10]">
+        <div className="relative w-full" style={{ aspectRatio: String(activeAspectRatio) }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={`${activeImage}-${activeIndex}`}
@@ -54,6 +56,11 @@ export default function ProductSnapshotSlider({ images }: ProductSnapshotSliderP
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-contain"
                 priority={activeIndex === 0}
+                onLoadingComplete={(img) => {
+                  if (!img.naturalWidth || !img.naturalHeight) return;
+                  const ratio = img.naturalWidth / img.naturalHeight;
+                  setAspectRatios((prev) => (prev[activeImage] ? prev : { ...prev, [activeImage]: ratio }));
+                }}
               />
             </motion.div>
           </AnimatePresence>
