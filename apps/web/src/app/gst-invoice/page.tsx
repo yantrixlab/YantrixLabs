@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import path from 'path';
+import { readdir } from 'fs/promises';
 import { PublicLayout } from '@/components/layout/PublicLayout';
+import ProductSnapshotSlider from './ProductSnapshotSlider';
 import {
   ArrowRight,
   BarChart3,
@@ -45,6 +48,8 @@ export const metadata: Metadata = {
     images: ['https://yantrixlab.com/og-gst-tool.png'],
   },
 };
+
+export const dynamic = 'force-dynamic';
 
 const faqJsonLd = {
   '@context': 'https://schema.org',
@@ -134,7 +139,27 @@ const faqs = [
   },
 ];
 
-export default function GSTInvoicePage() {
+async function getSnapshotImages() {
+  const screenshotsDir = path.join(process.cwd(), 'public', 'gst_invoice_screenshots');
+  const allowedExtensions = new Set(['.png', '.jpg', '.jpeg', '.webp', '.avif']);
+
+  try {
+    const entries = await readdir(screenshotsDir, { withFileTypes: true });
+
+    return entries
+      .filter((entry) => entry.isFile())
+      .map((entry) => entry.name)
+      .filter((name) => allowedExtensions.has(path.extname(name).toLowerCase()))
+      .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }))
+      .map((name) => `/gst_invoice_screenshots/${name}`);
+  } catch {
+    return [];
+  }
+}
+
+export default async function GSTInvoicePage() {
+  const snapshotImages = await getSnapshotImages();
+
   return (
     <PublicLayout>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -238,23 +263,12 @@ export default function GSTInvoicePage() {
             <div className="grid gap-5 lg:grid-cols-3">
               <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 lg:col-span-2">
                 <div className="mb-4 flex items-center justify-between">
-                  <p className="text-sm font-semibold text-gray-800">Invoice Table</p>
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Scanner Connected</span>
+                  <p className="text-sm font-semibold text-gray-800">Live Product Screens</p>
+                  <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                    Auto Rotating
+                  </span>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm text-gray-700">
-                    <span>A4 Copier Paper</span>
-                    <span>Rs 1,950</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm text-gray-700">
-                    <span>Packing Tape Roll</span>
-                    <span>Rs 540</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm text-gray-700">
-                    <span>Marker Set</span>
-                    <span>Rs 380</span>
-                  </div>
-                </div>
+                <ProductSnapshotSlider images={snapshotImages} />
               </div>
 
               <div className="space-y-4">

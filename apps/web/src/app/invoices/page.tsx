@@ -129,10 +129,24 @@ export default function InvoicesPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={fetchInvoices}
-            className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-150 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white p-2.5 sm:px-3 sm:py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-150 active:scale-95"
+            title="Reload invoices"
+            aria-label="Reload invoices"
           >
             <RefreshCw className="h-4 w-4" />
           </button>
+          <Link
+            href="/invoices/new"
+            onClick={(e) => {
+              if (!requireAuthForAction('invoice:create')) e.preventDefault();
+            }}
+            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 p-2.5 sm:px-3.5 sm:py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all duration-150 active:scale-95"
+            title="Create new invoice"
+            aria-label="Create new invoice"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">New Invoice</span>
+          </Link>
           <button
             onClick={handleExport}
             className="hidden sm:inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3.5 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-150 active:scale-95"
