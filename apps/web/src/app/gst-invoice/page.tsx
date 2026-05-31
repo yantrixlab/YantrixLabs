@@ -139,9 +139,9 @@ export default function GSTInvoicePage() {
     <PublicLayout>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <section className="relative overflow-hidden border-b border-gray-200/70 bg-gradient-to-b from-gray-50 via-white to-blue-50/70 py-20 sm:py-24">
-        <div className="pointer-events-none absolute -top-24 -right-20 h-72 w-72 rounded-full bg-blue-200/35 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-cyan-200/35 blur-3xl" />
+      <section className="public-hero relative overflow-hidden border-b border-gray-200/70 py-20 sm:py-24">
+        <div className="pointer-events-none absolute -top-24 -right-20 h-72 w-72 rounded-full bg-blue-200/25 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-20 h-72 w-72 rounded-full bg-cyan-200/25 blur-3xl" />
         <div className="container-wide relative">
           <div className="mx-auto max-w-4xl text-center">
             <p className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-blue-700">
@@ -161,12 +161,6 @@ export default function GSTInvoicePage() {
               >
                 Start Free Billing
                 <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/scanner"
-                className="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
-              >
-                Download Scanner APK
               </Link>
             </div>
           </div>
@@ -201,7 +195,7 @@ export default function GSTInvoicePage() {
                 key={feature.title}
                 className={`rounded-2xl border p-6 transition duration-300 hover:-translate-y-1 ${
                   feature.highlight
-                    ? 'border-blue-300 bg-gradient-to-br from-blue-50 via-cyan-50 to-white shadow-lg shadow-blue-100/70'
+                    ? 'border-blue-300 bg-white shadow-lg shadow-blue-100/40 hover:border-blue-400'
                     : 'border-gray-200 bg-white hover:border-gray-300'
                 }`}
               >
@@ -344,9 +338,6 @@ export default function GSTInvoicePage() {
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link href="/dashboard?guest=1" className="inline-flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">
               Start Free Billing
-            </Link>
-            <Link href="/scanner" className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
-              Download Scanner APK
             </Link>
           </div>
         </div>

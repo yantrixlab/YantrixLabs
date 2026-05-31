@@ -11,7 +11,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/contact',
     '/services',
     '/tools',
-    '/scanner',
     '/pricing',
     '/saas-development-services',
     '/mobile-app-development-services',
@@ -52,7 +51,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/services': 0.9,
     '/gst-invoice': 0.9,
     '/tools': 0.8,
-    '/scanner': 0.8,
     '/blog': 0.7,
   };
 

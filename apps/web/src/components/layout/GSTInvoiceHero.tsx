@@ -1,10 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { ArrowRight, PlayCircle, Zap } from 'lucide-react';
+import { ArrowRight, Zap } from 'lucide-react';
 import { isAuthenticated } from '@/lib/api';
 import { enableGuestMode } from '@/lib/guestMode';
 
@@ -66,13 +65,6 @@ export default function GSTInvoiceHero() {
                   Start Free Billing
                   <ArrowRight className="h-4 w-4" />
                 </button>
-                <Link
-                  href="/scanner"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-500/70 bg-slate-900/60 px-7 py-3.5 text-sm font-semibold text-slate-100 transition hover:bg-slate-800"
-                >
-                  Watch Live Demo
-                  <PlayCircle className="h-4 w-4" />
-                </Link>
               </div>
 
               <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2 text-xs font-semibold text-cyan-100">
