@@ -36,6 +36,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const data = await res.json();
     if (data?.success && Array.isArray(data.data)) {
       toolRoutes = data.data
+        .filter((tool: { slug?: string; toolType?: string }) =>
+          tool.toolType !== 'INTERNAL_APP' && tool.toolType !== 'EXTERNAL_URL'
+        )
         .map((tool: { slug?: string }) => tool.slug)
         .filter((slug: unknown): slug is string => typeof slug === 'string' && slug.length > 0)
         .map(slug => `/${slug}`);
