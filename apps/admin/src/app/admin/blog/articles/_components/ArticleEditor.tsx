@@ -1073,138 +1073,47 @@ export default function ArticleEditor({ postId }: Props) {
           </button>
 
           {seoOpen && (
-            <div className="px-4 pb-4 space-y-4 border-t border-gray-700">
-              {/* SEO Score bar */}
-              <div className="pt-3">
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full transition-all ${
-                      data.seoScore >= 80 ? 'bg-green-500' : data.seoScore >= 50 ? 'bg-yellow-500' : 'bg-red-500'
-                    }`}
-                    style={{ width: `${data.seoScore}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Google SERP Preview */}
+            <div className="px-4 pb-4 space-y-5 border-t border-gray-700 pt-4">
               <div>
-                <p className="text-xs text-gray-400 mb-1.5 font-semibold">Google Search Preview</p>
-                <div className="bg-white rounded-lg p-3 space-y-0.5">
-                  <p className="text-[13px] text-[#202124] truncate">
-                    yantrixlab.com{data.slug ? ` › ${data.slug}` : ''}
-                  </p>
-                  <p className="text-[#1a0dab] text-lg leading-snug truncate">
-                    {(data.seoTitle || data.title || 'Article title').slice(0, 70)}
-                  </p>
-                  <p className="text-[#4d5156] text-sm leading-snug line-clamp-2">
-                    {(data.seoDescription || data.excerpt || 'Add a meta description to control how this appears in search results.').slice(0, 160)}
-                  </p>
-                </div>
+                <label className="text-sm font-semibold text-white block mb-1.5">Focus keyword</label>
+                <input
+                  value={data.focusKeyword}
+                  onChange={e => update('focusKeyword', e.target.value)}
+                  className="w-full bg-gray-800 text-white text-sm px-3 py-2.5 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500"
+                />
+                <p className="text-xs text-gray-500 mt-1.5">The main keyword or phrase this post should rank for.</p>
               </div>
-
-              {/* Social Share Preview */}
-              <div>
-                <p className="text-xs text-gray-400 mb-1.5 font-semibold">Social Share Preview</p>
-                <div className="bg-gray-950 border border-gray-700 rounded-lg overflow-hidden">
-                  {(data.ogImage || data.coverImage) && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={data.ogImage || data.coverImage} alt="" className="w-full h-28 object-cover" />
-                  )}
-                  <div className="p-2.5">
-                    <p className="text-[10px] text-gray-500 uppercase">yantrixlab.com</p>
-                    <p className="text-sm text-gray-100 font-medium truncate">{data.ogTitle || data.seoTitle || data.title || 'Article title'}</p>
-                    <p className="text-xs text-gray-400 line-clamp-2">{data.ogDescription || data.seoDescription || data.excerpt}</p>
-                  </div>
-                </div>
-              </div>
-
-              {[
-                { label: 'Focus Keyword', field: 'focusKeyword', placeholder: 'Main keyword or phrase this post should rank for' },
-                { label: 'Meta Title', field: 'seoTitle', placeholder: 'Title for search engines' },
-                { label: 'Meta Description', field: 'seoDescription', placeholder: '120-160 chars description' },
-                { label: 'Meta Keywords', field: 'metaKeywords', placeholder: 'comma, separated, keywords' },
-                { label: 'Canonical URL', field: 'canonicalUrl', placeholder: 'https://...' },
-                { label: 'OG Title', field: 'ogTitle', placeholder: 'Open Graph title' },
-                { label: 'OG Description', field: 'ogDescription', placeholder: 'Open Graph description' },
-                { label: 'OG Image URL', field: 'ogImage', placeholder: 'https://...' },
-                { label: 'Twitter Card Image URL', field: 'twitterImage', placeholder: 'https://... (falls back to OG image)' },
-                { label: 'Breadcrumb Title', field: 'breadcrumbTitle', placeholder: 'Short label for breadcrumb trail' },
-              ].map(({ label, field, placeholder }) => (
-                <div key={field}>
-                  <label className="text-xs text-gray-400 block mb-1">
-                    {label}
-                    {field === 'seoTitle' && <span className="ml-1 text-gray-600">({(data.seoTitle || data.title).length} chars)</span>}
-                    {field === 'seoDescription' && <span className="ml-1 text-gray-600">({data.seoDescription.length} chars)</span>}
-                  </label>
-                  {field === 'seoDescription' || field === 'ogDescription' ? (
-                    <textarea
-                      value={data[field as keyof ArticleData] as string}
-                      onChange={e => update(field as keyof ArticleData, e.target.value)}
-                      placeholder={placeholder}
-                      rows={2}
-                      className="w-full bg-gray-800 text-white text-sm px-3 py-2 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500 resize-none placeholder-gray-600"
-                    />
-                  ) : (
-                    <input
-                      value={data[field as keyof ArticleData] as string}
-                      onChange={e => update(field as keyof ArticleData, e.target.value)}
-                      placeholder={placeholder}
-                      className="w-full bg-gray-800 text-white text-sm px-3 py-2 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-gray-600"
-                    />
-                  )}
-                </div>
-              ))}
 
               <div>
-                <label className="text-xs text-gray-400 block mb-1">Schema Type</label>
-                <select
-                  value={data.schemaType}
-                  onChange={e => update('schemaType', e.target.value)}
-                  className="w-full bg-gray-800 text-white text-sm px-3 py-2 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500"
-                >
-                  {['ARTICLE', 'HOWTO', 'FAQ', 'PRODUCT', 'NEWSARTICLE'].map(t => (
-                    <option key={t} value={t}>{t}</option>
-                  ))}
-                </select>
+                <label className="text-sm font-semibold text-white block mb-1.5">Meta title</label>
+                <input
+                  value={data.seoTitle}
+                  onChange={e => update('seoTitle', e.target.value)}
+                  maxLength={60}
+                  className="w-full bg-gray-800 text-white text-sm px-3 py-2.5 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500"
+                />
+                <p className="text-xs text-gray-500 mt-1.5">{data.seoTitle.length} / 60 characters</p>
               </div>
 
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 text-xs text-gray-400 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={data.robotsIndex}
-                    onChange={e => update('robotsIndex', e.target.checked)}
-                    className="rounded"
-                  />
-                  Index
-                </label>
-                <label className="flex items-center gap-2 text-xs text-gray-400 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={data.robotsFollow}
-                    onChange={e => update('robotsFollow', e.target.checked)}
-                    className="rounded"
-                  />
-                  Follow
-                </label>
-              </div>
-
-              {/* SEO Checklist */}
               <div>
-                <p className="text-xs text-gray-400 mb-2 font-semibold">SEO Checklist</p>
-                <ul className="space-y-1.5">
-                  {getSeoChecks(data).map(check => (
-                    <li key={check.label} className="flex items-start gap-2 text-xs" title={check.hint}>
-                      {check.passed
-                        ? <Check className="h-3.5 w-3.5 text-green-400 shrink-0 mt-0.5" />
-                        : <X className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />}
-                      <div>
-                        <span className={check.passed ? 'text-gray-300' : 'text-gray-200 font-medium'}>{check.label}</span>
-                        {!check.passed && <p className="text-gray-500 mt-0.5">{check.hint}</p>}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                <label className="text-sm font-semibold text-white block mb-1.5">Meta description</label>
+                <textarea
+                  value={data.seoDescription}
+                  onChange={e => update('seoDescription', e.target.value)}
+                  maxLength={160}
+                  rows={3}
+                  className="w-full bg-gray-800 text-white text-sm px-3 py-2.5 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500 resize-none"
+                />
+                <p className="text-xs text-gray-500 mt-1.5">{data.seoDescription.length} / 156 characters</p>
+              </div>
+
+              <div>
+                <label className="text-sm font-semibold text-white block mb-1.5">Meta keywords</label>
+                <input
+                  value={data.metaKeywords}
+                  onChange={e => update('metaKeywords', e.target.value)}
+                  className="w-full bg-gray-800 text-white text-sm px-3 py-2.5 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500"
+                />
               </div>
             </div>
           )}
