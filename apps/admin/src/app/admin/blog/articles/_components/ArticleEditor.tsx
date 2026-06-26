@@ -31,6 +31,7 @@ interface ArticleData {
   content: string;
   contentHtml: string;
   coverImage: string;
+  coverImageAlt: string;
   status: string;
   categoryId: string;
   tagIds: string[];
@@ -46,6 +47,8 @@ interface ArticleData {
   ogTitle: string;
   ogDescription: string;
   ogImage: string;
+  twitterImage: string;
+  breadcrumbTitle: string;
   schemaType: string;
   robotsIndex: boolean;
   robotsFollow: boolean;
@@ -83,21 +86,132 @@ function calcReadTime(words: number): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-function calcSeoScore(data: ArticleData): number {
-  let score = 0;
-  if (data.title.length >= 30 && data.title.length <= 60) score += 20;
-  else if (data.title.length > 0) score += 10;
-  if (data.seoDescription.length >= 120 && data.seoDescription.length <= 160) score += 20;
-  else if (data.seoDescription.length > 0) score += 10;
-  if (data.focusKeyword) {
-    score += 15;
-    if (data.title.toLowerCase().includes(data.focusKeyword.toLowerCase())) score += 10;
-    if (data.contentHtml.toLowerCase().includes(data.focusKeyword.toLowerCase())) score += 10;
+interface SeoCheck {
+  label: string;
+  passed: boolean;
+  hint: string;
+}
+
+function plainText(html: string): string {
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function keywordDensity(text: string, keyword: string): number {
+  if (!keyword.trim()) return 0;
+  const words = text.toLowerCase().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return 0;
+  const kw = keyword.trim().toLowerCase();
+  const kwWords = kw.split(/\s+/).length;
+  let count = 0;
+  const lower = text.toLowerCase();
+  let idx = lower.indexOf(kw);
+  while (idx !== -1) {
+    count++;
+    idx = lower.indexOf(kw, idx + kw.length);
   }
-  const wordCount = countWords(data.contentHtml.replace(/<[^>]+>/g, ''));
-  if (wordCount >= 300) score += 15;
-  if (data.coverImage) score += 10;
-  return Math.min(score, 100);
+  return (count * kwWords) / words.length * 100;
+}
+
+function countImagesMissingAlt(html: string): number {
+  const imgs = html.match(/<img\b[^>]*>/gi) || [];
+  return imgs.filter(tag => !/alt\s*=\s*["'][^"']+["']/i.test(tag)).length;
+}
+
+function getSeoChecks(data: ArticleData): SeoCheck[] {
+  const text = plainText(data.contentHtml);
+  const wordCount = countWords(text);
+  const kw = data.focusKeyword.trim().toLowerCase();
+  const density = kw ? keywordDensity(text, kw) : 0;
+  const imagesMissingAlt = countImagesMissingAlt(data.contentHtml);
+  const titleLen = (data.seoTitle || data.title).length;
+  const descLen = data.seoDescription.length;
+
+  return [
+    {
+      label: 'Focus keyword set',
+      passed: !!kw,
+      hint: kw ? `Focus keyword: "${data.focusKeyword}"` : 'Add a focus keyword to guide your SEO checks.',
+    },
+    {
+      label: 'Keyword in title',
+      passed: !!kw && data.title.toLowerCase().includes(kw),
+      hint: 'Include the focus keyword in the article title, ideally near the start.',
+    },
+    {
+      label: 'Keyword in slug/URL',
+      passed: !!kw && data.slug.toLowerCase().includes(kw.replace(/\s+/g, '-')),
+      hint: 'Include the focus keyword in the URL slug.',
+    },
+    {
+      label: 'Keyword in meta description',
+      passed: !!kw && data.seoDescription.toLowerCase().includes(kw),
+      hint: 'Mention the focus keyword in the meta description.',
+    },
+    {
+      label: 'Keyword in first 100 words',
+      passed: !!kw && text.toLowerCase().split(/\s+/).slice(0, 100).join(' ').includes(kw),
+      hint: 'Use the focus keyword early in the content so readers and search engines see relevance immediately.',
+    },
+    {
+      label: 'Keyword density (0.5%–2.5%)',
+      passed: !!kw && density >= 0.5 && density <= 2.5,
+      hint: kw
+        ? `Current density ${density.toFixed(1)}%. ${density > 2.5 ? 'Reduce repetition to avoid keyword stuffing.' : 'Use the keyword a bit more throughout the body.'}`
+        : 'Set a focus keyword to measure density.',
+    },
+    {
+      label: 'SEO title length (30–60 chars)',
+      passed: titleLen >= 30 && titleLen <= 60,
+      hint: `Current length: ${titleLen}. Google typically truncates titles past ~60 characters.`,
+    },
+    {
+      label: 'Meta description length (120–160 chars)',
+      passed: descLen >= 120 && descLen <= 160,
+      hint: `Current length: ${descLen}. Aim for 120-160 characters so it isn't truncated in search results.`,
+    },
+    {
+      label: 'Content length (≥ 600 words)',
+      passed: wordCount >= 600,
+      hint: `Current: ${wordCount} words. Longer, in-depth content tends to rank better for competitive keywords.`,
+    },
+    {
+      label: 'Cover image set',
+      passed: !!data.coverImage,
+      hint: 'A cover image improves social sharing and click-through from search.',
+    },
+    {
+      label: 'Cover image alt text',
+      passed: !!data.coverImage && !!data.coverImageAlt,
+      hint: 'Add descriptive alt text to the cover image for image search SEO and accessibility.',
+    },
+    {
+      label: 'All content images have alt text',
+      passed: imagesMissingAlt === 0,
+      hint: imagesMissingAlt > 0 ? `${imagesMissingAlt} image(s) in the body are missing alt text.` : 'All images have alt text.',
+    },
+    {
+      label: 'At least one subheading (H2/H3)',
+      passed: /<h[23][^>]*>/i.test(data.contentHtml),
+      hint: 'Break up content with H2/H3 subheadings — helps readability and featured-snippet eligibility.',
+    },
+    {
+      label: 'At least one internal or external link',
+      passed: /<a\s+[^>]*href=/i.test(data.contentHtml),
+      hint: 'Link to related articles or authoritative external sources to boost topical relevance.',
+    },
+    {
+      label: 'Canonical URL set',
+      passed: !!data.canonicalUrl,
+      hint: 'Optional, but prevents duplicate-content issues if this article is ever syndicated.',
+    },
+  ];
+}
+
+function calcSeoScore(data: ArticleData): number {
+  const checks = getSeoChecks(data);
+  const required = checks.filter(c => c.label !== 'Canonical URL set');
+  const passed = required.filter(c => c.passed).length;
+  return Math.round((passed / required.length) * 100);
 }
 
 interface Props {
@@ -140,6 +254,7 @@ export default function ArticleEditor({ postId }: Props) {
     content: '',
     contentHtml: '',
     coverImage: '',
+    coverImageAlt: '',
     status: 'DRAFT',
     categoryId: '',
     tagIds: [],
@@ -155,6 +270,8 @@ export default function ArticleEditor({ postId }: Props) {
     ogTitle: '',
     ogDescription: '',
     ogImage: '',
+    twitterImage: '',
+    breadcrumbTitle: '',
     schemaType: 'ARTICLE',
     robotsIndex: true,
     robotsFollow: true,
@@ -175,6 +292,7 @@ export default function ArticleEditor({ postId }: Props) {
           content: post.content || '',
           contentHtml: post.contentHtml || post.content || '',
           coverImage: post.coverImage || '',
+          coverImageAlt: post.coverImageAlt || '',
           status: post.status || 'DRAFT',
           categoryId: post.categoryId || '',
           tagIds: post.tags?.map((t: { tagId: string }) => t.tagId) ?? [],
@@ -189,6 +307,8 @@ export default function ArticleEditor({ postId }: Props) {
           ogTitle: post.ogTitle || '',
           ogDescription: post.ogDescription || '',
           ogImage: post.ogImage || '',
+          twitterImage: post.twitterImage || '',
+          breadcrumbTitle: post.breadcrumbTitle || '',
           schemaType: post.schemaType || 'ARTICLE',
           robotsIndex: post.robotsIndex ?? true,
           robotsFollow: post.robotsFollow ?? true,
@@ -437,8 +557,11 @@ export default function ArticleEditor({ postId }: Props) {
     wrapper.setAttribute('data-img-block', '1');
     wrapper.style.cssText = 'margin:0.5em 0;text-align:left;';
 
+    const altText = prompt('Describe this image for SEO and accessibility (alt text):') || '';
+
     const img = document.createElement('img');
     img.src = url;
+    img.alt = altText;
     img.style.cssText = 'max-width:100%;width:300px;display:inline-block;vertical-align:middle;cursor:pointer;';
 
     wrapper.appendChild(img);
@@ -483,6 +606,14 @@ export default function ArticleEditor({ postId }: Props) {
     requestAnimationFrame(() => {
       if (activeImgEl) setImgRect(activeImgEl.getBoundingClientRect());
     });
+  };
+
+  const editImageAlt = () => {
+    if (!activeImgEl) return;
+    const next = prompt('Alt text for this image (SEO + accessibility):', activeImgEl.alt || '');
+    if (next === null) return;
+    activeImgEl.alt = next;
+    handleEditorInput();
   };
 
   const deleteImage = () => {
@@ -855,6 +986,17 @@ export default function ArticleEditor({ postId }: Props) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={data.coverImage} alt="" className="w-full h-32 object-cover rounded-lg" />
           )}
+          <div>
+            <label className="text-xs text-gray-400 block mb-1">
+              Alt Text {data.coverImage && !data.coverImageAlt && <span className="text-amber-400">(missing)</span>}
+            </label>
+            <input
+              value={data.coverImageAlt}
+              onChange={e => update('coverImageAlt', e.target.value)}
+              placeholder="Describe the image for SEO & accessibility"
+              className="w-full bg-gray-800 text-white text-sm px-3 py-2 rounded-lg border border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-gray-600"
+            />
+          </div>
         </div>
 
         {/* Category & Tags */}
@@ -928,7 +1070,7 @@ export default function ArticleEditor({ postId }: Props) {
           </button>
 
           {seoOpen && (
-            <div className="px-4 pb-4 space-y-3 border-t border-gray-700">
+            <div className="px-4 pb-4 space-y-4 border-t border-gray-700">
               {/* SEO Score bar */}
               <div className="pt-3">
                 <div className="w-full bg-gray-800 rounded-full h-2">
@@ -941,6 +1083,38 @@ export default function ArticleEditor({ postId }: Props) {
                 </div>
               </div>
 
+              {/* Google SERP Preview */}
+              <div>
+                <p className="text-xs text-gray-400 mb-1.5 font-semibold">Google Search Preview</p>
+                <div className="bg-white rounded-lg p-3 space-y-0.5">
+                  <p className="text-[13px] text-[#202124] truncate">
+                    yantrixlab.com{data.slug ? ` › ${data.slug}` : ''}
+                  </p>
+                  <p className="text-[#1a0dab] text-lg leading-snug truncate">
+                    {(data.seoTitle || data.title || 'Article title').slice(0, 70)}
+                  </p>
+                  <p className="text-[#4d5156] text-sm leading-snug line-clamp-2">
+                    {(data.seoDescription || data.excerpt || 'Add a meta description to control how this appears in search results.').slice(0, 160)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Social Share Preview */}
+              <div>
+                <p className="text-xs text-gray-400 mb-1.5 font-semibold">Social Share Preview</p>
+                <div className="bg-gray-950 border border-gray-700 rounded-lg overflow-hidden">
+                  {(data.ogImage || data.coverImage) && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={data.ogImage || data.coverImage} alt="" className="w-full h-28 object-cover" />
+                  )}
+                  <div className="p-2.5">
+                    <p className="text-[10px] text-gray-500 uppercase">yantrixlab.com</p>
+                    <p className="text-sm text-gray-100 font-medium truncate">{data.ogTitle || data.seoTitle || data.title || 'Article title'}</p>
+                    <p className="text-xs text-gray-400 line-clamp-2">{data.ogDescription || data.seoDescription || data.excerpt}</p>
+                  </div>
+                </div>
+              </div>
+
               {[
                 { label: 'SEO Title', field: 'seoTitle', placeholder: 'Title for search engines' },
                 { label: 'Meta Description', field: 'seoDescription', placeholder: '120-160 chars description' },
@@ -949,9 +1123,15 @@ export default function ArticleEditor({ postId }: Props) {
                 { label: 'OG Title', field: 'ogTitle', placeholder: 'Open Graph title' },
                 { label: 'OG Description', field: 'ogDescription', placeholder: 'Open Graph description' },
                 { label: 'OG Image URL', field: 'ogImage', placeholder: 'https://...' },
+                { label: 'Twitter Card Image URL', field: 'twitterImage', placeholder: 'https://... (falls back to OG image)' },
+                { label: 'Breadcrumb Title', field: 'breadcrumbTitle', placeholder: 'Short label for breadcrumb trail' },
               ].map(({ label, field, placeholder }) => (
                 <div key={field}>
-                  <label className="text-xs text-gray-400 block mb-1">{label}</label>
+                  <label className="text-xs text-gray-400 block mb-1">
+                    {label}
+                    {field === 'seoTitle' && <span className="ml-1 text-gray-600">({(data.seoTitle || data.title).length} chars)</span>}
+                    {field === 'seoDescription' && <span className="ml-1 text-gray-600">({data.seoDescription.length} chars)</span>}
+                  </label>
                   {field === 'seoDescription' || field === 'ogDescription' ? (
                     <textarea
                       value={data[field as keyof ArticleData] as string}
@@ -1003,6 +1183,24 @@ export default function ArticleEditor({ postId }: Props) {
                   />
                   Follow
                 </label>
+              </div>
+
+              {/* SEO Checklist */}
+              <div>
+                <p className="text-xs text-gray-400 mb-2 font-semibold">SEO Checklist</p>
+                <ul className="space-y-1.5">
+                  {getSeoChecks(data).map(check => (
+                    <li key={check.label} className="flex items-start gap-2 text-xs" title={check.hint}>
+                      {check.passed
+                        ? <Check className="h-3.5 w-3.5 text-green-400 shrink-0 mt-0.5" />
+                        : <X className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />}
+                      <div>
+                        <span className={check.passed ? 'text-gray-300' : 'text-gray-200 font-medium'}>{check.label}</span>
+                        {!check.passed && <p className="text-gray-500 mt-0.5">{check.hint}</p>}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           )}
@@ -1179,6 +1377,15 @@ export default function ArticleEditor({ postId }: Props) {
             className="w-16 bg-gray-700 text-white text-xs px-1.5 py-0.5 rounded border border-gray-600 focus:outline-none focus:border-indigo-500"
           />
           <span className="text-xs text-gray-400">px</span>
+          <div className="w-px h-4 bg-gray-600 mx-1" />
+          <button
+            type="button"
+            title="Edit Alt Text"
+            onClick={editImageAlt}
+            className={`p-1 rounded transition-colors ${activeImgEl?.alt ? 'text-green-400' : 'text-amber-400'} hover:text-white hover:bg-gray-700`}
+          >
+            <Type className="h-3.5 w-3.5" />
+          </button>
           <div className="w-px h-4 bg-gray-600 mx-1" />
           <button
             type="button"

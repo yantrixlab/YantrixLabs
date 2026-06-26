@@ -21,6 +21,7 @@ interface Post {
   contentHtml: string | null;
   content: string;
   coverImage: string | null;
+  coverImageAlt: string | null;
   authorName: string;
   authorAvatar: string | null;
   authorBio: string | null;
@@ -31,9 +32,12 @@ interface Post {
   schemaType: string;
   seoTitle: string | null;
   seoDescription: string | null;
+  focusKeyword: string | null;
   ogTitle: string | null;
   ogDescription: string | null;
   ogImage: string | null;
+  twitterImage: string | null;
+  breadcrumbTitle: string | null;
   robotsIndex: boolean;
   robotsFollow: boolean;
   category: { id: string; name: string; slug: string; color: string | null } | null;
@@ -88,8 +92,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: post.ogTitle || post.title,
       description: post.ogDescription || post.excerpt || undefined,
-      images: post.ogImage ? [post.ogImage] : post.coverImage ? [post.coverImage] : [],
+      images: post.twitterImage
+        ? [post.twitterImage]
+        : post.ogImage
+          ? [post.ogImage]
+          : post.coverImage
+            ? [post.coverImage]
+            : [],
     },
+    keywords: post.focusKeyword || undefined,
   };
 }
 
@@ -123,20 +134,35 @@ export default async function BlogPostPage({ params }: PageProps) {
   const contentHtml = addIdsToHeadings(post.contentHtml || post.content || '');
   const toc = extractToc(contentHtml);
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yantrixlab.com';
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': post.schemaType === 'HOWTO' ? 'HowTo' : post.schemaType === 'NEWSARTICLE' ? 'NewsArticle' : 'Article',
     headline: post.title,
     description: post.excerpt || post.seoDescription,
     image: post.coverImage || post.ogImage,
+    keywords: post.focusKeyword || undefined,
     author: { '@type': 'Person', name: post.authorName },
     datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
     url: pageUrl,
     publisher: {
       '@type': 'Organization',
       name: 'Yantrix Labs',
       logo: { '@type': 'ImageObject', url: 'https://yantrixlab.com/app_logo.png' },
     },
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${siteUrl}/blog` },
+      { '@type': 'ListItem', position: 3, name: post.breadcrumbTitle || post.title, item: pageUrl },
+    ],
   };
 
   // Cast for component compatibility (adding missing fields with defaults)
@@ -163,6 +189,10 @@ export default async function BlogPostPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
 
       <div className="bg-white min-h-screen pt-1">
         {/* Article Header */}
@@ -186,7 +216,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={post.coverImage}
-              alt={post.title}
+              alt={post.coverImageAlt || post.title}
               className="w-full h-64 md:h-[28rem] object-cover rounded-3xl shadow-xl"
             />
           </div>

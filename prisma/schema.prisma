@@ -1236,6 +1236,7 @@ model BlogPost {
   content        String         @db.Text
   contentHtml    String?        @db.Text
   coverImage     String?
+  coverImageAlt  String?
   status         BlogPostStatus @default(DRAFT)
   categoryId     String?
   authorId       String?
