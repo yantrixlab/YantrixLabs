@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { ToastProvider } from '@/components/ui/Toast';
 
@@ -88,6 +89,15 @@ export default function RootLayout({
       </head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-PDPZ7XLBP8" strategy="afterInteractive" />
+        <Script id="ga4" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-PDPZ7XLBP8');
+          `}
+        </Script>
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
