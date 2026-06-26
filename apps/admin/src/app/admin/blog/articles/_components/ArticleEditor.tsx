@@ -43,6 +43,7 @@ interface ArticleData {
   seoTitle: string;
   seoDescription: string;
   focusKeyword: string;
+  metaKeywords: string;
   canonicalUrl: string;
   ogTitle: string;
   ogDescription: string;
@@ -266,6 +267,7 @@ export default function ArticleEditor({ postId }: Props) {
     seoTitle: '',
     seoDescription: '',
     focusKeyword: '',
+    metaKeywords: '',
     canonicalUrl: '',
     ogTitle: '',
     ogDescription: '',
@@ -303,6 +305,7 @@ export default function ArticleEditor({ postId }: Props) {
           seoTitle: post.seoTitle || '',
           seoDescription: post.seoDescription || '',
           focusKeyword: post.focusKeyword || '',
+          metaKeywords: post.metaKeywords || '',
           canonicalUrl: post.canonicalUrl || '',
           ogTitle: post.ogTitle || '',
           ogDescription: post.ogDescription || '',
@@ -1116,9 +1119,10 @@ export default function ArticleEditor({ postId }: Props) {
               </div>
 
               {[
-                { label: 'SEO Title', field: 'seoTitle', placeholder: 'Title for search engines' },
+                { label: 'Focus Keyword', field: 'focusKeyword', placeholder: 'Main keyword or phrase this post should rank for' },
+                { label: 'Meta Title', field: 'seoTitle', placeholder: 'Title for search engines' },
                 { label: 'Meta Description', field: 'seoDescription', placeholder: '120-160 chars description' },
-                { label: 'Focus Keyword', field: 'focusKeyword', placeholder: 'Main keyword' },
+                { label: 'Meta Keywords', field: 'metaKeywords', placeholder: 'comma, separated, keywords' },
                 { label: 'Canonical URL', field: 'canonicalUrl', placeholder: 'https://...' },
                 { label: 'OG Title', field: 'ogTitle', placeholder: 'Open Graph title' },
                 { label: 'OG Description', field: 'ogDescription', placeholder: 'Open Graph description' },

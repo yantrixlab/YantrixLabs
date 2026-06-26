@@ -33,6 +33,7 @@ interface Post {
   seoTitle: string | null;
   seoDescription: string | null;
   focusKeyword: string | null;
+  metaKeywords: string | null;
   ogTitle: string | null;
   ogDescription: string | null;
   ogImage: string | null;
@@ -100,7 +101,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             ? [post.coverImage]
             : [],
     },
-    keywords: post.focusKeyword || undefined,
+    keywords: post.metaKeywords || post.focusKeyword || undefined,
   };
 }
 

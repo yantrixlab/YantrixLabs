@@ -311,7 +311,7 @@ router.post('/', async (req: AuthenticatedRequest, res: Response, next: NextFunc
       title, slug, excerpt, content, contentHtml, coverImage, status,
       categoryId, authorId, authorName, authorAvatar, authorBio,
       readTime, wordCount, publishedAt, scheduledAt, isFeatured,
-      seoTitle, seoDescription, focusKeyword, canonicalUrl,
+      seoTitle, seoDescription, focusKeyword, metaKeywords, canonicalUrl,
       ogTitle, ogDescription, ogImage, twitterImage, schemaType,
       breadcrumbTitle, robotsIndex, robotsFollow, seoScore, tagIds,
     } = req.body;
@@ -338,6 +338,7 @@ router.post('/', async (req: AuthenticatedRequest, res: Response, next: NextFunc
         seoTitle,
         seoDescription,
         focusKeyword,
+        metaKeywords,
         canonicalUrl,
         ogTitle,
         ogDescription,
