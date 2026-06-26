@@ -68,6 +68,8 @@ interface ToolFormData {
   pricingType: string;
   seoTitle: string;
   seoDescription: string;
+  focusKeyword: string;
+  metaKeywords: string;
   sortOrder: string;
   screenshots: string;
 }
@@ -79,7 +81,7 @@ const DEFAULT_FORM: ToolFormData = {
   toolType: 'INTERNAL_APP', internalRoute: '', externalUrl: '',
   customHtml: '', customCss: '', customJs: '',
   ctaText: 'Launch Tool', ctaUrl: '',
-  pricingType: 'FREE', seoTitle: '', seoDescription: '', sortOrder: '0',
+  pricingType: 'FREE', seoTitle: '', seoDescription: '', focusKeyword: '', metaKeywords: '', sortOrder: '0',
   screenshots: '',
 };
 
@@ -730,7 +732,18 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
                   <Search className="h-4 w-4 text-orange-400" /> SEO Settings
                 </h2>
                 <div>
-                  <label className={labelClass}>SEO Title</label>
+                  <label className={labelClass}>Focus Keyword</label>
+                  <input
+                    type="text"
+                    placeholder="gst invoice tool"
+                    value={form.focusKeyword}
+                    onChange={e => set('focusKeyword', e.target.value)}
+                    className={inputClass}
+                  />
+                  <p className="text-xs text-gray-600 mt-1">The main keyword or phrase this tool page should rank for.</p>
+                </div>
+                <div>
+                  <label className={labelClass}>Meta Title</label>
                   <input
                     type="text"
                     placeholder="GST Invoice Tool - Free Online GST Billing | Yantrix Labs"
@@ -752,6 +765,17 @@ export default function ToolForm({ initialData, toolId, mode }: ToolFormProps) {
                     maxLength={160}
                   />
                   <p className="text-xs text-gray-600 mt-1">{form.seoDescription.length}/160 characters</p>
+                </div>
+                <div>
+                  <label className={labelClass}>Meta Keywords</label>
+                  <input
+                    type="text"
+                    placeholder="gst invoice, gst billing software, free invoicing tool"
+                    value={form.metaKeywords}
+                    onChange={e => set('metaKeywords', e.target.value)}
+                    className={inputClass}
+                  />
+                  <p className="text-xs text-gray-600 mt-1">Comma-separated. Minor ranking signal today, but still read by some search engines and tools.</p>
                 </div>
                 {/* SEO Preview */}
                 <div className="rounded-xl border border-gray-700 p-4 bg-gray-800/30">

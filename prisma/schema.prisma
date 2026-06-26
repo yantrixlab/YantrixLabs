@@ -1077,6 +1077,8 @@ model Tool {
   pricingType      PricingType    @default(FREE)
   seoTitle         String?
   seoDescription   String?
+  focusKeyword     String?
+  metaKeywords     String?
   isSystem         Boolean        @default(false)
   sortOrder        Int            @default(0)
   viewCount        Int            @default(0)

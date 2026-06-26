@@ -995,6 +995,8 @@ router.post(
         pricingType,
         seoTitle,
         seoDescription,
+        focusKeyword,
+        metaKeywords,
         sortOrder,
       } = req.body;
 
@@ -1054,6 +1056,8 @@ router.post(
           pricingType: pricingType || "FREE",
           seoTitle: seoTitle || null,
           seoDescription: seoDescription || null,
+          focusKeyword: focusKeyword || null,
+          metaKeywords: metaKeywords || null,
           sortOrder: sortOrder != null ? parseInt(sortOrder) : 0,
           createdBy: req.user?.id || null,
         },
@@ -1102,6 +1106,8 @@ router.put(
         "pricingType",
         "seoTitle",
         "seoDescription",
+        "focusKeyword",
+        "metaKeywords",
         "sortOrder",
       ];
 

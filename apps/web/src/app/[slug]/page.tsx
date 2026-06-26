@@ -28,6 +28,10 @@ interface Tool {
   ctaUrl: string | null;
   pricingType: string;
   featured: boolean;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  focusKeyword: string | null;
+  metaKeywords: string | null;
 }
 
 async function fetchTool(slug: string): Promise<Tool | null> {
@@ -47,12 +51,21 @@ export async function generateMetadata(
   const { slug } = await params;
   const tool = await fetchTool(slug);
   if (!tool) return { title: 'Tool Not Found' };
+  const title = tool.seoTitle || tool.title;
+  const description = tool.seoDescription || tool.shortDescription || tool.fullDescription || undefined;
   return {
-    title: tool.title,
-    description: tool.shortDescription ?? tool.fullDescription ?? undefined,
+    title,
+    description,
+    keywords: tool.metaKeywords || tool.focusKeyword || undefined,
     openGraph: {
-      title: tool.title,
-      description: tool.shortDescription ?? tool.fullDescription ?? undefined,
+      title,
+      description,
+      images: tool.bannerUrl ? [tool.bannerUrl] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
       images: tool.bannerUrl ? [tool.bannerUrl] : undefined,
     },
   };
