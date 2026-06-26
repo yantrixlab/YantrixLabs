@@ -71,12 +71,40 @@ const faqSchema = {
   ],
 };
 
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Mobile App Development',
+  name: 'Mobile App Development Services',
+  provider: { '@type': 'Organization', name: 'Yantrix Labs', url: 'https://yantrixlab.com' },
+  areaServed: 'IN',
+  description: 'Native and cross-platform mobile app development using React Native and native Android/iOS, including App Store and Play Store submission.',
+  url: 'https://yantrixlab.com/mobile-app-development-services',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yantrixlab.com' },
+    { '@type': 'ListItem', position: 2, name: 'Mobile App Development Services', item: 'https://yantrixlab.com/mobile-app-development-services' },
+  ],
+};
+
 export default function MobileAppDevelopmentServicesPage() {
   return (
     <PublicLayout>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <section className="py-20 bg-gradient-to-br from-indigo-50 via-white to-purple-50">

@@ -1,6 +1,6 @@
-import { redirect } from 'next/navigation';
+import { permanentRedirect } from 'next/navigation';
 
 export default function CustomSoftwareDevelopmentServicesRedirect() {
-  redirect('/services');
+  permanentRedirect('/services');
 }
 

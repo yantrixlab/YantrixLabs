@@ -38,6 +38,24 @@ export const metadata: Metadata = {
   },
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://yantrixlab.com';
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Yantrix Labs',
+  url: siteUrl,
+  logo: `${siteUrl}/app_logo.png`,
+  description: 'Yantrix Labs builds software products and digital solutions, including SaaS, web, and mobile app development.',
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Yantrix Labs',
+  url: siteUrl,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -89,6 +107,14 @@ export default function RootLayout({
       </head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-PDPZ7XLBP8" strategy="afterInteractive" />
         <Script id="ga4" strategy="afterInteractive">
           {`

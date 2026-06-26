@@ -71,12 +71,40 @@ const faqSchema = {
   ],
 };
 
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'SaaS Development',
+  name: 'SaaS Development Services',
+  provider: { '@type': 'Organization', name: 'Yantrix Labs', url: 'https://yantrixlab.com' },
+  areaServed: 'IN',
+  description: 'Custom SaaS application design, multi-tenant architecture, and MVP development for startups and small businesses.',
+  url: 'https://yantrixlab.com/saas-development-services',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yantrixlab.com' },
+    { '@type': 'ListItem', position: 2, name: 'SaaS Development Services', item: 'https://yantrixlab.com/saas-development-services' },
+  ],
+};
+
 export default function SaaSDevelopmentServicesPage() {
   return (
     <PublicLayout>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <section className="py-20 bg-gradient-to-br from-indigo-50 via-white to-blue-50">

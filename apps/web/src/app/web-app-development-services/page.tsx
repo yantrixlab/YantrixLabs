@@ -80,9 +80,72 @@ const deepSections = [
   },
 ];
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How long does a web app project usually take?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Most MVP web apps launch in 8 to 12 weeks, while larger multi-module systems can take 3 to 6 months based on scope and integration depth.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can you build both web and mobile products from one architecture?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. We design API-first systems so your web and mobile apps share secure backend services and consistent business logic.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do you provide post-launch support?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. We provide maintenance, optimization, feature expansion, and analytics-driven iteration support after go-live.',
+      },
+    },
+  ],
+};
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Web App Development',
+  name: 'Web App Development Services',
+  provider: { '@type': 'Organization', name: 'Yantrix Labs', url: 'https://yantrixlab.com' },
+  areaServed: 'IN',
+  description: 'Custom, API-first web application development for startups and SMEs, covering architecture, security, performance, and SEO-ready engineering.',
+  url: 'https://yantrixlab.com/web-app-development-services',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yantrixlab.com' },
+    { '@type': 'ListItem', position: 2, name: 'Web App Development Services', item: 'https://yantrixlab.com/web-app-development-services' },
+  ],
+};
+
 export default function WebAppDevelopmentServicesPage() {
   return (
     <PublicLayout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <section className="py-24 bg-gradient-to-br from-blue-950 via-slate-900 to-indigo-900 text-white">
         <div className="container-wide max-w-6xl">
           <p className="text-xs tracking-[0.18em] uppercase text-blue-200 mb-4">Growth-Focused Web Engineering</p>

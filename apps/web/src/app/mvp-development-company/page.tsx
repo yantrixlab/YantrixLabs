@@ -72,9 +72,37 @@ const faqSchema = {
   ],
 };
 
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'MVP Development',
+  name: 'MVP Development Services',
+  provider: { '@type': 'Organization', name: 'Yantrix Labs', url: 'https://yantrixlab.com' },
+  areaServed: 'IN',
+  description: 'Rapid MVP development for startups, including mobile and web app sprints, cross-platform builds, and production-ready scalable architecture.',
+  url: 'https://yantrixlab.com/mvp-development-company',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yantrixlab.com' },
+    { '@type': 'ListItem', position: 2, name: 'MVP Development Company', item: 'https://yantrixlab.com/mvp-development-company' },
+  ],
+};
+
 export default function MVPDevelopmentCompanyPage() {
   return (
     <PublicLayout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

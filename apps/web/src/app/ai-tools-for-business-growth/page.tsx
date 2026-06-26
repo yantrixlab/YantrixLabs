@@ -72,9 +72,37 @@ const faqSchema = {
   ],
 };
 
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'AI Automation',
+  name: 'AI Tools for Business Growth',
+  provider: { '@type': 'Organization', name: 'Yantrix Labs', url: 'https://yantrixlab.com' },
+  areaServed: 'IN',
+  description: 'Custom AI, Computer Vision, and RPA automation tools to eliminate manual workflows for startups and SMEs.',
+  url: 'https://yantrixlab.com/ai-tools-for-business-growth',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yantrixlab.com' },
+    { '@type': 'ListItem', position: 2, name: 'AI Tools for Business Growth', item: 'https://yantrixlab.com/ai-tools-for-business-growth' },
+  ],
+};
+
 export default function AIToolsForBusinessGrowthPage() {
   return (
     <PublicLayout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

@@ -80,9 +80,72 @@ const strategySections = [
   },
 ];
 
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What are passive income tools for businesses?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'They are software-driven systems that automate delivery, billing, and lifecycle workflows so revenue can continue with minimal manual intervention.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do passive income models work for service businesses?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Service businesses can productize recurring outcomes into subscription offers, templates, dashboards, or automation-backed support plans.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How long does it take to launch?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Initial launch can happen in 6 to 10 weeks for focused MVP models, with expansion features added in later iterations.',
+      },
+    },
+  ],
+};
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: 'Recurring Revenue Systems',
+  name: 'Passive Income Tools for Business',
+  provider: { '@type': 'Organization', name: 'Yantrix Labs', url: 'https://yantrixlab.com' },
+  areaServed: 'IN',
+  description: 'Subscription product design, lifecycle automation, and revenue intelligence systems for businesses building recurring revenue.',
+  url: 'https://yantrixlab.com/passive-income-tools-for-business',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yantrixlab.com' },
+    { '@type': 'ListItem', position: 2, name: 'Passive Income Tools for Business', item: 'https://yantrixlab.com/passive-income-tools-for-business' },
+  ],
+};
+
 export default function PassiveIncomeToolsForBusinessPage() {
   return (
     <PublicLayout>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <section className="py-24 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 text-white">
         <div className="container-wide max-w-6xl">
           <p className="text-xs tracking-[0.18em] uppercase text-emerald-200 mb-4">Recurring Revenue Systems</p>
