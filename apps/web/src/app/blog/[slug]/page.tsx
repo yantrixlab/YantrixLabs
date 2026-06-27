@@ -219,7 +219,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 <img
                   src={post.coverImage}
                   alt={post.coverImageAlt || post.title}
-                  className="w-full h-auto max-h-[34rem] object-contain bg-gray-100"
+                  className="w-full h-auto block"
                 />
               )}
               <div className="p-6 md:p-10">
