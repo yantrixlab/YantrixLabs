@@ -64,6 +64,18 @@ const zipUpload = multer({
   },
 });
 
+// Resolves the public origin to embed in stored file URLs. Prefers the
+// explicit API_URL env var (useful when the API sits behind a CDN/subdomain
+// different from where requests arrive), but falls back to the actual
+// request's protocol/host so URLs are correct even if API_URL is unset or
+// stale, instead of silently defaulting to localhost in production.
+function getApiBase(req: Request): string {
+  if (process.env.API_URL) {
+    return process.env.API_URL.replace(/\/api\/v1\/?$/, '');
+  }
+  return `${req.protocol}://${req.get('host')}`;
+}
+
 const router = Router();
 
 // ─── Public Routes (no auth) ────────────────────────────────────────────────
@@ -522,7 +534,7 @@ router.post('/media/upload', authenticate, upload.single('file'), async (req: Au
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
     // API_URL may include the /api/v1 path prefix; strip it to get the server origin for static file URLs.
-    const apiBase = (process.env.API_URL || `http://localhost:4000`).replace(/\/api\/v1\/?$/, '');
+    const apiBase = getApiBase(req);
     const fileUrl = `${apiBase}/uploads/blog/${req.file.filename}`;
     const media = await prisma.blogMedia.create({
       data: {
@@ -587,7 +599,7 @@ router.post('/media/import', zipUpload.single('file'), async (req: Authenticated
       return res.status(400).json({ success: false, error: 'No zip file uploaded' });
     }
 
-    const apiBase = (process.env.API_URL || `http://localhost:4000`).replace(/\/api\/v1\/?$/, '');
+    const apiBase = getApiBase(req);
     const zip = new AdmZip(req.file.buffer);
     const entries = zip.getEntries().filter(e => !e.isDirectory);
 
@@ -637,7 +649,7 @@ router.post('/media/import', zipUpload.single('file'), async (req: Authenticated
 
 router.post('/media/scan', async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const apiBase = (process.env.API_URL || `http://localhost:4000`).replace(/\/api\/v1\/?$/, '');
+    const apiBase = getApiBase(req);
     const filesOnDisk = fs.existsSync(UPLOAD_DIR)
       ? fs.readdirSync(UPLOAD_DIR).filter(f => fs.statSync(path.join(UPLOAD_DIR, f)).isFile())
       : [];
