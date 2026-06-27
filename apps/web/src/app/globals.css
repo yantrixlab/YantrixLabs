@@ -107,27 +107,6 @@
   }
 }
 
-/* Pre-hydration dark paint for GST module pages */
-html[data-gst-theme="dark"],
-html[data-gst-theme="dark"] body {
-  background-color: #060b16 !important;
-  color: #c6d4f2 !important;
-}
-
-html[data-gst-theme="dark"] .bg-white { background-color: #0b1324 !important; }
-html[data-gst-theme="dark"] .bg-gray-50 { background-color: #0f1a30 !important; }
-html[data-gst-theme="dark"] .bg-gray-50\/80 { background-color: #060b16 !important; }
-html[data-gst-theme="dark"] .bg-gray-100 { background-color: #14203b !important; }
-html[data-gst-theme="dark"] .border-gray-100,
-html[data-gst-theme="dark"] .border-gray-200,
-html[data-gst-theme="dark"] .border-gray-300 { border-color: #223251 !important; }
-html[data-gst-theme="dark"] .text-gray-400,
-html[data-gst-theme="dark"] .text-gray-500 { color: #8ca2cd !important; }
-html[data-gst-theme="dark"] .text-gray-600,
-html[data-gst-theme="dark"] .text-gray-700 { color: #c6d4f2 !important; }
-html[data-gst-theme="dark"] .text-gray-800,
-html[data-gst-theme="dark"] .text-gray-900 { color: #eef4ff !important; }
-
 /* Forgot-password auth page: balanced professional contrast */
 .forgot-auth-page .forgot-auth-card {
   background: #ffffff;
@@ -151,42 +130,6 @@ html[data-gst-theme="dark"] .text-gray-900 { color: #eef4ff !important; }
 
 .forgot-auth-page .forgot-auth-primary:hover {
   background: linear-gradient(135deg, #335ea9, #486fb2);
-}
-
-html[data-gst-theme="dark"] .forgot-auth-page {
-  background:
-    radial-gradient(900px 340px at 50% -10%, rgba(64, 103, 178, 0.22), transparent 56%),
-    #060b16 !important;
-}
-
-html[data-gst-theme="dark"] .forgot-auth-header h1,
-html[data-gst-theme="dark"] .forgot-auth-header p,
-html[data-gst-theme="dark"] .forgot-auth-header span {
-  color: #dce8ff !important;
-}
-
-html[data-gst-theme="dark"] .forgot-auth-card {
-  background: linear-gradient(160deg, #0e1930, #0a1326) !important;
-  border-color: #2b3f61 !important;
-  box-shadow: 0 24px 52px rgba(2, 8, 22, 0.62) !important;
-}
-
-html[data-gst-theme="dark"] .forgot-auth-input {
-  background: #122341 !important;
-  border-color: #2a4267 !important;
-  color: #e8f1ff !important;
-}
-
-html[data-gst-theme="dark"] .forgot-auth-input::placeholder {
-  color: #87a0c3 !important;
-}
-
-html[data-gst-theme="dark"] .forgot-auth-primary {
-  background: linear-gradient(135deg, #4a72ba, #5f86ce) !important;
-}
-
-html[data-gst-theme="dark"] .forgot-auth-primary:hover {
-  background: linear-gradient(135deg, #5a82ca, #6f96dd) !important;
 }
 
 @layer components {
@@ -675,21 +618,6 @@ html[data-gst-theme="dark"] .forgot-auth-primary:hover {
   --public-ring: 0 102 255;
 }
 
-html[data-public-theme='dark'] {
-  --public-bg: 0 14 36;
-  --public-surface: 0 20 51;
-  --public-surface-card: 8 29 70;
-  --public-surface-muted: 0 41 102;
-  --public-surface-alt: 0 61 153;
-  --public-border: 0 82 204;
-  --public-border-strong: 51 133 255;
-  --public-text: 229 240 255;
-  --public-text-muted: 153 194 255;
-  --public-text-soft: 102 163 255;
-  --public-shadow: 0 20px 44px rgba(0, 0, 0, 0.42), 0 8px 24px rgba(0, 0, 0, 0.30);
-  --public-shadow-hover: 0 28px 56px rgba(0, 0, 0, 0.50), 0 10px 30px rgba(0, 0, 0, 0.36);
-}
-
 .public-site {
   background: rgb(var(--public-bg));
   color: rgb(var(--public-text));
@@ -807,31 +735,6 @@ html[data-public-theme='dark'] {
   background-color: rgb(var(--brand-50)) !important;
 }
 
-html[data-public-theme='dark'] .public-site .text-white,
-html[data-public-theme='dark'] .public-site .text-gray-900,
-html[data-public-theme='dark'] .public-site .text-gray-800,
-html[data-public-theme='dark'] .public-site .text-gray-700,
-html[data-public-theme='dark'] .public-site .text-gray-600,
-html[data-public-theme='dark'] .public-site .text-gray-500,
-html[data-public-theme='dark'] .public-site .text-gray-400 {
-  color: rgb(var(--public-text)) !important;
-}
-
-html[data-public-theme='dark'] .public-site .text-gray-500,
-html[data-public-theme='dark'] .public-site .text-gray-400,
-html[data-public-theme='dark'] .public-site .text-indigo-200,
-html[data-public-theme='dark'] .public-site .text-indigo-300 {
-  color: rgb(var(--public-text-muted)) !important;
-}
-
-html[data-public-theme='dark'] .public-site .shadow-lg,
-html[data-public-theme='dark'] .public-site .shadow-xl,
-html[data-public-theme='dark'] .public-site .shadow-2xl,
-html[data-public-theme='dark'] .public-site .shadow-sm,
-html[data-public-theme='dark'] .public-site .shadow-md {
-  box-shadow: var(--public-shadow) !important;
-}
-
 .public-site .public-hero {
   background:
     radial-gradient(1200px 420px at 50% -15%, rgb(var(--brand-100) / 0.75), transparent 64%),
@@ -851,197 +754,6 @@ html[data-public-theme='dark'] .public-site .shadow-md {
 .public-site .public-hero .bg-indigo-50 {
   border-color: rgb(var(--brand-200)) !important;
   background-color: rgb(var(--brand-50) / 0.92) !important;
-}
-
-html[data-public-theme='dark'] .public-site .public-hero {
-  background:
-    radial-gradient(1000px 360px at 50% -18%, rgb(var(--brand-500) / 0.24), transparent 66%),
-    linear-gradient(140deg, rgb(var(--brand-950)) 0%, rgb(var(--brand-900)) 52%, rgb(var(--brand-800)) 100%) !important;
-  border-bottom: 1px solid rgb(var(--brand-700) / 0.35);
-}
-
-html[data-public-theme='dark'] .public-site .public-hero .text-gray-900,
-html[data-public-theme='dark'] .public-site .public-hero .text-gray-600,
-html[data-public-theme='dark'] .public-site .public-hero .text-gray-500,
-html[data-public-theme='dark'] .public-site .public-hero .text-indigo-200,
-html[data-public-theme='dark'] .public-site .public-hero .text-indigo-300 {
-  color: rgb(var(--brand-100)) !important;
-}
-
-html[data-public-theme='dark'] .public-site .public-hero .gradient-text {
-  background-image: linear-gradient(90deg, rgb(var(--brand-100)), rgb(var(--brand-300))) !important;
-}
-
-html[data-public-theme='dark'] .public-site .public-hero .bg-white {
-  background-color: rgb(var(--brand-900)) !important;
-}
-
-html[data-public-theme='dark'] .public-site .public-hero .border-gray-200,
-html[data-public-theme='dark'] .public-site .public-hero .border-indigo-200 {
-  border-color: rgb(var(--brand-700) / 0.6) !important;
-}
-
-html[data-public-theme='dark'] .public-site .public-hero input,
-html[data-public-theme='dark'] .public-site .public-hero select,
-html[data-public-theme='dark'] .public-site .public-hero textarea {
-  background: rgb(var(--brand-900) / 0.7) !important;
-  border-color: rgb(var(--brand-700) / 0.7) !important;
-  color: rgb(var(--brand-50)) !important;
-}
-
-html[data-public-theme='dark'] .public-site .public-hero input::placeholder,
-html[data-public-theme='dark'] .public-site .public-hero textarea::placeholder {
-  color: rgb(var(--brand-200)) !important;
-}
-
-html[data-public-theme='dark'] .public-site .public-hero.public-hero-dark {
-  background:
-    radial-gradient(1000px 320px at 50% -20%, rgb(var(--brand-400) / 0.22), transparent 68%),
-    linear-gradient(140deg, rgb(var(--brand-950)) 0%, rgb(var(--brand-900)) 48%, rgb(var(--brand-800)) 100%) !important;
-}
-
-html[data-public-theme='dark'] .public-site .contact-help-card {
-  background: linear-gradient(145deg, rgb(var(--brand-900)), rgb(var(--brand-800))) !important;
-  border-color: rgb(var(--brand-700) / 0.62) !important;
-}
-
-html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
-  background-color: rgb(var(--brand-700) / 0.35) !important;
-}
-
-/* Keep blog hero typography stable across theme mode toggles */
-.public-site .blog-hero-fixed {
-  color: #ffffff !important;
-}
-
-.public-site .blog-hero-fixed .text-white,
-.public-site .blog-hero-fixed .text-indigo-200,
-.public-site .blog-hero-fixed .text-indigo-300,
-.public-site .blog-hero-fixed .text-indigo-200\/90,
-.public-site .blog-hero-fixed .text-indigo-300\/80 {
-  color: #c8dbff !important;
-}
-
-.public-site .blog-hero-fixed h1 {
-  color: transparent !important;
-}
-
-.public-site .blog-hero-fixed input {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-.public-site .blog-hero-fixed input::placeholder {
-  color: rgba(196, 216, 255, 0.82) !important;
-}
-
-/* Keep home hero visuals fixed (no public theme color remap) */
-.public-site .home-hero-fixed {
-  color: #eef4ff !important;
-}
-
-.public-site .home-hero-fixed .text-white {
-  color: #eef4ff !important;
-}
-
-.public-site .home-hero-fixed .text-white\/50 {
-  color: rgba(238, 244, 255, 0.55) !important;
-}
-
-.public-site .home-hero-fixed .text-white\/40 {
-  color: rgba(238, 244, 255, 0.44) !important;
-}
-
-.public-site .home-hero-fixed .text-indigo-300,
-.public-site .home-hero-fixed .text-indigo-400 {
-  color: #a8b5ff !important;
-}
-
-/* Ensure key hero utility text tones remain stable across theme toggles */
-.public-site .home-hero-fixed .text-slate-100 { color: #dbe7ff !important; }
-.public-site .home-hero-fixed .text-slate-200 { color: #c9dcff !important; }
-.public-site .home-hero-fixed .text-slate-300 { color: #a9c3ec !important; }
-.public-site .home-hero-fixed .text-slate-400 { color: #86a5d6 !important; }
-.public-site .home-hero-fixed .text-cyan-100 { color: #c7f4ff !important; }
-.public-site .home-hero-fixed .text-cyan-200 { color: #9cecff !important; }
-.public-site .home-hero-fixed .text-emerald-200 { color: #9ff4d0 !important; }
-.public-site .home-hero-fixed .text-emerald-300 { color: #7de7bb !important; }
-
-/* Lock "Let's build it" CTA section colors across theme changes */
-.public-site .home-build-cta-fixed .text-indigo-300 {
-  color: #89c2ff !important;
-}
-
-.public-site .home-build-cta-fixed .text-indigo-200 {
-  color: #a7d1ff !important;
-}
-
-.public-site .home-build-cta-fixed .text-white {
-  color: #eaf3ff !important;
-}
-
-.public-site .home-build-cta-fixed a {
-  color: inherit !important;
-}
-
-.public-site .home-build-cta-fixed a[href="/contact"] {
-  background-color: #ffffff !important;
-  color: #255fce !important;
-  border-color: transparent !important;
-  box-shadow: 0 12px 28px rgba(3, 25, 70, 0.26) !important;
-}
-
-.public-site .home-build-cta-fixed a[href="/contact"]:hover {
-  background-color: #eef4ff !important;
-  color: #1f56bf !important;
-}
-
-.public-site .home-build-cta-fixed a[href="/services"] {
-  color: #ffffff !important;
-  border-color: #3a95ff !important;
-  background-color: transparent !important;
-}
-
-.public-site .home-build-cta-fixed a[href="/services"]:hover {
-  background-color: rgba(76, 143, 255, 0.2) !important;
-}
-
-/* Keep Featured Product section visuals static across theme changes */
-.public-site .featured-product-fixed {
-  isolation: isolate;
-  background:
-    radial-gradient(1100px 520px at 18% 12%, rgba(37, 99, 235, 0.22), transparent 65%),
-    radial-gradient(900px 460px at 82% 6%, rgba(99, 102, 241, 0.2), transparent 68%),
-    linear-gradient(180deg, #020b1f 0%, #031231 52%, #020d24 100%) !important;
-}
-
-.public-site .featured-product-fixed .text-white {
-  color: #eaf3ff !important;
-}
-
-.public-site .featured-product-fixed .text-gray-900,
-.public-site .featured-product-fixed .text-gray-800 {
-  color: #eaf3ff !important;
-}
-
-.public-site .featured-product-fixed .text-gray-700,
-.public-site .featured-product-fixed .text-gray-600,
-.public-site .featured-product-fixed .text-gray-500,
-.public-site .featured-product-fixed .text-gray-400 {
-  color: #b9ccef !important;
-}
-
-/* Keep home hero secondary CTA readable across theme changes */
-.public-site .home-hero-fixed .hero-secondary-cta {
-  background-color: rgba(8, 24, 56, 0.42) !important;
-  border-color: rgba(114, 158, 232, 0.55) !important;
-  color: #eaf3ff !important;
-}
-
-.public-site .home-hero-fixed .hero-secondary-cta:hover {
-  background-color: rgba(12, 34, 74, 0.62) !important;
-  color: #ffffff !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1087,41 +799,6 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
   transform: translateY(0);
 }
 
-/* Keep footer colors constant across public theme toggles */
-.public-site .public-footer-fixed {
-  background-color: #111827 !important;
-  color: #9ca3af !important;
-}
-
-.public-site .public-footer-fixed .text-white {
-  color: #ffffff !important;
-}
-
-.public-site .public-footer-fixed .text-sm,
-.public-site .public-footer-fixed .text-xs,
-.public-site .public-footer-fixed .text-gray-400,
-.public-site .public-footer-fixed .text-gray-500,
-.public-site .public-footer-fixed .text-gray-600,
-.public-site .public-footer-fixed .text-gray-700,
-.public-site .public-footer-fixed .text-gray-800,
-.public-site .public-footer-fixed .text-gray-900 {
-  color: #93c5fd !important;
-}
-
-.public-site .public-footer-fixed .border-gray-800,
-.public-site .public-footer-fixed .border-gray-700,
-.public-site .public-footer-fixed .border-gray-600 {
-  border-color: #1f2937 !important;
-}
-
-.public-site .public-footer-fixed a {
-  color: #7fb8ff !important;
-}
-
-.public-site .public-footer-fixed a:hover {
-  color: #ffffff !important;
-}
-
 .scanner-connect-btn {
   position: relative;
   overflow: hidden;
@@ -1133,28 +810,6 @@ html[data-public-theme='dark'] .public-site .contact-help-card .bg-indigo-100 {
 
 .scanner-connect-btn:hover {
   background: rgb(var(--brand-100) / 0.82);
-}
-
-html[data-gst-theme="dark"] .scanner-connect-btn {
-  border-color: #3b5f9a;
-  background: linear-gradient(145deg, rgba(28, 55, 104, 0.9), rgba(22, 43, 84, 0.9));
-  color: #dbe8ff;
-  box-shadow: 0 6px 18px rgba(5, 15, 36, 0.45);
-}
-
-html[data-gst-theme="dark"] .scanner-connect-btn:hover {
-  background: linear-gradient(145deg, rgba(40, 73, 132, 0.95), rgba(30, 56, 108, 0.95));
-}
-
-html[data-public-theme='dark'] .public-site .scanner-connect-btn {
-  border-color: rgb(var(--brand-600) / 0.72);
-  background: linear-gradient(145deg, rgb(var(--brand-900) / 0.92), rgb(var(--brand-800) / 0.9));
-  color: rgb(var(--brand-100));
-  box-shadow: 0 8px 22px rgb(0 0 0 / 0.32);
-}
-
-html[data-public-theme='dark'] .public-site .scanner-connect-btn:hover {
-  background: linear-gradient(145deg, rgb(var(--brand-800) / 0.96), rgb(var(--brand-700) / 0.92));
 }
 
 @keyframes scannerConnectRipple {

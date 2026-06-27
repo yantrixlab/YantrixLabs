@@ -17,21 +17,6 @@
   color: var(--inv-text);
 }
 
-:global(html[data-gst-theme="dark"]) .pageShell {
-  --inv-bg: #0a1221;
-  --inv-surface: #0f1a30;
-  --inv-surface-2: #13203a;
-  --inv-border: #243654;
-  --inv-border-strong: #2e456b;
-  --inv-text: #e5edff;
-  --inv-text-2: #c0d0ea;
-  --inv-text-3: #8fa5c8;
-  --inv-accent: #7aa2ff;
-  --inv-accent-2: #5e84dc;
-  --inv-ring: rgba(122, 162, 255, 0.35);
-  --inv-shadow: 0 14px 32px rgba(2, 8, 23, 0.42);
-  --inv-summary: linear-gradient(140deg, #465dd3 0%, #3c4db4 55%, #2f3f90 100%);
-}
 
 .pageTitle {
   color: var(--inv-text);

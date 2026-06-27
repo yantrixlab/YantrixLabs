@@ -523,25 +523,6 @@ export default function HomePage() {
         }))
       : TESTIMONIALS.map((t) => ({ ...t, rating: 5, productName: "Client Project" }));
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const storedMode =
-      (localStorage.getItem("public_theme_mode") as
-        | "light"
-        | "dark"
-        | "system"
-        | null) || "system";
-    const resolved =
-      storedMode === "system"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : storedMode;
-    document.documentElement.setAttribute("data-public-theme-mode", storedMode);
-    document.documentElement.setAttribute("data-public-theme", resolved);
-    document.documentElement.style.colorScheme = resolved;
-  }, []);
-
   return (
     <div className="public-site min-h-screen bg-[rgb(var(--public-bg))]">
       {/* â”€â”€â”€ Navbar + Hero (premium dark) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
@@ -636,18 +617,17 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ FEATURED PRODUCT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="featured-product-fixed relative overflow-hidden py-28">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(1100px_520px_at_18%_12%,rgba(37,99,235,0.22),transparent_65%),radial-gradient(900px_460px_at_82%_6%,rgba(99,102,241,0.2),transparent_68%),linear-gradient(180deg,#020b1f_0%,#031231_52%,#020d24_100%)]" />
+      <section className="relative overflow-hidden py-28 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
         {/* Ambient glow blobs */}
         <div className="pointer-events-none absolute inset-0">
           <div
-            className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full opacity-25 blur-[120px]"
+            className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full opacity-20 blur-[120px]"
             style={{
-              background: "radial-gradient(circle, #0066FF, transparent 70%)",
+              background: "radial-gradient(circle, #6366f1, transparent 70%)",
             }}
           />
           <div
-            className="absolute bottom-0 right-1/4 h-[420px] w-[420px] rounded-full opacity-20 blur-[100px]"
+            className="absolute bottom-0 right-1/4 h-[420px] w-[420px] rounded-full opacity-15 blur-[100px]"
             style={{
               background: "radial-gradient(circle, #8b5cf6, transparent 70%)",
             }}
@@ -656,15 +636,6 @@ export default function HomePage() {
             className="absolute top-1/2 -right-16 h-[280px] w-[280px] rounded-full opacity-15 blur-[80px]"
             style={{
               background: "radial-gradient(circle, #06b6d4, transparent 70%)",
-            }}
-          />
-          {/* Subtle grid */}
-          <div
-            className="absolute inset-0 opacity-[0.032]"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(148,163,184,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.8) 1px, transparent 1px)",
-              backgroundSize: "56px 56px",
             }}
           />
         </div>
@@ -686,14 +657,7 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="mb-7"
               >
-                <span
-                  className="inline-flex items-center gap-2 rounded-full border border-indigo-400/25 px-4 py-1.5 text-xs font-semibold tracking-widest uppercase"
-                  style={{
-                    background: "rgba(99,102,241,0.12)",
-                    color: "#a5b4fc",
-                    backdropFilter: "blur(12px)",
-                  }}
-                >
+                <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-xs font-semibold tracking-widest uppercase text-indigo-700">
                   <Star className="h-3 w-3 fill-current" />
                   Featured Product
                 </span>
@@ -705,13 +669,13 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18, duration: 0.65 }}
                 viewport={{ once: true }}
-                className="text-4xl md:text-5xl lg:text-[52px] font-bold leading-[1.1] tracking-tight text-white mb-5"
+                className="text-4xl md:text-5xl lg:text-[52px] font-bold leading-[1.1] tracking-tight text-gray-900 mb-5"
               >
                 GST Invoice Tool -{" "}
                 <span
                   style={{
                     background:
-                      "linear-gradient(135deg, #818cf8 0%, #c084fc 55%, #67e8f9 100%)",
+                      "linear-gradient(135deg, #4f46e5 0%, #9333ea 55%, #0891b2 100%)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -727,8 +691,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.28, duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-lg leading-relaxed mb-10 max-w-md"
-                style={{ color: "rgba(203,213,225,0.80)" }}
+                className="text-lg leading-relaxed mb-10 max-w-md text-gray-600"
               >
                 Create GST-compliant invoices in seconds. Automate tax
                 calculations, track payments, and manage billing with
@@ -798,10 +761,7 @@ export default function HomePage() {
                         style={{ color: f.iconColor }}
                       />
                     </span>
-                    <span
-                      className="font-medium"
-                      style={{ color: "rgba(226,232,240,0.90)" }}
-                    >
+                    <span className="font-medium text-gray-700">
                       {f.label}
                     </span>
                   </motion.li>
@@ -869,14 +829,7 @@ export default function HomePage() {
                 />
 
                 {/* Glass card */}
-                <div
-                  className="relative rounded-2xl p-5 overflow-hidden"
-                  style={{
-                    background: "transparent",
-                    backdropFilter: "none",
-                    boxShadow: "none",
-                  }}
-                >
+                <div className="relative rounded-2xl p-5 overflow-hidden bg-white border border-gray-200 shadow-xl">
                   {/* Inner top highlight line */}
                   <div
                     className="absolute top-0 left-0 right-0 h-px pointer-events-none"
@@ -891,14 +844,7 @@ export default function HomePage() {
                     <div className="h-3 w-3 rounded-full bg-red-500/70" />
                     <div className="h-3 w-3 rounded-full bg-yellow-500/70" />
                     <div className="h-3 w-3 rounded-full bg-green-500/70" />
-                    <div
-                      className="ml-3 flex items-center gap-1.5 rounded-md px-3 py-1 text-xs"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "rgba(165,180,252,0.55)",
-                      }}
-                    >
+                    <div className="ml-3 flex items-center gap-1.5 rounded-md px-3 py-1 text-xs text-gray-400">
                       <div className="h-1.5 w-1.5 rounded-full bg-green-400/60" />
                       app.yantrixlab.com/dashboard
                     </div>
@@ -952,17 +898,14 @@ export default function HomePage() {
                         viewport={{ once: true }}
                         className="rounded-xl p-3.5"
                         style={{
-                          background: "transparent",
-                          border: "none",
+                          background: s.bg,
+                          border: `1px solid ${s.border}`,
                         }}
                       >
-                        <p
-                          className="text-xs mb-1"
-                          style={{ color: "rgba(255,255,255,0.50)" }}
-                        >
+                        <p className="text-xs mb-1 text-gray-500">
                           {s.label}
                         </p>
-                        <p className="text-sm font-bold text-white mb-1.5">
+                        <p className="text-sm font-bold text-gray-900 mb-1.5">
                           {s.value}
                         </p>
                         <span
@@ -981,17 +924,10 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.55, duration: 0.45 }}
                     viewport={{ once: true }}
-                    className="rounded-xl p-3.5 mb-4"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                    }}
+                    className="rounded-xl p-3.5 mb-4 bg-gray-50 border border-gray-100"
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <p
-                        className="text-xs font-semibold"
-                        style={{ color: "rgba(255,255,255,0.55)" }}
-                      >
+                      <p className="text-xs font-semibold text-gray-500">
                         Revenue Trend
                       </p>
                       <span
@@ -1025,16 +961,9 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.62, duration: 0.45 }}
                     viewport={{ once: true }}
-                    className="rounded-xl p-3.5"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                    }}
+                    className="rounded-xl p-3.5 bg-gray-50 border border-gray-100"
                   >
-                    <p
-                      className="text-xs font-semibold mb-3"
-                      style={{ color: "rgba(255,255,255,0.55)" }}
-                    >
+                    <p className="text-xs font-semibold mb-3 text-gray-500">
                       Recent Invoices
                     </p>
                     <div className="space-y-2.5">
@@ -1076,21 +1005,18 @@ export default function HomePage() {
                             <div
                               className="h-6 w-6 rounded-md flex items-center justify-center text-[9px] font-bold"
                               style={{
-                                background: "rgba(99,102,241,0.18)",
-                                color: "rgba(165,180,252,0.8)",
+                                background: "rgba(99,102,241,0.12)",
+                                color: "#4f46e5",
                               }}
                             >
                               {inv.name.charAt(0)}
                             </div>
-                            <span
-                              className="text-xs font-medium"
-                              style={{ color: "rgba(255,255,255,0.70)" }}
-                            >
+                            <span className="text-xs font-medium text-gray-700">
                               {inv.name}
                             </span>
                           </div>
                           <div className="flex items-center gap-2.5">
-                            <span className="text-xs font-semibold text-white">
+                            <span className="text-xs font-semibold text-gray-900">
                               {inv.amount}
                             </span>
                             <span
@@ -1493,34 +1419,34 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ FINAL CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="home-build-cta-fixed py-24 bg-gradient-to-br from-brand-600 to-brand-900">
+      <section className="py-24 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
         <div className="container-wide text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="text-indigo-300 font-semibold uppercase tracking-widest text-sm mb-4">
+            <p className="text-indigo-600 font-semibold uppercase tracking-widest text-sm mb-4">
               Need software for your business?
             </p>
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               Let&apos;s build it.
             </h2>
-            <p className="text-xl text-indigo-200 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
               We work with startups, SMEs, and enterprises to create digital
               products that drive growth.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-8 py-4 text-base font-semibold text-indigo-600 hover:bg-indigo-50 transition-all shadow-lg"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-700 transition-all shadow-lg"
               >
                 Book a Consultation
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/services"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-indigo-400 px-8 py-4 text-base font-semibold text-white hover:bg-indigo-500/20 transition-all"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-gray-700 hover:bg-gray-50 transition-all shadow-sm"
               >
                 Explore Products
               </Link>
@@ -1530,7 +1456,7 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <footer className="public-footer-fixed bg-gray-900 text-gray-400 py-16">
+      <footer className="bg-gray-50 border-t border-gray-100 text-gray-500 py-16">
         <div className="container-wide">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="md:col-span-2">
@@ -1540,7 +1466,7 @@ export default function HomePage() {
                   alt="Yantrix Labs"
                   className="h-8 w-8 rounded-lg object-contain"
                 />
-                <span className="text-xl font-bold text-white">
+                <span className="text-xl font-bold text-gray-900">
                   Yantrix Labs
                 </span>
               </Link>
@@ -1551,12 +1477,12 @@ export default function HomePage() {
               <p className="text-xs">Made with care in India</p>
             </div>
             <div>
-              <h5 className="font-semibold text-white mb-4">Products</h5>
+              <h5 className="font-semibold text-gray-900 mb-4">Products</h5>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link
                     href="/services"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-indigo-600 transition-colors"
                   >
                     GST Invoice Tool
                   </Link>
@@ -1564,7 +1490,7 @@ export default function HomePage() {
                 <li>
                   <Link
                     href="/services"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-indigo-600 transition-colors"
                   >
                     All Products
                   </Link>
@@ -1572,7 +1498,7 @@ export default function HomePage() {
                 <li>
                   <Link
                     href="/services"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-indigo-600 transition-colors"
                   >
                     Custom Development
                   </Link>
@@ -1580,12 +1506,12 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold text-white mb-4">Company</h5>
+              <h5 className="font-semibold text-gray-900 mb-4">Company</h5>
               <ul className="space-y-2 text-sm">
                 <li>
                   <Link
                     href="/about"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-indigo-600 transition-colors"
                   >
                     About Us
                   </Link>
@@ -1593,7 +1519,7 @@ export default function HomePage() {
                 <li>
                   <Link
                     href="/contact"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-indigo-600 transition-colors"
                   >
                     Contact
                   </Link>
@@ -1601,7 +1527,7 @@ export default function HomePage() {
                 <li>
                   <Link
                     href="/privacy"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-indigo-600 transition-colors"
                   >
                     Privacy Policy
                   </Link>
@@ -1609,7 +1535,7 @@ export default function HomePage() {
                 <li>
                   <Link
                     href="/terms"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-indigo-600 transition-colors"
                   >
                     Terms of Service
                   </Link>
@@ -1617,26 +1543,26 @@ export default function HomePage() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="border-t border-gray-200 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm">
               Copyright {new Date().getFullYear()} Yantrix Labs. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-sm">
               <Link
                 href="/privacy"
-                className="hover:text-white transition-colors"
+                className="hover:text-indigo-600 transition-colors"
               >
                 Privacy
               </Link>
               <Link
                 href="/terms"
-                className="hover:text-white transition-colors"
+                className="hover:text-indigo-600 transition-colors"
               >
                 Terms
               </Link>
               <Link
                 href="/contact"
-                className="hover:text-white transition-colors"
+                className="hover:text-indigo-600 transition-colors"
               >
                 Contact
               </Link>

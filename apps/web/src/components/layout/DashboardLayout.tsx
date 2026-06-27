@@ -26,8 +26,6 @@ import {
   PanelLeftClose,
   PanelLeft,
   Plus,
-  Moon,
-  Sun,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import {
@@ -120,14 +118,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     Record<string, string | null>
   >({});
   const [moduleOrder, setModuleOrder] = useState<string[]>([]);
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") return "light";
-    const stored = localStorage.getItem("gst_invoice_theme");
-    if (stored === "dark" || stored === "light") return stored;
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
   const [subscriptionEnforced, setSubscriptionEnforced] = useState(true);
   const [guest, setGuest] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
@@ -136,12 +126,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [authInitDone, setAuthInitDone] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalTab, setAuthModalTab] = useState<"signin" | "signup">("signin");
-
-  useEffect(() => {
-    localStorage.setItem("gst_invoice_theme", theme);
-    document.documentElement.setAttribute("data-gst-theme", theme);
-    document.body.style.backgroundColor = theme === "dark" ? "#060b16" : "";
-  }, [theme]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -905,7 +889,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div
-      className={`${themeStyles.gstModuleTheme} ${theme === "dark" ? themeStyles.dark : ""} flex h-screen bg-gray-50/80 overflow-hidden print:block print:h-auto print:overflow-visible print:bg-white`}
+      className={`${themeStyles.gstModuleTheme} flex h-screen bg-gray-50/80 overflow-hidden print:block print:h-auto print:overflow-visible print:bg-white`}
     >
       {/* Desktop Sidebar */}
       <aside
@@ -980,27 +964,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex-1" />
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
-              className="rounded-xl p-2.5 text-gray-500 hover:bg-gray-100 transition-colors"
-              title={
-                theme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-              aria-label={
-                theme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-            >
-              {theme === "dark" ? (
-                <Sun className="h-[18px] w-[18px]" />
-              ) : (
-                <Moon className="h-[18px] w-[18px]" />
-              )}
-            </button>
-
             {(() => {
               if (guest) {
                 return (

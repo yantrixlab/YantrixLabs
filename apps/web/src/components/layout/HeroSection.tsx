@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -11,8 +11,6 @@ import {
   Braces,
   Globe,
   Menu,
-  Moon,
-  Sun,
   Smartphone,
   Sparkles,
   X,
@@ -88,27 +86,6 @@ const deliverySteps = [
 export default function HeroSection({ loggedIn }: HeroSectionProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
-
-  useEffect(() => {
-    const stored = (localStorage.getItem('public_theme_mode') || 'system') as 'light' | 'dark' | 'system';
-    const resolved = stored === 'system'
-      ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      : stored;
-    document.documentElement.setAttribute('data-public-theme-mode', stored);
-    document.documentElement.setAttribute('data-public-theme', resolved);
-    document.documentElement.style.colorScheme = resolved;
-    setResolvedTheme(resolved);
-  }, []);
-
-  const onThemeToggle = () => {
-    const nextMode: 'light' | 'dark' = resolvedTheme === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('public_theme_mode', nextMode);
-    document.documentElement.setAttribute('data-public-theme-mode', nextMode);
-    document.documentElement.setAttribute('data-public-theme', nextMode);
-    document.documentElement.style.colorScheme = nextMode;
-    setResolvedTheme(nextMode);
-  };
 
   const particles = useMemo(
     () =>
@@ -123,28 +100,19 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
   );
 
   return (
-    <section className="home-hero-fixed relative min-h-screen overflow-hidden bg-slate-950">
+    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(1200px_680px_at_12%_8%,rgba(59,130,246,0.24),transparent_60%),radial-gradient(1000px_620px_at_92%_12%,rgba(99,102,241,0.22),transparent_60%),linear-gradient(180deg,#020617_0%,#040b20_48%,#04091a_100%)]" />
-        <div className="absolute -left-24 top-12 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
-        <div className="absolute right-0 top-16 h-96 w-96 rounded-full bg-violet-500/20 blur-3xl" />
-        <div className="absolute bottom-10 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(125,145,180,0.10)_1px,transparent_1px),linear-gradient(90deg,rgba(125,145,180,0.10)_1px,transparent_1px)] bg-[size:62px_62px] [mask-image:radial-gradient(ellipse_at_center,black_44%,transparent_82%)]" />
+        <div className="absolute -left-24 top-12 h-80 w-80 rounded-full bg-indigo-200/40 blur-3xl" />
+        <div className="absolute right-0 top-16 h-96 w-96 rounded-full bg-purple-200/40 blur-3xl" />
+        <div className="absolute bottom-10 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-200/30 blur-3xl" />
       </div>
 
-      <header
-        className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-all duration-300"
-        style={{
-          backgroundColor: 'rgba(4, 22, 51, 0.30)',
-          borderTop: '1px solid rgba(30, 74, 134, 0.55)',
-          borderBottom: '1px solid rgba(30, 74, 134, 0.55)',
-        }}
-      >
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
         <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
           <div className="flex h-[72px] items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-              <span className="text-[16px] font-semibold text-[#e9f1ff] tracking-tight">Yantrix Labs</span>
+              <span className="text-[16px] font-semibold text-gray-900 tracking-tight">Yantrix Labs</span>
             </Link>
 
           <nav className="hidden items-center gap-1.5 md:flex">
@@ -156,8 +124,8 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
                   href={item.href}
                   className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition-all duration-150 ${
                     isActive
-                      ? 'bg-[#0f2a57] text-[#2f8bff]'
-                      : 'text-[#f1f6ff] hover:bg-[#0f2a57] hover:text-white'
+                      ? 'bg-indigo-50 text-indigo-600'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                 >
                   {item.label}
@@ -167,17 +135,9 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
-            <button
-              type="button"
-              onClick={onThemeToggle}
-              aria-label={`Toggle theme. Current ${resolvedTheme}`}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#2f5ea4] bg-[#0b2c5c] text-[#d6e6ff] transition-all hover:bg-[#123a74] hover:text-white"
-            >
-              {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-5 py-2 text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-indigo-600 bg-indigo-600 px-5 py-2 text-sm font-semibold text-white transition-all hover:bg-indigo-700"
             >
               Enquiry
               <ArrowRight className="h-3.5 w-3.5" />
@@ -187,7 +147,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen((v) => !v)}
-              className="md:hidden p-2 text-[#ffffff]"
+              className="md:hidden p-2 text-gray-700"
               aria-label="Menu"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -195,7 +155,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
           </div>
         </div>
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-[#1e4a86]/60 bg-[#041633] px-4 py-4 space-y-2">
+          <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-2">
             {navLinks.map((item) => {
               const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
               return (
@@ -203,7 +163,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
                   key={item.href}
                   href={item.href}
                   className={`block py-2 text-sm font-medium ${
-                    isActive ? 'text-[#2f8bff] font-semibold' : 'text-[#f1f6ff]'
+                    isActive ? 'text-indigo-600 font-semibold' : 'text-gray-600'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -212,19 +172,10 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
               );
             })}
             <div className="pt-2 space-y-2">
-              <button
-                type="button"
-                aria-label={`Toggle theme. Current ${resolvedTheme}`}
-                onClick={onThemeToggle}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#2f5ea4] bg-[#0b2c5c] px-3 py-2 text-sm font-semibold text-[#d6e6ff] transition-all hover:bg-[#123a74] hover:text-white"
-              >
-                {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                {resolvedTheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-              </button>
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block rounded-xl border border-[#2f6fd1] bg-[#0d4aa6] px-4 py-2 text-center text-sm font-semibold text-[#ffffff] transition-all hover:bg-[#135bc8]"
+                className="block rounded-xl border border-indigo-600 bg-indigo-600 px-4 py-2 text-center text-sm font-semibold text-white transition-all hover:bg-indigo-700"
               >
                 Enquiry
               </Link>
@@ -239,7 +190,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
-            className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.25)]"
+            className="mb-7 inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 shadow-sm"
           >
             <motion.span
               animate={{ scale: [1, 1.14, 1] }}
@@ -255,10 +206,10 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.08 }}
-            className="text-5xl font-extrabold leading-[1.02] tracking-tight text-white drop-shadow-[0_8px_30px_rgba(15,23,42,0.65)] md:text-7xl"
+            className="text-5xl font-extrabold leading-[1.02] tracking-tight text-gray-900 md:text-7xl"
           >
-            Modern Apps, <span className="bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">AI</span> Tools &{' '}
-            <span className="bg-gradient-to-r from-violet-300 via-blue-300 to-cyan-300 bg-clip-text text-transparent">Automation</span>{' '}
+            Modern Apps, <span className="bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">AI</span> Tools &{' '}
+            <span className="bg-gradient-to-r from-violet-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">Automation</span>{' '}
             Systems for Growing Businesses
           </motion.h1>
 
@@ -266,7 +217,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.16 }}
-            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-slate-100 lg:mx-0"
+            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-gray-600 lg:mx-0"
           >
             We engineer native Android and iOS apps, robust web platforms, SaaS products, custom business automation, and scalable
             software systems with modern UI/UX for ambitious teams.
@@ -290,7 +241,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
               <Link
                 href={loggedIn ? '/dashboard' : '/tools'}
-                className="hero-secondary-cta inline-flex items-center rounded-xl border border-white/20 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]"
+                className="hero-secondary-cta inline-flex items-center rounded-xl border border-gray-200 bg-white px-7 py-3.5 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50"
               >
                 View Our Products
               </Link>
@@ -304,7 +255,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             className="mt-8 flex flex-wrap items-center justify-center gap-2 lg:justify-start"
           >
             {trustItems.map((item) => (
-              <span key={item} className="rounded-full border border-cyan-200/25 bg-slate-900/65 px-3 py-1.5 text-xs font-medium text-cyan-100">
+              <span key={item} className="rounded-full border border-indigo-100 bg-indigo-50 px-3 py-1.5 text-xs font-medium text-indigo-700">
                 {item}
               </span>
             ))}
@@ -312,13 +263,13 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
         </motion.div>
 
         <div className="relative h-[620px] w-full">
-          <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.18)_0%,rgba(37,99,235,0.1)_36%,transparent_72%)] blur-2xl" />
+          <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.10)_0%,rgba(99,102,241,0.05)_36%,transparent_72%)] blur-2xl" />
 
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.16 }}
-            className="absolute right-[5%] top-[5%] z-30 rounded-2xl border border-emerald-300/35 bg-emerald-300/10 px-3.5 py-2.5 text-xs text-emerald-100 backdrop-blur-xl shadow-[0_14px_28px_rgba(1,50,32,0.35)]"
+            className="absolute right-[5%] top-[5%] z-30 rounded-2xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 text-xs text-emerald-700 shadow-md"
           >
             <div className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
@@ -330,42 +281,42 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ opacity: 0, y: 30, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.2 }}
-            className="absolute left-1/2 top-1/2 z-20 w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-white/15 bg-[linear-gradient(160deg,rgba(11,26,57,0.82),rgba(5,15,35,0.72))] p-5 backdrop-blur-xl shadow-[0_24px_60px_rgba(2,10,30,0.55)]"
+            className="absolute left-1/2 top-1/2 z-20 w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-gray-200 bg-white p-5 shadow-xl"
           >
-            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Execution Command Center</span>
-              <span className="rounded-full border border-cyan-300/30 bg-cyan-300/15 px-2 py-1 text-[11px] font-semibold text-cyan-100">
+            <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">Execution Command Center</span>
+              <span className="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-700">
                 Live
               </span>
             </div>
             <div className="mb-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-white/10 bg-slate-950/35 p-3">
-                <p className="text-xs text-slate-400">Deployments / Month</p>
-                <p className="mt-1 text-lg font-semibold text-white">142</p>
+              <div className="rounded-xl border border-gray-100 bg-gray-50 p-3">
+                <p className="text-xs text-gray-500">Deployments / Month</p>
+                <p className="mt-1 text-lg font-semibold text-gray-900">142</p>
               </div>
-              <div className="rounded-xl border border-white/10 bg-slate-950/35 p-3">
-                <p className="text-xs text-slate-400">Automation Runs</p>
-                <p className="mt-1 text-lg font-semibold text-white">18.9k</p>
+              <div className="rounded-xl border border-gray-100 bg-gray-50 p-3">
+                <p className="text-xs text-gray-500">Automation Runs</p>
+                <p className="mt-1 text-lg font-semibold text-gray-900">18.9k</p>
               </div>
             </div>
 
-            <div className="space-y-3 rounded-2xl border border-white/10 bg-slate-950/35 p-3.5">
+            <div className="space-y-3 rounded-2xl border border-gray-100 bg-gray-50 p-3.5">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-300">Delivery Pipeline</p>
-                <p className="text-xs text-emerald-200">On Track</p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Delivery Pipeline</p>
+                <p className="text-xs text-emerald-600">On Track</p>
               </div>
               {deliverySteps.map((step) => (
                 <div key={step.label}>
                   <div className="mb-1 flex items-center justify-between">
-                    <p className="text-[11px] text-slate-300">{step.label}</p>
-                    <p className="text-[11px] font-semibold text-slate-200">{step.value}%</p>
+                    <p className="text-[11px] text-gray-500">{step.label}</p>
+                    <p className="text-[11px] font-semibold text-gray-700">{step.value}%</p>
                   </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-slate-800/80">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-gray-200">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${step.value}%` }}
                       transition={{ duration: 0.9, delay: 0.35 }}
-                      className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-400"
+                      className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-blue-500 to-violet-500"
                     />
                   </div>
                 </div>
@@ -377,18 +328,18 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.26 }}
-            className="absolute left-[0%] top-[44%] z-30 hidden w-[250px] -translate-y-1/2 rounded-2xl border border-white/15 bg-slate-950/65 p-4 backdrop-blur-xl lg:block"
+            className="absolute left-[0%] top-[44%] z-30 hidden w-[250px] -translate-y-1/2 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg lg:block"
           >
-            <div className="mb-2 flex items-center gap-2 text-xs text-slate-200">
-              <Braces className="h-4 w-4 text-cyan-200" />
+            <div className="mb-2 flex items-center gap-2 text-xs text-gray-700">
+              <Braces className="h-4 w-4 text-indigo-500" />
               Deployment Pipeline
             </div>
-            <p className="text-xs leading-relaxed text-slate-300">
+            <p className="text-xs leading-relaxed text-gray-500">
               `deploy --target production`
               <br />
               Android, iOS, and Web release sync
               <br />
-              Status: <span className="text-emerald-300">Stable</span>
+              Status: <span className="text-emerald-600">Stable</span>
             </p>
           </motion.div>
 
@@ -396,13 +347,13 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.32 }}
-            className="absolute right-[0%] top-[66%] z-30 hidden w-[240px] -translate-y-1/2 rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-xl lg:block"
+            className="absolute right-[0%] top-[66%] z-30 hidden w-[240px] -translate-y-1/2 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg lg:block"
           >
-            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-slate-100">
-              <Zap className="h-4 w-4 text-violet-200" />
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-gray-700">
+              <Zap className="h-4 w-4 text-violet-500" />
               Automation Loop
             </div>
-            <div className="space-y-1 text-[11px] text-slate-300">
+            <div className="space-y-1 text-[11px] text-gray-500">
               <p>Lead Intake</p>
               <p>AI Qualification</p>
               <p>CRM + Team Alert</p>
@@ -418,13 +369,13 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
                   initial={{ opacity: 0, y: 22 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.3 + idx * 0.08 }}
-                  className={`rounded-2xl border ${card.border} bg-gradient-to-br ${card.accent} p-3.5 backdrop-blur-xl shadow-[0_12px_24px_rgba(2,10,30,0.28)]`}
+                  className="rounded-2xl border border-gray-200 bg-white p-3.5 shadow-md"
                 >
-                  <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/20 bg-slate-900/50">
-                    <Icon className="h-4 w-4 text-cyan-100" />
+                  <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-indigo-100 bg-indigo-50">
+                    <Icon className="h-4 w-4 text-indigo-600" />
                   </div>
-                  <p className="text-sm font-semibold text-white">{card.title}</p>
-                  <p className="mt-1 text-[11px] leading-relaxed text-slate-300">{card.subtitle}</p>
+                  <p className="text-sm font-semibold text-gray-900">{card.title}</p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-gray-500">{card.subtitle}</p>
                 </motion.div>
               );
             })}
@@ -434,14 +385,14 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.25, 0.55, 0.25] }}
             transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute left-[18%] top-[15%] h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.65)]"
+            className="absolute left-[18%] top-[15%] h-2 w-2 rounded-full bg-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.45)]"
           />
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: [0.2, 0.5, 0.2] }}
             transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-            className="absolute right-[18%] top-[28%] h-2 w-2 rounded-full bg-blue-300 shadow-[0_0_20px_rgba(96,165,250,0.65)]"
+            className="absolute right-[18%] top-[28%] h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_20px_rgba(96,165,250,0.45)]"
           />
         </div>
       </div>
@@ -449,9 +400,9 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
       {particles.map((p) => (
         <motion.span
           key={p.id}
-          className="pointer-events-none absolute h-1.5 w-1.5 rounded-full bg-cyan-200/55"
+          className="pointer-events-none absolute h-1.5 w-1.5 rounded-full bg-indigo-300/50"
           style={{ left: p.left, top: p.top }}
-          animate={{ y: [-6, 6, -6], opacity: [0.25, 0.8, 0.25] }}
+          animate={{ y: [-6, 6, -6], opacity: [0.2, 0.6, 0.2] }}
           transition={{ duration: p.duration, repeat: Infinity, ease: 'easeInOut', delay: p.delay }}
         />
       ))}

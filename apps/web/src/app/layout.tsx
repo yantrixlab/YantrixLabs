@@ -61,41 +61,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const themeBootstrap = `
-    (function () {
-      try {
-        var theme = localStorage.getItem('gst_invoice_theme');
-        var p = window.location.pathname || '';
-        var isGstModuleRoute =
-          p === '/dashboard' ||
-          p === '/invoices' ||
-          p.indexOf('/invoices/') === 0 ||
-          p === '/customers' ||
-          p.indexOf('/customers/') === 0 ||
-          p === '/products' ||
-          p.indexOf('/products/') === 0 ||
-          p === '/reports' ||
-          p === '/payments' ||
-          p === '/expenses' ||
-          p === '/inventory' ||
-          p === '/hrm' ||
-          p === '/crm' ||
-          p === '/settings' ||
-          p.indexOf('/settings/') === 0;
-
-        if (isGstModuleRoute && theme === 'dark') {
-          document.documentElement.setAttribute('data-gst-theme', 'dark');
-          document.documentElement.style.backgroundColor = '#060b16';
-          document.body.style.backgroundColor = '#060b16';
-        } else {
-          document.documentElement.removeAttribute('data-gst-theme');
-          document.documentElement.style.backgroundColor = '';
-          document.body.style.backgroundColor = '';
-        }
-      } catch (e) {}
-    })();
-  `;
-
   return (
     <html lang="en">
       <head>
@@ -106,7 +71,6 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
