@@ -5,11 +5,30 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { randomUUID } from 'crypto';
+import AdmZip from 'adm-zip';
 
 // ─── Multer setup for media file uploads ────────────────────────────────────
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads', 'blog');
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
+
+const ALLOWED_MEDIA_MIME_TYPES = new Set([
+  'image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml',
+  'application/pdf',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+]);
+
+const EXT_MIME_MAP: Record<string, string> = {
+  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif',
+  '.webp': 'image/webp', '.svg': 'image/svg+xml', '.pdf': 'application/pdf',
+  '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+};
+
+function mimeFromExt(ext: string): string {
+  return EXT_MIME_MAP[ext.toLowerCase()] || 'application/octet-stream';
 }
 
 const storage = multer.diskStorage({
@@ -23,12 +42,24 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: { fileSize: 50 * 1024 * 1024 },
   fileFilter: (_req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    if (ALLOWED_MEDIA_MIME_TYPES.has(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only image files are allowed'));
+      cb(new Error('Unsupported file type. Allowed: images, PDF, DOCX, XLSX.'));
+    }
+  },
+});
+
+const zipUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 200 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype === 'application/zip' || file.mimetype === 'application/x-zip-compressed' || path.extname(file.originalname).toLowerCase() === '.zip') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only .zip files are allowed for import'));
     }
   },
 });
@@ -513,6 +544,130 @@ router.delete('/media/:id', async (req: AuthenticatedRequest, res: Response, nex
   try {
     await prisma.blogMedia.delete({ where: { id: req.params.id } });
     res.json({ success: true, data: { message: 'Media deleted' } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ─── Media backup & restore ──────────────────────────────────────────────────
+
+router.get('/media/usage', async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const files = fs.existsSync(UPLOAD_DIR) ? fs.readdirSync(UPLOAD_DIR) : [];
+    let totalBytes = 0;
+    for (const file of files) {
+      const stat = fs.statSync(path.join(UPLOAD_DIR, file));
+      if (stat.isFile()) totalBytes += stat.size;
+    }
+    res.json({ success: true, data: { totalBytes, fileCount: files.length } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/media/export', async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const zip = new AdmZip();
+    if (fs.existsSync(UPLOAD_DIR)) {
+      zip.addLocalFolder(UPLOAD_DIR);
+    }
+    const buffer = zip.toBuffer();
+    const filename = `media-backup-${new Date().toISOString().slice(0, 10)}.zip`;
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(buffer);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/media/import', zipUpload.single('file'), async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No zip file uploaded' });
+    }
+
+    const apiBase = (process.env.API_URL || `http://localhost:4000`).replace(/\/api\/v1\/?$/, '');
+    const zip = new AdmZip(req.file.buffer);
+    const entries = zip.getEntries().filter(e => !e.isDirectory);
+
+    let imported = 0;
+    let skipped = 0;
+
+    for (const entry of entries) {
+      // Zip-slip protection: reject any entry that would resolve outside UPLOAD_DIR.
+      const destPath = path.join(UPLOAD_DIR, path.basename(entry.entryName));
+      if (!destPath.startsWith(UPLOAD_DIR)) {
+        skipped++;
+        continue;
+      }
+
+      const ext = path.extname(entry.entryName);
+      const mimeType = mimeFromExt(ext);
+      if (mimeType === 'application/octet-stream') {
+        skipped++;
+        continue;
+      }
+
+      // Re-name on import to avoid collisions with existing files, same scheme as direct uploads.
+      const newFilename = `${Date.now()}-${randomUUID()}${ext}`;
+      const finalDestPath = path.join(UPLOAD_DIR, newFilename);
+      fs.writeFileSync(finalDestPath, entry.getData());
+
+      const stat = fs.statSync(finalDestPath);
+      const fileUrl = `${apiBase}/uploads/blog/${newFilename}`;
+      await prisma.blogMedia.create({
+        data: {
+          filename: newFilename,
+          originalName: path.basename(entry.entryName),
+          url: fileUrl,
+          mimeType,
+          size: stat.size,
+          folder: 'imported',
+        },
+      });
+      imported++;
+    }
+
+    res.json({ success: true, data: { imported, skipped, total: entries.length } });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/media/scan', async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const apiBase = (process.env.API_URL || `http://localhost:4000`).replace(/\/api\/v1\/?$/, '');
+    const filesOnDisk = fs.existsSync(UPLOAD_DIR)
+      ? fs.readdirSync(UPLOAD_DIR).filter(f => fs.statSync(path.join(UPLOAD_DIR, f)).isFile())
+      : [];
+    const existing = await prisma.blogMedia.findMany({ select: { filename: true } });
+    const knownFilenames = new Set(existing.map(m => m.filename));
+
+    let added = 0;
+    for (const filename of filesOnDisk) {
+      if (knownFilenames.has(filename)) continue;
+      const ext = path.extname(filename);
+      const mimeType = mimeFromExt(ext);
+      const stat = fs.statSync(path.join(UPLOAD_DIR, filename));
+      await prisma.blogMedia.create({
+        data: {
+          filename,
+          originalName: filename,
+          url: `${apiBase}/uploads/blog/${filename}`,
+          mimeType,
+          size: stat.size,
+          folder: 'scanned',
+        },
+      });
+      added++;
+    }
+
+    const dbFilenames = existing.map(m => m.filename);
+    const diskFilenameSet = new Set(filesOnDisk);
+    const missingFiles = dbFilenames.filter(f => !diskFilenameSet.has(f)).length;
+
+    res.json({ success: true, data: { added, missingFiles, scannedFiles: filesOnDisk.length } });
   } catch (error) {
     next(error);
   }

@@ -5,7 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   LayoutDashboard, Users, Building2, CreditCard, Zap,
-  Star, ScrollText, Settings, LogOut, Shield, Package, FileCode2, LayoutList, Wrench, MessageSquare, BookOpen, HelpCircle
+  Star, ScrollText, Settings, LogOut, Shield, Package, FileCode2, LayoutList, Wrench, MessageSquare, BookOpen, HelpCircle,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { isAdminAuthenticated, getAdminToken, API_URL } from '@/lib/api';
 
@@ -22,6 +23,7 @@ const NAV = [
   { href: '/admin/reviews', label: 'Reviews', icon: Star },
   { href: '/admin/enquiries', label: 'Enquiries', icon: MessageSquare },
   { href: '/admin/blog', label: 'Blog', icon: BookOpen },
+  { href: '/admin/media', label: 'Media', icon: ImageIcon },
   { href: '/admin/faq', label: 'FAQs', icon: HelpCircle },
   { href: '/admin/audit-logs', label: 'Audit Logs', icon: ScrollText },
   { href: '/admin/settings', label: 'Settings', icon: Settings },

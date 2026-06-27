@@ -159,7 +159,7 @@ export default function BlogDashboardPage() {
             { href: '/admin/blog/articles/new', label: 'New Article', icon: Plus, color: 'bg-indigo-600 hover:bg-indigo-700' },
             { href: '/admin/blog/categories', label: 'Categories', icon: BarChart2, color: 'bg-gray-700 hover:bg-gray-600' },
             { href: '/admin/blog/tags', label: 'Tags', icon: Tag, color: 'bg-gray-700 hover:bg-gray-600' },
-            { href: '/admin/blog/media', label: 'Media Library', icon: Image, color: 'bg-gray-700 hover:bg-gray-600' },
+            { href: '/admin/media', label: 'Media Library', icon: Image, color: 'bg-gray-700 hover:bg-gray-600' },
           ].map(action => (
             <Link
               key={action.href}
