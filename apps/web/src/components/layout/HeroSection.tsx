@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -8,7 +8,6 @@ import {
   ArrowRight,
   BarChart3,
   Bot,
-  Braces,
   Globe,
   Menu,
   Smartphone,
@@ -87,24 +86,11 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 18 }, (_, i) => ({
-        id: i,
-        left: `${6 + ((i * 17) % 88)}%`,
-        top: `${10 + ((i * 29) % 76)}%`,
-        duration: 8 + (i % 5),
-        delay: i * 0.22,
-      })),
-    []
-  );
-
   return (
-    <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <section className="relative min-h-screen overflow-hidden bg-white">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-24 top-12 h-80 w-80 rounded-full bg-indigo-200/40 blur-3xl" />
-        <div className="absolute right-0 top-16 h-96 w-96 rounded-full bg-purple-200/40 blur-3xl" />
-        <div className="absolute bottom-10 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-200/30 blur-3xl" />
+        <div className="absolute -left-32 top-0 h-[420px] w-[420px] rounded-full bg-indigo-50 blur-3xl" />
+        <div className="absolute right-0 top-1/4 h-[380px] w-[380px] rounded-full bg-purple-50 blur-3xl" />
       </div>
 
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
@@ -262,48 +248,47 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
           </motion.div>
         </motion.div>
 
-        <div className="relative h-[620px] w-full">
-          <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.10)_0%,rgba(99,102,241,0.05)_36%,transparent_72%)] blur-2xl" />
-
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative"
+        >
+          {/* Floating delivery-speed badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.16 }}
-            className="absolute right-[5%] top-[5%] z-30 rounded-2xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 text-xs text-emerald-700 shadow-md"
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="absolute -top-4 right-6 z-10 hidden items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3.5 py-2 text-xs font-medium text-emerald-700 shadow-md sm:flex"
           >
-            <div className="flex items-center gap-2">
-              <BarChart3 className="h-4 w-4" />
-              Avg. delivery speed improved by 31%
-            </div>
+            <BarChart3 className="h-3.5 w-3.5" />
+            Avg. delivery speed improved by 31%
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.2 }}
-            className="absolute left-1/2 top-1/2 z-20 w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-gray-200 bg-white p-5 shadow-xl"
-          >
-            <div className="mb-4 flex items-center justify-between border-b border-gray-100 pb-3">
+          {/* Main dashboard card */}
+          <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-xl">
+            <div className="mb-5 flex items-center justify-between border-b border-gray-100 pb-4">
               <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">Execution Command Center</span>
-              <span className="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-1 text-[11px] font-semibold text-indigo-700">
+              <span className="rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold text-indigo-700">
                 Live
               </span>
             </div>
-            <div className="mb-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-gray-100 bg-gray-50 p-3">
+
+            <div className="mb-5 grid grid-cols-2 gap-3">
+              <div className="rounded-xl border border-gray-100 bg-gray-50 p-3.5">
                 <p className="text-xs text-gray-500">Deployments / Month</p>
-                <p className="mt-1 text-lg font-semibold text-gray-900">142</p>
+                <p className="mt-1 text-xl font-semibold text-gray-900">142</p>
               </div>
-              <div className="rounded-xl border border-gray-100 bg-gray-50 p-3">
+              <div className="rounded-xl border border-gray-100 bg-gray-50 p-3.5">
                 <p className="text-xs text-gray-500">Automation Runs</p>
-                <p className="mt-1 text-lg font-semibold text-gray-900">18.9k</p>
+                <p className="mt-1 text-xl font-semibold text-gray-900">18.9k</p>
               </div>
             </div>
 
-            <div className="space-y-3 rounded-2xl border border-gray-100 bg-gray-50 p-3.5">
+            <div className="space-y-3 rounded-2xl border border-gray-100 bg-gray-50 p-4">
               <div className="flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">Delivery Pipeline</p>
-                <p className="text-xs text-emerald-600">On Track</p>
+                <p className="text-xs font-medium text-emerald-600">On Track</p>
               </div>
               {deliverySteps.map((step) => (
                 <div key={step.label}>
@@ -314,62 +299,34 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
                   <div className="h-1.5 overflow-hidden rounded-full bg-gray-200">
                     <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: `${step.value}%` }}
-                      transition={{ duration: 0.9, delay: 0.35 }}
+                      whileInView={{ width: `${step.value}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.9, delay: 0.1 }}
                       className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-blue-500 to-violet-500"
                     />
                   </div>
                 </div>
               ))}
             </div>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.26 }}
-            className="absolute left-[0%] top-[44%] z-30 hidden w-[250px] -translate-y-1/2 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg lg:block"
-          >
-            <div className="mb-2 flex items-center gap-2 text-xs text-gray-700">
-              <Braces className="h-4 w-4 text-indigo-500" />
-              Deployment Pipeline
+            <div className="mt-4 flex items-center gap-2 rounded-xl border border-gray-100 bg-gray-50 px-3.5 py-3 text-xs text-gray-600">
+              <Zap className="h-4 w-4 flex-shrink-0 text-violet-500" />
+              Automation loop: Lead Intake &rarr; AI Qualification &rarr; CRM + Team Alert
             </div>
-            <p className="text-xs leading-relaxed text-gray-500">
-              `deploy --target production`
-              <br />
-              Android, iOS, and Web release sync
-              <br />
-              Status: <span className="text-emerald-600">Stable</span>
-            </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.32 }}
-            className="absolute right-[0%] top-[66%] z-30 hidden w-[240px] -translate-y-1/2 rounded-2xl border border-gray-200 bg-white p-4 shadow-lg lg:block"
-          >
-            <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-gray-700">
-              <Zap className="h-4 w-4 text-violet-500" />
-              Automation Loop
-            </div>
-            <div className="space-y-1 text-[11px] text-gray-500">
-              <p>Lead Intake</p>
-              <p>AI Qualification</p>
-              <p>CRM + Team Alert</p>
-            </div>
-          </motion.div>
-
-          <div className="absolute inset-x-7 bottom-0 z-30 grid gap-3 sm:grid-cols-3">
+          {/* Expertise cards */}
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
             {expertiseCards.map((card, idx) => {
               const Icon = card.icon;
               return (
                 <motion.div
                   key={card.title}
-                  initial={{ opacity: 0, y: 22 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.3 + idx * 0.08 }}
-                  className="rounded-2xl border border-gray-200 bg-white p-3.5 shadow-md"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: idx * 0.08 }}
+                  className="rounded-2xl border border-gray-200 bg-white p-3.5 shadow-sm"
                 >
                   <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-indigo-100 bg-indigo-50">
                     <Icon className="h-4 w-4 text-indigo-600" />
@@ -380,32 +337,8 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
               );
             })}
           </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0.25, 0.55, 0.25] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute left-[18%] top-[15%] h-2 w-2 rounded-full bg-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.45)]"
-          />
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0.2, 0.5, 0.2] }}
-            transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-            className="absolute right-[18%] top-[28%] h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_20px_rgba(96,165,250,0.45)]"
-          />
-        </div>
+        </motion.div>
       </div>
-
-      {particles.map((p) => (
-        <motion.span
-          key={p.id}
-          className="pointer-events-none absolute h-1.5 w-1.5 rounded-full bg-indigo-300/50"
-          style={{ left: p.left, top: p.top }}
-          animate={{ y: [-6, 6, -6], opacity: [0.2, 0.6, 0.2] }}
-          transition={{ duration: p.duration, repeat: Infinity, ease: 'easeInOut', delay: p.delay }}
-        />
-      ))}
     </section>
   );
 }
