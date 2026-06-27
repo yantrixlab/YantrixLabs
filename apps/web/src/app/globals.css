@@ -635,8 +635,7 @@
 }
 
 .public-site .text-gray-900,
-.public-site .text-gray-800,
-.public-site .text-white {
+.public-site .text-gray-800 {
   color: rgb(var(--public-text)) !important;
 }
 
