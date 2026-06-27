@@ -9,6 +9,7 @@ import { TableOfContents } from '@/components/blog/TableOfContents';
 import { RelatedPosts } from '@/components/blog/RelatedPosts';
 import { ShareButtons } from '@/components/blog/ShareButtons';
 import { NewsletterCTA } from '@/components/blog/NewsletterCTA';
+import { BlogCTACard } from '@/components/blog/BlogCTACard';
 import { ArrowLeft, ArrowRight, Eye } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
@@ -195,12 +196,9 @@ export default async function BlogPostPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
-      <div className="bg-white min-h-screen pt-1">
-        {/* Article Header */}
-        <ArticleHeader post={postForComponents} />
-
-        {/* Share buttons row (below header) */}
-        <div className="max-w-4xl mx-auto px-4 mb-6 flex items-center justify-between flex-wrap gap-3">
+      <div className="bg-gray-50 min-h-screen pt-1">
+        {/* Back link + share, above the card */}
+        <div className="max-w-4xl mx-auto px-4 pt-8 pb-4 flex items-center justify-between flex-wrap gap-3">
           <Link
             href="/blog"
             className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
@@ -211,23 +209,28 @@ export default async function BlogPostPage({ params }: PageProps) {
           <ShareButtons url={pageUrl} title={post.title} />
         </div>
 
-        {/* Cover Image */}
-        {post.coverImage && (
-          <div className="max-w-4xl mx-auto px-4 mb-12">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={post.coverImage}
-              alt={post.coverImageAlt || post.title}
-              className="w-full h-64 md:h-[28rem] object-cover rounded-3xl shadow-xl"
-            />
+        {/* Header card: cover image + title/meta */}
+        <div className="max-w-4xl mx-auto px-4 mb-8">
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            {post.coverImage && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={post.coverImage}
+                alt={post.coverImageAlt || post.title}
+                className="w-full h-64 md:h-[26rem] object-cover"
+              />
+            )}
+            <div className="p-6 md:p-10">
+              <ArticleHeader post={postForComponents} />
+            </div>
           </div>
-        )}
+        </div>
 
         {/* Content + Sidebar */}
         <div className="max-w-7xl mx-auto px-4 pb-16">
-          <div className="flex gap-12 items-start">
+          <div className="flex gap-8 items-start">
             {/* ── Main Article ─────────────────────────────── */}
-            <article className="flex-1 min-w-0">
+            <article className="flex-1 min-w-0 bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10">
               {/* Article body */}
               <div
                 className="blog-content"
@@ -321,23 +324,26 @@ export default async function BlogPostPage({ params }: PageProps) {
             </article>
 
             {/* ── Sticky Right Sidebar ──────────────────────── */}
-            <aside className="hidden lg:flex flex-col gap-6 w-64 flex-shrink-0">
+            <aside className="hidden lg:flex flex-col gap-6 w-72 flex-shrink-0">
               <div className="sticky top-24 space-y-6">
+                {/* Primary CTA */}
+                <BlogCTACard />
+
                 {/* Table of Contents */}
                 {toc.length > 1 && (
-                  <div className="bg-gray-50 rounded-2xl p-5">
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
                     <TableOfContents items={toc} />
                   </div>
                 )}
 
                 {/* Share Buttons */}
-                <div className="bg-gray-50 rounded-2xl p-5">
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
                   <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Share</h4>
                   <ShareButtons url={pageUrl} title={post.title} />
                 </div>
 
                 {/* Stats */}
-                <div className="bg-gray-50 rounded-2xl p-5">
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
                   <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Stats</h4>
                   <div className="space-y-2 text-sm text-gray-600">
                     <div className="flex items-center justify-between">
@@ -358,7 +364,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
                 {/* Related in sidebar */}
                 {related.length > 0 && (
-                  <div className="bg-gray-50 rounded-2xl p-5">
+                  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
                     <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
                       Related Articles
                     </h4>
