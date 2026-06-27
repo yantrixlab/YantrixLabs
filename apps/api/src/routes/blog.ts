@@ -647,7 +647,7 @@ router.post('/media/import', zipUpload.single('file'), async (req: Authenticated
   }
 });
 
-router.post('/media/scan', async (_req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+router.post('/media/scan', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     const apiBase = getApiBase(req);
     const filesOnDisk = fs.existsSync(UPLOAD_DIR)
