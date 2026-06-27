@@ -25,6 +25,9 @@ module.exports = {
       env: {
         NODE_ENV: "production",
         PORT: 4000,
+        // Public origin embedded in stored file URLs (e.g. uploaded media).
+        // Must match the domain the API is actually reachable at.
+        API_URL: "https://api.yantrixlab.com",
       },
     },
   ],
