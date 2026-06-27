@@ -198,7 +198,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       <div className="bg-gray-50 min-h-screen pt-1">
         {/* Back link + share, above the card */}
-        <div className="max-w-4xl mx-auto px-4 pt-8 pb-4 flex items-center justify-between flex-wrap gap-3">
+        <div className="max-w-7xl mx-auto px-4 pt-8 pb-4 flex items-center justify-between flex-wrap gap-3">
           <Link
             href="/blog"
             className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
@@ -209,33 +209,27 @@ export default async function BlogPostPage({ params }: PageProps) {
           <ShareButtons url={pageUrl} title={post.title} />
         </div>
 
-        {/* Header card: cover image + title/meta */}
-        <div className="max-w-4xl mx-auto px-4 mb-8">
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-            {post.coverImage && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={post.coverImage}
-                alt={post.coverImageAlt || post.title}
-                className="w-full h-64 md:h-[26rem] object-cover"
-              />
-            )}
-            <div className="p-6 md:p-10">
-              <ArticleHeader post={postForComponents} />
-            </div>
-          </div>
-        </div>
-
         {/* Content + Sidebar */}
         <div className="max-w-7xl mx-auto px-4 pb-16">
           <div className="flex gap-8 items-start">
-            {/* ── Main Article ─────────────────────────────── */}
-            <article className="flex-1 min-w-0 bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10">
-              {/* Article body */}
-              <div
-                className="blog-content"
-                dangerouslySetInnerHTML={{ __html: contentHtml }}
-              />
+            {/* ── Main Article: cover image + header + body, one card ── */}
+            <article className="flex-1 min-w-0 bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+              {post.coverImage && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={post.coverImage}
+                  alt={post.coverImageAlt || post.title}
+                  className="w-full h-64 md:h-[26rem] object-cover"
+                />
+              )}
+              <div className="p-6 md:p-10">
+                <ArticleHeader post={postForComponents} />
+
+                {/* Article body */}
+                <div
+                  className="blog-content mt-8"
+                  dangerouslySetInnerHTML={{ __html: contentHtml }}
+                />
 
               {/* Tags */}
               {post.tags.length > 0 && (
@@ -321,6 +315,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   )}
                 </div>
               )}
+              </div>
             </article>
 
             {/* ── Sticky Right Sidebar ──────────────────────── */}
