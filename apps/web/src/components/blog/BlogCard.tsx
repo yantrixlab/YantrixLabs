@@ -36,7 +36,7 @@ export function BlogCard({ post, index = 0 }: Props) {
               <img
                 src={post.coverImage}
                 alt={post.title}
-                className="absolute inset-0 w-full h-full object-contain p-2 group-hover:scale-[1.03] transition-transform duration-500"
+                className="absolute inset-0 w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100">
