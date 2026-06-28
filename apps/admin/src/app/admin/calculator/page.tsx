@@ -13,6 +13,7 @@ interface Platform {
   id: string;
   name: string;
   slug: string;
+  iconUrl: string | null;
   basePrice: number;
   multiplier: number;
   isActive: boolean;
@@ -98,7 +99,7 @@ export default function AdminCalculatorPage() {
 
 // ─── Platforms ────────────────────────────────────────────────────────────
 
-const EMPTY_PLATFORM = { name: '', basePrice: 0, multiplier: 1, isActive: true };
+const EMPTY_PLATFORM = { name: '', iconUrl: '', basePrice: 0, multiplier: 1, isActive: true };
 
 function PlatformsTab() {
   const [items, setItems] = useState<Platform[]>([]);
@@ -130,7 +131,7 @@ function PlatformsTab() {
   const openCreate = () => { setEditing(null); setForm(EMPTY_PLATFORM); setShowForm(true); };
   const openEdit = (p: Platform) => {
     setEditing(p);
-    setForm({ name: p.name, basePrice: p.basePrice, multiplier: p.multiplier, isActive: p.isActive });
+    setForm({ name: p.name, iconUrl: p.iconUrl || '', basePrice: p.basePrice, multiplier: p.multiplier, isActive: p.isActive });
     setShowForm(true);
   };
   const closeForm = () => { setShowForm(false); setEditing(null); setForm(EMPTY_PLATFORM); };
@@ -240,6 +241,22 @@ function PlatformsTab() {
                 className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:border-orange-500 focus:outline-none"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-1.5">Icon URL</label>
+              <div className="flex items-center gap-3">
+                {form.iconUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={form.iconUrl} alt="" className="h-9 w-9 rounded-lg object-contain bg-gray-800 border border-gray-700 flex-shrink-0" onError={e => { e.currentTarget.style.display = 'none'; }} />
+                )}
+                <input
+                  type="text" value={form.iconUrl}
+                  onChange={e => setForm(p => ({ ...p, iconUrl: e.target.value }))}
+                  placeholder="https://example.com/icons/android.svg"
+                  className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-sm text-gray-200 placeholder-gray-600 focus:border-orange-500 focus:outline-none"
+                />
+              </div>
+              <p className="text-xs text-gray-600 mt-1">Shown on the public calculator's platform card. Leave blank to use a generic icon.</p>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-1.5">Base Price (₹)</label>
@@ -299,6 +316,14 @@ function PlatformsTab() {
               className="rounded-xl border border-gray-800 bg-gray-900 px-4 py-3.5 flex items-center gap-3 group cursor-grab active:cursor-grabbing hover:border-gray-700 transition-colors"
             >
               <GripVertical className="h-4 w-4 text-gray-700 group-hover:text-gray-500 transition-colors flex-shrink-0" />
+              {p.iconUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={p.iconUrl} alt="" className="h-8 w-8 rounded-lg object-contain bg-gray-800 border border-gray-700 flex-shrink-0" onError={e => { e.currentTarget.style.display = 'none'; }} />
+              ) : (
+                <div className="h-8 w-8 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center flex-shrink-0">
+                  <Smartphone className="h-3.5 w-3.5 text-gray-600" />
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-white">{p.name}</p>
                 <p className="text-xs text-gray-500 mt-0.5">Base ₹{p.basePrice.toLocaleString()} · {p.multiplier}x multiplier</p>

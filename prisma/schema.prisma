@@ -1372,6 +1372,7 @@ model CalculatorPlatform {
   id         String   @id @default(cuid())
   name       String
   slug       String   @unique
+  iconUrl    String?
   basePrice  Float    @default(0)
   multiplier Float    @default(1)
   isActive   Boolean  @default(true)

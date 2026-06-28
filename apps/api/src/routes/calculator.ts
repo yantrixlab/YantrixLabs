@@ -58,7 +58,7 @@ router.get('/platforms', async (_req: AuthenticatedRequest, res: Response, next:
 
 router.post('/platforms', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const { name, basePrice, multiplier, isActive } = req.body;
+    const { name, iconUrl, basePrice, multiplier, isActive } = req.body;
 
     if (!name) {
       res.status(400).json({ success: false, error: 'Name is required' });
@@ -79,6 +79,7 @@ router.post('/platforms', async (req: AuthenticatedRequest, res: Response, next:
       data: {
         name: name.trim(),
         slug,
+        iconUrl: iconUrl?.trim() || null,
         basePrice: basePrice !== undefined ? Number(basePrice) : 0,
         multiplier: multiplier !== undefined ? Number(multiplier) : 1,
         isActive: isActive !== undefined ? Boolean(isActive) : true,
@@ -110,11 +111,12 @@ router.put('/platforms/reorder', async (req: AuthenticatedRequest, res: Response
 
 router.put('/platforms/:id', async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
-    const { name, basePrice, multiplier, isActive, sortOrder } = req.body;
+    const { name, iconUrl, basePrice, multiplier, isActive, sortOrder } = req.body;
     const platform = await prisma.calculatorPlatform.update({
       where: { id: req.params.id },
       data: {
         ...(name !== undefined && { name: name.trim(), slug: slugify(name) }),
+        ...(iconUrl !== undefined && { iconUrl: iconUrl?.trim() || null }),
         ...(basePrice !== undefined && { basePrice: Number(basePrice) }),
         ...(multiplier !== undefined && { multiplier: Number(multiplier) }),
         ...(isActive !== undefined && { isActive: Boolean(isActive) }),
