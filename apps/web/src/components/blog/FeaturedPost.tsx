@@ -45,14 +45,14 @@ export function FeaturedPost({ post }: Props) {
 
       <Link href={`/blog/${post.slug}`} className="group block">
         <div className="grid md:grid-cols-5 gap-0 bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-          {/* Image — 3/5 width, full image visible */}
-          <div className="md:col-span-3 relative overflow-hidden bg-gray-50 h-64 md:h-auto">
+          {/* Image — 3/5 width, height follows the image's natural size */}
+          <div className="md:col-span-3 relative overflow-hidden bg-gray-50">
             {post.coverImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={post.coverImage}
                 alt={post.title}
-                className="absolute inset-0 h-full w-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
+                className="block w-full h-auto group-hover:scale-[1.03] transition-transform duration-500"
               />
             ) : (
               <div className="h-64 md:h-full flex items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100">

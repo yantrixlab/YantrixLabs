@@ -29,17 +29,17 @@ export function BlogCard({ post, index = 0 }: Props) {
     >
       <Link href={`/blog/${post.slug}`} className="group block h-full">
         <article className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
-          {/* Thumbnail: full image visible, no cropping */}
-          <div className="relative overflow-hidden aspect-[4/3] bg-gray-50">
+          {/* Thumbnail: full image visible, height follows the image's natural size */}
+          <div className="relative overflow-hidden bg-gray-50">
             {post.coverImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={post.coverImage}
                 alt={post.title}
-                className="absolute inset-0 w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500"
+                className="block w-full h-auto group-hover:scale-[1.03] transition-transform duration-500"
               />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100">
+              <div className="aspect-[4/3] flex items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100">
                 <span className="text-5xl select-none">📄</span>
               </div>
             )}
