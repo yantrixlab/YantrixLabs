@@ -1365,3 +1365,47 @@ model Faq {
 
   @@map("faqs")
 }
+
+// ─── Cost Calculator ────────────────────────────────────────────────────────
+
+model CalculatorPlatform {
+  id         String   @id @default(cuid())
+  name       String
+  slug       String   @unique
+  basePrice  Float    @default(0)
+  multiplier Float    @default(1)
+  isActive   Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("calculator_platforms")
+}
+
+model CalculatorFeatureCategory {
+  id        String              @id @default(cuid())
+  name      String
+  slug      String              @unique
+  isActive  Boolean             @default(true)
+  sortOrder Int                 @default(0)
+  features  CalculatorFeature[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@map("calculator_feature_categories")
+}
+
+model CalculatorFeature {
+  id          String                    @id @default(cuid())
+  name        String
+  description String?
+  price       Float                     @default(0)
+  categoryId  String
+  category    CalculatorFeatureCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  isActive    Boolean                   @default(true)
+  sortOrder   Int                       @default(0)
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+
+  @@map("calculator_features")
+}

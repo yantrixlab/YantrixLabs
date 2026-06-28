@@ -19,6 +19,7 @@ const RESERVED_TOOL_SLUGS = [
   "blog",
   "business-automation-tools",
   "contact",
+  "cost-calculator",
   "crm",
   "custom-software-development-services",
   "customers",

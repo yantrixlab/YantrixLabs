@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/tools', label: 'Tools' },
   { href: '/services', label: 'Services' },
+  { href: '/cost-calculator', label: 'Cost Calculator' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },

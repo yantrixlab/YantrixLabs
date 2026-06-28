@@ -33,6 +33,7 @@ import blogRoutes from "./routes/blog";
 import faqRoutes from "./routes/faq";
 import scanRoutes from "./routes/scan";
 import reviewRoutes from "./routes/reviews";
+import calculatorRoutes from "./routes/calculator";
 
 const app = express();
 
@@ -168,6 +169,7 @@ app.use("/api/v1/blog", blogRoutes);
 app.use("/api/v1/faqs", faqRoutes);
 app.use("/api/v1/scan", scanRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/calculator", calculatorRoutes);
 
 // ─── 404 Handler ────────────────────────────────────────────────────────────
 app.use((_req, res) => {
