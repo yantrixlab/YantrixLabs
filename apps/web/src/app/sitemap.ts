@@ -47,7 +47,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     toolRoutes = [];
   }
 
-  const routes = Array.from(new Set([...staticRoutes, ...toolRoutes]));
+  let blogRoutes: string[] = [];
+  try {
+    const res = await fetch(`${apiUrl.replace(/\/+$/, '')}/blog/public/posts?limit=500`, { cache: 'no-store' });
+    const data = await res.json();
+    if (data?.success && Array.isArray(data.data)) {
+      blogRoutes = data.data
+        .map((post: { slug?: string }) => post.slug)
+        .filter((slug: unknown): slug is string => typeof slug === 'string' && slug.length > 0)
+        .map(slug => `/blog/${slug}`);
+    }
+  } catch {
+    blogRoutes = [];
+  }
+
+  const routes = Array.from(new Set([...staticRoutes, ...toolRoutes, ...blogRoutes]));
 
   const priorityMap: Record<string, number> = {
     '/': 1.0,
