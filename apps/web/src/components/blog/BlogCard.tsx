@@ -25,20 +25,21 @@ export function BlogCard({ post, index = 0 }: Props) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.07 }}
+      className="h-full"
     >
       <Link href={`/blog/${post.slug}`} className="group block h-full">
-        <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 h-full flex flex-col">
-          {/* 16:9 thumbnail */}
-          <div className="relative overflow-hidden aspect-video bg-gradient-to-br from-brand-50 to-brand-200">
+        <article className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col">
+          {/* Thumbnail: full image visible, no cropping */}
+          <div className="relative overflow-hidden aspect-[4/3] bg-gray-50">
             {post.coverImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={post.coverImage}
                 alt={post.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="absolute inset-0 w-full h-full object-contain p-2 group-hover:scale-[1.03] transition-transform duration-500"
               />
             ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100">
                 <span className="text-5xl select-none">📄</span>
               </div>
             )}
@@ -46,11 +47,8 @@ export function BlogCard({ post, index = 0 }: Props) {
             {post.category && (
               <div className="absolute top-3 left-3">
                 <span
-                  className="text-xs font-bold px-2.5 py-1 rounded-full backdrop-blur-sm"
-                  style={{
-                    background: post.category.color ? `${post.category.color}e0` : '#0066FFe0',
-                    color: '#fff',
-                  }}
+                  className="text-xs font-bold px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm shadow-sm"
+                  style={{ color: post.category.color || '#0066FF' }}
                 >
                   {post.category.name}
                 </span>
@@ -60,6 +58,7 @@ export function BlogCard({ post, index = 0 }: Props) {
 
           {/* Body */}
           <div className="p-5 flex flex-col flex-1">
+            <p className="text-xs font-medium text-gray-400 mb-2">{formatDate(post.publishedAt)}</p>
             <h3 className="text-gray-900 font-bold text-base leading-snug line-clamp-2 mb-2 group-hover:text-indigo-600 transition-colors">
               {post.title}
             </h3>
