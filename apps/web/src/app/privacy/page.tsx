@@ -2,7 +2,7 @@ import { PublicLayout } from '@/components/layout/PublicLayout';
 import { Shield, Lock } from 'lucide-react';
 
 export default function PrivacyPage() {
-  const lastUpdated = 'January 15, 2025';
+  const lastUpdated = 'August 29, 2026';
 
   return (
     <PublicLayout>
@@ -42,26 +42,67 @@ export default function PrivacyPage() {
               <p><strong>Usage Data:</strong> Log files, IP addresses, browser type, pages visited, and features used — to improve our service.</p>
               <p><strong>Payment Information:</strong> Billing details processed securely through our payment partner (Razorpay). We do not store full card numbers.</p>
               <p><strong>Communications:</strong> If you contact our support team, we retain those communications to improve our service.</p>
+
+              <h3 className="font-semibold text-gray-900 mt-6 mb-3">Permission-Based Data Collection (Mobile Apps)</h3>
+              <p>Our mobile applications may request the following device permissions:</p>
+              <ul>
+                <li><strong>Location Permission:</strong> Used to identify user location for location-based services, analytics, and service improvements. Location data is never shared with third parties without explicit consent.</li>
+                <li><strong>Camera Permission:</strong> Used for document scanning, profile picture uploads, and video-based features within our applications. Camera access is only activated when the user initiates these features.</li>
+                <li><strong>SMS Permission:</strong> Used to read SMS messages for financial transaction authentication and two-factor verification during payment processing. SMS data is processed securely and immediately after use.</li>
+                <li><strong>Contacts Permission:</strong> Used to access contact information for business customer management and communication features within our CRM tools.</li>
+                <li><strong>Storage Permission:</strong> Used to save and retrieve invoices, documents, and business data on your device for offline access.</li>
+              </ul>
             </Section>
 
             <Section title="3. How We Use Your Information">
+              <p><strong>Platform Operations:</strong></p>
               <ul>
-                <li>To provide, maintain, and improve the Yantrix platform</li>
+                <li>To provide, maintain, and improve the Yantrix platform and mobile applications</li>
                 <li>To process payments and manage your subscription</li>
                 <li>To send transactional emails (invoice confirmations, payment receipts)</li>
-                <li>To send product updates and feature announcements (you can opt out)</li>
-                <li>To provide customer support</li>
-                <li>To detect and prevent fraud or abuse</li>
-                <li>To comply with legal obligations under Indian law</li>
+                <li>To provide customer support and respond to inquiries</li>
+              </ul>
+
+              <p className="mt-4"><strong>Analytics and Improvement:</strong></p>
+              <ul>
+                <li>To analyze usage patterns and improve user experience</li>
+                <li>To monitor app performance and fix technical issues</li>
+                <li>To understand feature adoption and prioritize development</li>
+                <li>To send product updates and feature announcements (you can opt out via app settings)</li>
+              </ul>
+
+              <p className="mt-4"><strong>Security and Compliance:</strong></p>
+              <ul>
+                <li>To detect and prevent fraud, abuse, and unauthorized access</li>
+                <li>To comply with legal obligations under Indian law (GST regulations, taxation, etc.)</li>
+                <li>To respond to legal requests or government inquiries</li>
+                <li>To protect the rights, privacy, and safety of our users and the platform</li>
+              </ul>
+
+              <p className="mt-4"><strong>Permission-Specific Use:</strong></p>
+              <ul>
+                <li><strong>Location Data:</strong> Used only for location-specific services and analytics. You can disable location tracking in your device settings or app preferences at any time.</li>
+                <li><strong>Camera/Scanner:</strong> Processed only on your device. No camera data is stored or transmitted except for the documents/images you choose to upload.</li>
+                <li><strong>SMS/OTP:</strong> Read only for authentication purposes. OTP messages are not stored after use.</li>
+                <li><strong>Contacts:</strong> Stored locally on your device. Only contacts you explicitly add to the platform are synced to our servers.</li>
               </ul>
             </Section>
 
             <Section title="4. Data Sharing">
-              <p>We do not sell your personal data. We share data only in these circumstances:</p>
+              <p>We do not sell your personal data to third parties for marketing purposes. We share data only in these circumstances:</p>
               <ul>
-                <li><strong>Service Providers:</strong> Trusted third parties who help us operate the platform (hosting, email, payments). They are contractually bound to protect your data.</li>
-                <li><strong>Legal Requirements:</strong> If required by law, court order, or government authority in India.</li>
-                <li><strong>Business Transfer:</strong> In the event of a merger or acquisition, with appropriate notification to you.</li>
+                <li><strong>Service Providers:</strong> Trusted third parties who help us operate the platform:
+                  <ul className="mt-2 ml-4">
+                    <li>Payment Processors (Razorpay) — to process transactions securely</li>
+                    <li>Email Service Providers — to send transactional and notification emails</li>
+                    <li>Cloud Hosting Providers — to store and backup your data</li>
+                    <li>Analytics Services — to understand usage patterns and improve our platform</li>
+                  </ul>
+                  These service providers are contractually bound to protect your data and use it only for specified purposes.
+                </li>
+                <li><strong>Google Analytics:</strong> We use Google Analytics to track app usage and user behavior. Google may use this data according to their privacy policy. You can control this via app settings.</li>
+                <li><strong>Legal Requirements:</strong> If required by law, court order, or government authority in India (including GST authorities, IT department, etc.), we will disclose data as mandated.</li>
+                <li><strong>Business Transfer:</strong> In the event of a merger, acquisition, or sale of assets, user data may be transferred with appropriate notification and privacy protection measures.</li>
               </ul>
             </Section>
 
@@ -97,7 +138,7 @@ export default function PrivacyPage() {
                 <li><strong>Export:</strong> Download your business data in CSV or PDF format from Settings</li>
                 <li><strong>Opt-out:</strong> Unsubscribe from marketing emails at any time</li>
               </ul>
-              <p>To exercise these rights, contact <a href="mailto:privacy@yantrix.in" className="text-indigo-600 hover:underline">privacy@yantrix.in</a>.</p>
+              <p>To exercise these rights, contact <a href="mailto:yantrixlab@gmail.com" className="text-indigo-600 hover:underline">yantrixlab@gmail.com</a>.</p>
             </Section>
 
             <Section title="8. Cookies">
@@ -112,30 +153,52 @@ export default function PrivacyPage() {
 
             <Section title="9. Children's Privacy">
               <p>
-                Yantrix is intended for use by businesses and is not directed at individuals under 18 years
-                of age. We do not knowingly collect personal data from minors.
+                Yantrix applications are intended for use by businesses and professionals and are not directed at individuals under 18 years of age. We do not knowingly collect personal data from minors. If we become aware that a minor has provided us with personal data, we will take steps to delete such data and terminate the minor's account.
               </p>
             </Section>
 
             <Section title="10. Changes to This Policy">
               <p>
-                We may update this Privacy Policy periodically. We will notify you via email or in-app
-                notification when significant changes are made. Continued use of the Service constitutes
-                acceptance of the updated policy.
+                We may update this Privacy Policy periodically to reflect changes in our practices, technology, and legal requirements. We will notify you via email or in-app notification when significant changes are made. Continued use of the Service constitutes acceptance of the updated policy.
               </p>
             </Section>
 
-            <Section title="11. Contact">
+            <Section title="11. Google Play Store Compliance">
               <p>
-                For privacy-related queries, contact our Data Protection Officer at{' '}
-                <a href="mailto:privacy@yantrix.in" className="text-indigo-600 hover:underline">privacy@yantrix.in</a>
+                As required by Google Play Store policies, we maintain this Privacy Policy to be transparent about:
+              </p>
+              <ul>
+                <li>What sensitive permissions our apps request and why (location, camera, SMS, contacts, storage)</li>
+                <li>How we collect, use, and protect user data</li>
+                <li>How users can control their data and privacy settings</li>
+                <li>Our data security measures and retention policies</li>
+              </ul>
+              <p className="mt-4">
+                Users can review app permissions in their Android device settings and revoke permissions at any time.
+                Revoking permissions may limit certain app features but will not affect core functionality.
+              </p>
+            </Section>
+
+            <Section title="12. Contact">
+              <p>
+                For privacy-related queries, contact us at{' '}
+                <a href="mailto:yantrixlab@gmail.com" className="text-indigo-600 hover:underline">yantrixlab@gmail.com</a>
                 {' '}or write to us at:
               </p>
               <div className="bg-gray-50 rounded-lg p-4 text-sm">
                 <p className="font-medium text-gray-900">Yantrix Technologies Pvt. Ltd.</p>
                 <p>Attn: Data Protection Officer</p>
-                <p>Koramangala, Bengaluru - 560034</p>
-                <p>Karnataka, India</p>
+                <p>4th Floor, Innovate Hub</p>
+                <p>82/4, Kolkata - 700030</p>
+                <p>West Bengal, India</p>
+                <p className="mt-3">
+                  <strong>Support Email:</strong>{' '}
+                  <a href="mailto:yantrixlab@gmail.com" className="text-indigo-600 hover:underline">yantrixlab@gmail.com</a>
+                </p>
+                <p className="mt-2">
+                  <strong>Website:</strong>{' '}
+                  <a href="https://yantrixlabs.com" className="text-indigo-600 hover:underline">yantrixlabs.com</a>
+                </p>
               </div>
             </Section>
 

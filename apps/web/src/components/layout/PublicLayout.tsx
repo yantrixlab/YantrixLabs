@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X, MapPin, Mail, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
 import { enableGuestMode } from '@/lib/guestMode';
@@ -39,6 +39,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
   const [initials, setInitials] = useState('');
   const [businessLogo, setBusinessLogo] = useState<string | null>(null);
   const [businessName, setBusinessName] = useState<string | null>(null);
+  const [contactDetails, setContactDetails] = useState<any>(null);
 
   useEffect(() => {
     if (!isAuthenticated()) return;
@@ -58,6 +59,16 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           setBusinessLogo(biz.logo);
         }
         if (biz?.name) setBusinessName(biz.name);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    apiFetch('/admin/settings/contact', { method: 'GET' })
+      .then((res: any) => {
+        if (res.data) {
+          setContactDetails(res.data);
+        }
       })
       .catch(() => {});
   }, []);
@@ -186,10 +197,57 @@ export function PublicLayout({ children }: PublicLayoutProps) {
                 <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
                 <span className="text-xl font-bold text-gray-900">Yantrix Labs</span>
               </Link>
-              <p className="text-sm leading-relaxed mb-3">
+              <p className="text-sm leading-relaxed mb-4">
                 We build smart digital products and business tools for startups, SMEs, and enterprises.
               </p>
-              <p className="text-xs">Made with care in India</p>
+
+              {/* Contact Details Section */}
+              <div className="space-y-3 text-sm">
+                {contactDetails?.contactEmail && (
+                  <div className="flex items-start gap-2">
+                    <Mail className="h-4 w-4 mt-0.5 flex-shrink-0 text-indigo-600" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Email</p>
+                      <a href={`mailto:${contactDetails.contactEmail}`} className="text-gray-700 hover:text-indigo-600 transition-colors">
+                        {contactDetails.contactEmail}
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {contactDetails?.officeCompanyName && (
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0 text-indigo-600" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Address</p>
+                      <p className="text-gray-700">
+                        {contactDetails.officeCompanyName}
+                        <br />
+                        {contactDetails.officeFloor && `${contactDetails.officeFloor}, `}
+                        {contactDetails.officeStreet}
+                        <br />
+                        {contactDetails.officeCity}
+                        {contactDetails.officeState && `, ${contactDetails.officeState}`}
+                        {contactDetails.officeCountry && `, ${contactDetails.officeCountry}`}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {contactDetails?.contactPhone && (
+                  <div className="flex items-start gap-2">
+                    <Phone className="h-4 w-4 mt-0.5 flex-shrink-0 text-indigo-600" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium">Phone</p>
+                      <a href={contactDetails.contactPhoneHref || `tel:${contactDetails.contactPhone}`} className="text-gray-700 hover:text-indigo-600 transition-colors">
+                        {contactDetails.contactPhone}
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <p className="text-xs mt-4">Made with care in India</p>
             </div>
             <div>
               <h5 className="font-semibold text-gray-900 mb-3">Products</h5>
