@@ -138,7 +138,7 @@ export default function PrivacyPage() {
                 <li><strong>Export:</strong> Download your business data in CSV or PDF format from Settings</li>
                 <li><strong>Opt-out:</strong> Unsubscribe from marketing emails at any time</li>
               </ul>
-              <p>To exercise these rights, contact <a href="mailto:yantrixlab@gmail.com" className="text-indigo-600 hover:underline">yantrixlab@gmail.com</a>.</p>
+              <p>To exercise these rights, contact <a href="mailto:support@yantrixlab.com" className="text-indigo-600 hover:underline">support@yantrixlab.com</a>.</p>
             </Section>
 
             <Section title="8. Cookies">
@@ -182,18 +182,17 @@ export default function PrivacyPage() {
             <Section title="12. Contact">
               <p>
                 For privacy-related queries, contact us at{' '}
-                <a href="mailto:yantrixlab@gmail.com" className="text-indigo-600 hover:underline">yantrixlab@gmail.com</a>
+                <a href="mailto:support@yantrixlab.com" className="text-indigo-600 hover:underline">support@yantrixlab.com</a>
                 {' '}or write to us at:
               </p>
               <div className="bg-gray-50 rounded-lg p-4 text-sm">
-                <p className="font-medium text-gray-900">Yantrix Technologies Pvt. Ltd.</p>
-                <p>Attn: Data Protection Officer</p>
-                <p>4th Floor, Innovate Hub</p>
-                <p>82/4, Kolkata - 700030</p>
-                <p>West Bengal, India</p>
+                <p className="font-medium text-gray-900">Yantrix Labs</p>
+                <p>JB 163, Block 9</p>
+                <p>Faraka, WB - 742212</p>
+                <p>India</p>
                 <p className="mt-3">
                   <strong>Support Email:</strong>{' '}
-                  <a href="mailto:yantrixlab@gmail.com" className="text-indigo-600 hover:underline">yantrixlab@gmail.com</a>
+                  <a href="mailto:support@yantrixlab.com" className="text-indigo-600 hover:underline">support@yantrixlab.com</a>
                 </p>
                 <p className="mt-2">
                   <strong>Website:</strong>{' '}
