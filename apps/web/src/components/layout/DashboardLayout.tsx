@@ -513,13 +513,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 className="h-full w-full object-contain"
               />
             </div>
-            {!collapsed && (
-              {businessName ? (
+            {!collapsed &&
+              (businessName ? (
                 <span className="text-base font-bold text-white truncate">{businessName}</span>
               ) : (
                 <BrandName dark className="text-base font-extrabold truncate" />
-              )}
-            )}
+              ))}
           </Link>
         </div>
 
