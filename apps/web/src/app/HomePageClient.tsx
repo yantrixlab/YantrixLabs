@@ -32,10 +32,10 @@ import {
   Wrench,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { BrandName } from '@/components/ui/BrandName';
 import HeroSection from "@/components/layout/HeroSection";
 import ProcessSection from "@/components/layout/ProcessSection";
 import {
-import { BrandName } from '@/components/ui/BrandName';
   isAuthenticated,
   getUserData,
   apiFetch,

@@ -34,10 +34,10 @@ import {
   apiFetch,
   isSafeImageUrl,
 } from "@/lib/api";
+import { BrandName } from '@/components/ui/BrandName';
 import { AuthRequiredModal } from "@/components/ui/AuthRequiredModal";
 import { enableGuestMode, isGuestMode } from "@/lib/guestMode";
 import {
-import { BrandName } from '@/components/ui/BrandName';
   BusinessProfileSetupModal,
   type BusinessSettings as BizSettings,
 } from "@/components/ui/BusinessProfileSetupModal";
