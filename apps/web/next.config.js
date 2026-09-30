@@ -36,6 +36,11 @@ const nextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      { source: '/foldex-file-manager', destination: '/foldex-file-manager.html' },
+    ];
+  },
   async redirects() {
     return [
       {
