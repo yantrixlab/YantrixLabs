@@ -517,7 +517,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               (businessName ? (
                 <span className="text-base font-bold text-white truncate">{businessName}</span>
               ) : (
-                <BrandName dark className="text-base font-extrabold truncate" />
+                <BrandName dark className="text-lg font-black truncate" />
               ))}
           </Link>
         </div>

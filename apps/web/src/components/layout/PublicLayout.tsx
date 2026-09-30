@@ -81,7 +81,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="flex h-[72px] items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-              <BrandName className="text-[16px] font-extrabold tracking-tight" />
+              <BrandName className="text-[20px] font-black tracking-tight" />
             </Link>
 
             <div className="hidden md:flex items-center gap-1.5">
@@ -196,7 +196,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
             <div className="md:col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-4">
                 <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-                <BrandName className="text-xl font-extrabold" />
+                <BrandName className="text-2xl font-black" />
               </Link>
               <p className="text-sm leading-relaxed mb-4">
                 We build smart digital products and business tools for startups, SMEs, and enterprises.

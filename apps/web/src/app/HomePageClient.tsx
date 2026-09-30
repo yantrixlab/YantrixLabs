@@ -1467,7 +1467,7 @@ export default function HomePage() {
                   alt="Yantrix Labs"
                   className="h-8 w-8 rounded-lg object-contain"
                 />
-                <BrandName className="text-xl font-extrabold" />
+                <BrandName className="text-2xl font-black" />
               </Link>
               <p className="text-sm leading-relaxed mb-4">
                 We build smart digital products and business tools for startups,

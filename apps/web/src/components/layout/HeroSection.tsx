@@ -100,7 +100,7 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
           <div className="flex h-[72px] items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-              <BrandName className="text-[16px] font-extrabold tracking-tight" />
+              <BrandName className="text-[20px] font-black tracking-tight" />
             </Link>
 
           <nav className="hidden items-center gap-1.5 md:flex">

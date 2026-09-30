@@ -178,7 +178,7 @@ export default function PricingPage() {
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
               <img src="/app_logo.webp" alt="Yantrix" className="h-8 w-8 rounded-lg" />
-              <BrandName className="text-xl font-extrabold" />
+              <BrandName className="text-2xl font-black" />
             </Link>
 
             <div className="hidden md:flex items-center gap-8">

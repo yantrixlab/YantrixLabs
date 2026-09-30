@@ -53,7 +53,7 @@ export default function LoginPage() {
               <FileText className="h-5 w-5 text-white" />
             </div>
             <div className="text-left">
-              <BrandName className="block text-2xl font-extrabold leading-none" />
+              <BrandName className="block text-3xl font-black leading-none" />
               <span className="text-xs font-medium uppercase tracking-[0.2em] text-indigo-600">GST Invoice</span>
             </div>
           </Link>
