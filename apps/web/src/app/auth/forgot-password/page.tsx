@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, FileText, ShieldCheck } from 'lucide-react';
 import { API_URL } from '@/lib/api';
+import { BrandName } from '@/components/ui/BrandName';
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -170,7 +171,7 @@ export default function ForgotPasswordPage() {
                 <FileText className="h-5 w-5 text-white" />
               </div>
               <div className="text-left">
-                <span className="block text-2xl font-bold leading-none text-slate-900">YantrixLabs</span>
+                <BrandName className="block text-2xl font-extrabold leading-none" />
                 <span className="text-xs font-medium uppercase tracking-[0.2em] text-indigo-600">GST Invoice</span>
               </div>
             </Link>

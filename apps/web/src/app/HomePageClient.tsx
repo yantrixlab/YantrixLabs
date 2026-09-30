@@ -35,6 +35,7 @@ import { useState, useEffect } from "react";
 import HeroSection from "@/components/layout/HeroSection";
 import ProcessSection from "@/components/layout/ProcessSection";
 import {
+import { BrandName } from '@/components/ui/BrandName';
   isAuthenticated,
   getUserData,
   apiFetch,
@@ -1466,9 +1467,7 @@ export default function HomePage() {
                   alt="Yantrix Labs"
                   className="h-8 w-8 rounded-lg object-contain"
                 />
-                <span className="text-xl font-bold text-gray-900">
-                  Yantrix Labs
-                </span>
+                <BrandName className="text-xl font-extrabold" />
               </Link>
               <p className="text-sm leading-relaxed mb-4">
                 We build smart digital products and business tools for startups,
