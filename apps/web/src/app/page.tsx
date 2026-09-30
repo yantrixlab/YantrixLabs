@@ -47,7 +47,7 @@ const homeJsonLd = {
       '@type': 'Organization',
       name: 'Yantrix Labs',
       url: 'https://yantrixlab.com',
-      logo: 'https://yantrixlab.com/app_logo.png',
+      logo: 'https://yantrixlab.com/app_logo.webp',
       slogan: 'Business Automation for Modern India',
       areaServed: 'IN',
     },

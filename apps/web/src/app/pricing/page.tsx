@@ -176,7 +176,7 @@ export default function PricingPage() {
         <div className="container-wide">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/app_logo.png" alt="Yantrix" className="h-8 w-8 rounded-lg" />
+              <img src="/app_logo.webp" alt="Yantrix" className="h-8 w-8 rounded-lg" />
               <span className="text-xl font-bold text-gray-900">Yantrix</span>
             </Link>
 

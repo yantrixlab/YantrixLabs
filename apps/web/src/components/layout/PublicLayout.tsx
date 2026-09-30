@@ -79,7 +79,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
           <div className="flex h-[72px] items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
+              <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
               <span className="text-[16px] font-semibold text-gray-900 tracking-tight">Yantrix Labs</span>
             </Link>
 
@@ -194,7 +194,7 @@ export function PublicLayout({ children }: PublicLayoutProps) {
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div className="md:col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-4">
-                <img src="/app_logo.png" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
+                <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
                 <span className="text-xl font-bold text-gray-900">Yantrix Labs</span>
               </Link>
               <p className="text-sm leading-relaxed mb-4">

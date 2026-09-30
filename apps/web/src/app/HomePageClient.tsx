@@ -1462,7 +1462,7 @@ export default function HomePage() {
             <div className="md:col-span-2">
               <Link href="/" className="flex items-center gap-2 mb-4">
                 <img
-                  src="/app_logo.png"
+                  src="/app_logo.webp"
                   alt="Yantrix Labs"
                   className="h-8 w-8 rounded-lg object-contain"
                 />

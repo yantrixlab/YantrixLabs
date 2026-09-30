@@ -153,7 +153,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     publisher: {
       '@type': 'Organization',
       name: 'Yantrix Labs',
-      logo: { '@type': 'ImageObject', url: 'https://yantrixlab.com/app_logo.png' },
+      logo: { '@type': 'ImageObject', url: 'https://yantrixlab.com/app_logo.webp' },
     },
   };
 

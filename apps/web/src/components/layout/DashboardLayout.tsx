@@ -507,7 +507,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <Link href="/" className="flex items-center gap-2.5 min-w-0">
             <div className="h-8 w-8 rounded-xl flex items-center justify-center overflow-hidden flex-shrink-0 shadow-sm">
               <img
-                src="/app_logo.png"
+                src="/app_logo.webp"
                 alt="Yantrix Labs"
                 className="h-full w-full object-contain"
               />

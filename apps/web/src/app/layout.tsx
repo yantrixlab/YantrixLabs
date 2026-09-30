@@ -12,9 +12,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Yantrix Labs' }],
   creator: 'Yantrix Labs',
   icons: {
-    icon: '/app_logo.png',
-    shortcut: '/app_logo.png',
-    apple: '/app_logo.png',
+    icon: '/app_logo.webp',
+    shortcut: '/app_logo.webp',
+    apple: '/app_logo.webp',
   },
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://yantrixlab.com'),
   openGraph: {
@@ -45,7 +45,7 @@ const organizationJsonLd = {
   '@type': 'Organization',
   name: 'Yantrix Labs',
   url: siteUrl,
-  logo: `${siteUrl}/app_logo.png`,
+  logo: `${siteUrl}/app_logo.webp`,
   description: 'Yantrix Labs builds software products and digital solutions, including SaaS, web, and mobile app development.',
 };
 
