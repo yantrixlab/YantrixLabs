@@ -6,7 +6,7 @@ import { ArrowRight, Menu, X, MapPin, Mail, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { isAuthenticated, getUserData, apiFetch, isSafeImageUrl } from '@/lib/api';
 import { enableGuestMode } from '@/lib/guestMode';
-import { BrandName } from '@/components/ui/BrandName';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
@@ -79,9 +79,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
         <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
           <div className="flex h-[72px] items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-              <BrandName className="text-[20px] font-black tracking-tight" />
+            <Link href="/" className="flex items-center shrink-0">
+              <BrandLogo className="h-10 sm:h-12" />
             </Link>
 
             <div className="hidden md:flex items-center gap-1.5">
@@ -194,9 +193,8 @@ export function PublicLayout({ children }: PublicLayoutProps) {
         <div className="container-wide">
           <div className="grid md:grid-cols-4 gap-8 mb-10">
             <div className="md:col-span-2">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-                <BrandName className="text-2xl font-black" />
+              <Link href="/" className="flex items-center shrink-0">
+              <BrandLogo className="h-14 sm:h-16" />
               </Link>
               <p className="text-sm leading-relaxed mb-4">
                 We build smart digital products and business tools for startups, SMEs, and enterprises.

@@ -15,7 +15,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
-import { BrandName } from '@/components/ui/BrandName';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 
 interface HomeHeader {
   badgeText: string;
@@ -98,9 +98,8 @@ export default function HeroSection({ loggedIn }: HeroSectionProps) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100 transition-all duration-300">
         <div className="mx-auto w-full max-w-[1280px] px-5 sm:px-8 lg:px-10">
           <div className="flex h-[72px] items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="/app_logo.webp" alt="Yantrix Labs" className="h-8 w-8 rounded-lg object-contain" />
-              <BrandName className="text-[20px] font-black tracking-tight" />
+            <Link href="/" className="flex items-center shrink-0">
+              <BrandLogo className="h-10 sm:h-12" />
             </Link>
 
           <nav className="hidden items-center gap-1.5 md:flex">

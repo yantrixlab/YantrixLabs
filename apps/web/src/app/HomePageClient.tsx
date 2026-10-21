@@ -32,7 +32,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { BrandName } from '@/components/ui/BrandName';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 import HeroSection from "@/components/layout/HeroSection";
 import ProcessSection from "@/components/layout/ProcessSection";
 import {
@@ -1461,13 +1461,8 @@ export default function HomePage() {
         <div className="container-wide">
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="md:col-span-2">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-                <img
-                  src="/app_logo.webp"
-                  alt="Yantrix Labs"
-                  className="h-8 w-8 rounded-lg object-contain"
-                />
-                <BrandName className="text-2xl font-black" />
+              <Link href="/" className="flex items-center shrink-0">
+              <BrandLogo className="h-14 sm:h-16" />
               </Link>
               <p className="text-sm leading-relaxed mb-4">
                 We build smart digital products and business tools for startups,

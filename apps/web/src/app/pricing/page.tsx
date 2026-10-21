@@ -8,7 +8,7 @@ import {
   Shield, LayoutDashboard, Menu
 } from 'lucide-react';
 import { isAuthenticated, getUserData, apiFetch } from '@/lib/api';
-import { BrandName } from '@/components/ui/BrandName';
+import { BrandLogo } from '@/components/ui/BrandLogo';
 
 interface Plan {
   id: string;
@@ -176,9 +176,8 @@ export default function PricingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-xl">
         <div className="container-wide">
           <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <img src="/app_logo.webp" alt="Yantrix" className="h-8 w-8 rounded-lg" />
-              <BrandName className="text-2xl font-black" />
+            <Link href="/" className="flex items-center shrink-0">
+              <BrandLogo className="h-9 sm:h-11" />
             </Link>
 
             <div className="hidden md:flex items-center gap-8">
