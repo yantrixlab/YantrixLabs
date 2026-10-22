@@ -618,29 +618,7 @@ export default function HomePage() {
       </section>
 
       {/* â”€â”€â”€ FEATURED PRODUCT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
-      <section className="relative overflow-hidden py-28 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-        {/* Ambient glow blobs */}
-        <div className="pointer-events-none absolute inset-0">
-          <div
-            className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full opacity-20 blur-[120px]"
-            style={{
-              background: "radial-gradient(circle, #6366f1, transparent 70%)",
-            }}
-          />
-          <div
-            className="absolute bottom-0 right-1/4 h-[420px] w-[420px] rounded-full opacity-15 blur-[100px]"
-            style={{
-              background: "radial-gradient(circle, #8b5cf6, transparent 70%)",
-            }}
-          />
-          <div
-            className="absolute top-1/2 -right-16 h-[280px] w-[280px] rounded-full opacity-15 blur-[80px]"
-            style={{
-              background: "radial-gradient(circle, #06b6d4, transparent 70%)",
-            }}
-          />
-        </div>
-
+      <section className="relative overflow-hidden py-28 bg-transparent">
         <div className="container-wide relative">
           <div className="grid lg:grid-cols-2 gap-16 xl:gap-24 items-center">
             {/* â”€â”€ LEFT: Content â”€â”€ */}
